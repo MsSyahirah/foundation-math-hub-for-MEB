@@ -401,6 +401,21 @@ const week1Activities = [
 
 const week2Activities = [
   {
+    id: "learning-outcomes",
+    number: "Start Here",
+    title: "Week 2 Learning Outcomes",
+
+    icon: "🎯",
+    colour: "#6366f1",
+
+    description:
+      "Understand what you should be able to do by the end of Week 2.",
+
+    type: "outcomes",
+    prerequisites: []
+  },
+
+  {
     id: "learning-method",
     number: "Checkpoint 1",
     title: "Choose Your Learning Method",
@@ -410,10 +425,10 @@ const week2Activities = [
     colour: "#8b5cf6",
 
     description:
-      "Choose one main resource: Read the slides or Listen to the explanation. The Watch option is coming soon.",
+      "Open the Learn Your Way page and choose Read or Listen. Watch is coming soon.",
 
-    type: "choice",
-    prerequisites: [],
+    type: "choice-page",
+    prerequisites: ["learning-outcomes"],
 
     choices: [
       {
@@ -1904,7 +1919,8 @@ function createEmptyProgress() {
     bonusTokens: 0,
     bonusRollsUsed: [],
     studentName: "",
-    studentClass: ""
+    studentClass: "",
+    learningMethod: ""
   };
 }
 
@@ -1921,6 +1937,7 @@ let studentProgress =
 
 let currentLessonId = null;
 let currentQuestionResults = {};
+let currentQuestionAttempts = {};
 let currentBonusActivity = null;
 
 
@@ -2129,6 +2146,15 @@ function openWeek(weekId) {
 
   updateWholeWeek();
 
+  if (
+    selectedWeekId === "week-2" &&
+    !isActivityCompleted("learning-outcomes")
+  ) {
+    openOutcomesPage();
+  } else {
+    showWeekDashboard();
+  }
+
   window.scrollTo({
     top: 0,
     behavior: "smooth"
@@ -2145,6 +2171,14 @@ function returnToWeeks() {
 
   document
     .getElementById("lessonSection")
+    .classList.add("hidden");
+
+  document
+    .getElementById("outcomesSection")
+    .classList.add("hidden");
+
+  document
+    .getElementById("learningPathSection")
     .classList.add("hidden");
 
   document
@@ -2173,6 +2207,246 @@ function returnToWeeks() {
     top: 0,
     behavior: "smooth"
   });
+}
+
+
+/* =========================================================
+   WEEK 2 FOCUSED LEARNING SCREENS
+   ========================================================= */
+
+const dashboardSectionIds = [
+  "summarySection",
+  "routeSection",
+  "activitiesSection",
+  "rewardSection",
+  "evidenceSection"
+];
+
+
+function hideFocusedScreens() {
+  document
+    .getElementById("outcomesSection")
+    .classList.add("hidden");
+
+  document
+    .getElementById("learningPathSection")
+    .classList.add("hidden");
+
+  document
+    .getElementById("lessonSection")
+    .classList.add("hidden");
+}
+
+
+function showWeekDashboard() {
+  hideFocusedScreens();
+
+  dashboardSectionIds.forEach(sectionId => {
+    document
+      .getElementById(sectionId)
+      .classList.remove("hidden");
+  });
+}
+
+
+function hideWeekDashboard() {
+  dashboardSectionIds.forEach(sectionId => {
+    document
+      .getElementById(sectionId)
+      .classList.add("hidden");
+  });
+}
+
+
+function openOutcomesPage() {
+  if (selectedWeekId !== "week-2") {
+    showWeekDashboard();
+    return;
+  }
+
+  hideWeekDashboard();
+  hideFocusedScreens();
+
+  document
+    .getElementById("outcomesSection")
+    .classList.remove("hidden");
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+
+function completeOutcomesAndContinue() {
+  markActivityCompleted("learning-outcomes");
+  updateWholeWeek();
+  openLearningPathPage();
+}
+
+
+function openLearningPathPage() {
+  if (selectedWeekId !== "week-2") {
+    showToast("This learning-path page is available in Week 2.");
+    return;
+  }
+
+  hideWeekDashboard();
+  hideFocusedScreens();
+  renderLearningChoices();
+
+  document
+    .getElementById("learningPathSection")
+    .classList.remove("hidden");
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+
+function renderLearningChoices() {
+  const activity =
+    getCurrentActivities().find(
+      item => item.id === "learning-method"
+    );
+
+  const grid =
+    document.getElementById("learningChoiceGrid");
+
+  if (!activity || !grid) {
+    return;
+  }
+
+  grid.innerHTML = activity.choices
+    .map(choice => {
+      const link = getCurrentLinks()[choice.linkKey];
+      const unavailable = choice.comingSoon || !link;
+      const selected =
+        studentProgress.learningMethod === choice.linkKey;
+
+      const descriptions = {
+        read: "Go through the visual slides slowly at your own pace.",
+        listen: "Listen to the explanation and follow the calculation steps.",
+        watch: "Use a video explanation to learn the steps."
+      };
+
+      return `
+        <article
+          class="learning-choice-card
+            ${selected ? "selected" : ""}
+            ${unavailable ? "unavailable" : ""}"
+        >
+          <div class="learning-choice-icon">
+            ${choice.icon}
+          </div>
+
+          <h3>${choice.label.replace("the Slides", "")}</h3>
+
+          <p>${descriptions[choice.linkKey]}</p>
+
+          ${
+            unavailable
+              ? `
+                <span class="status-badge optional">
+                  Coming Soon
+                </span>
+              `
+              : `
+                <button
+                  class="button
+                    ${selected ? "button-green" : "button-primary"}
+                    button-small"
+                  onclick="selectLearningMethod('${choice.linkKey}')"
+                >
+                  ${
+                    selected
+                      ? "✓ Selected — Open Again"
+                      : "Select and Open"
+                  }
+                </button>
+              `
+          }
+        </article>
+      `;
+    })
+    .join("");
+
+  updateLearningPathStatus();
+}
+
+
+function selectLearningMethod(linkKey) {
+  const link = getCurrentLinks()[linkKey];
+
+  if (!link) {
+    showToast("This learning method is coming soon.");
+    return;
+  }
+
+  studentProgress.learningMethod = linkKey;
+  saveProgress();
+  renderLearningChoices();
+
+  window.open(
+    link,
+    "_blank",
+    "noopener,noreferrer"
+  );
+}
+
+
+function updateLearningPathStatus() {
+  const status =
+    document.getElementById("learningMethodStatus");
+
+  const continueButton =
+    document.getElementById("learningPathContinueButton");
+
+  const names = {
+    read: "Read",
+    listen: "Listen",
+    watch: "Watch"
+  };
+
+  if (!studentProgress.learningMethod) {
+    status.textContent =
+      "Choose Read or Listen to begin. Watch is coming soon.";
+
+    continueButton.disabled = true;
+    return;
+  }
+
+  status.textContent =
+    "Selected method: " +
+    names[studentProgress.learningMethod] +
+    ". Complete the resource, then continue.";
+
+  continueButton.disabled = false;
+}
+
+
+function completeLearningPath() {
+  if (!studentProgress.learningMethod) {
+    showToast("Choose Read or Listen before continuing.");
+    return;
+  }
+
+  markActivityCompleted("learning-method");
+  updateWholeWeek();
+  showWeekDashboard();
+
+  showToast(
+    "Learning method completed. Guided Practice is now unlocked."
+  );
+
+  document
+    .getElementById("activitiesSection")
+    .scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
 }
 
 
@@ -2313,7 +2587,7 @@ function createActivityButtons(
   unlocked,
   completed
 ) {
-  if (activity.type === "choice") {
+  if (activity.type === "outcomes") {
     if (!unlocked) {
       return `
         <button
@@ -2325,47 +2599,34 @@ function createActivityButtons(
       `;
     }
 
-    const resourceButtons =
-      activity.choices
-        .map(choice => {
-          const link =
-            getCurrentLinks()[choice.linkKey];
+    return `
+      <button
+        class="button button-primary button-small"
+        onclick="openOutcomesPage()"
+      >
+        ${completed ? "Review Outcomes" : "Start Here"}
+      </button>
+    `;
+  }
 
-          if (choice.comingSoon || !link) {
-            return `
-              <button
-                class="button button-light button-small"
-                disabled
-              >
-                ${choice.icon} ${choice.label} — Coming Soon
-              </button>
-            `;
-          }
-
-          return `
-            <button
-              class="button button-primary button-small"
-              onclick="openChoiceResource('${activity.id}', '${choice.linkKey}')"
-            >
-              ${choice.icon} ${choice.label}
-            </button>
-          `;
-        })
-        .join("");
+  if (activity.type === "choice-page") {
+    if (!unlocked) {
+      return `
+        <button
+          class="button button-light button-small"
+          disabled
+        >
+          Complete Start Here first
+        </button>
+      `;
+    }
 
     return `
-      ${resourceButtons}
-
       <button
-        class="button button-green button-small"
-        onclick="confirmChoiceCompletion('${activity.id}')"
-        ${completed ? "disabled" : ""}
+        class="button button-primary button-small"
+        onclick="openLearningPathPage()"
       >
-        ${
-          completed
-            ? "Learning Method Completed"
-            : "I Completed One Method"
-        }
+        ${completed ? "Review Learning Method" : "Choose Learning Method"}
       </button>
     `;
   }
@@ -2614,10 +2875,12 @@ function openLesson(lessonId) {
 
   currentLessonId = lessonId;
   currentQuestionResults = {};
+  currentQuestionAttempts = {};
 
   lesson.questions.forEach(
     (question, index) => {
       currentQuestionResults[index] = false;
+      currentQuestionAttempts[index] = 0;
     }
   );
 
@@ -2665,9 +2928,8 @@ function openLesson(lessonId) {
       ? "This checkpoint is already completed. You may review it again."
       : "Complete all questions correctly to unlock this button.";
 
-  document
-    .getElementById("activitiesSection")
-    .classList.add("hidden");
+  hideWeekDashboard();
+  hideFocusedScreens();
 
   document
     .getElementById("lessonSection")
@@ -2727,12 +2989,27 @@ function createPracticeSection(lesson) {
             >
 
 
-            <button
-              class="button button-primary button-small"
-              onclick="checkPracticeAnswer(${index})"
-            >
-              Check Answer
-            </button>
+            <div class="practice-actions">
+              <button
+                class="button button-primary button-small"
+                onclick="checkPracticeAnswer(${index})"
+              >
+                Check Answer
+              </button>
+
+              <button
+                class="button button-light button-small"
+                onclick="showPracticeHint(${index})"
+              >
+                Show Hint
+              </button>
+            </div>
+
+
+            <p
+              class="hint-message hidden"
+              id="hint${index}"
+            ></p>
 
 
             <p
@@ -2768,6 +3045,25 @@ function createPracticeSection(lesson) {
 
     </div>
   `;
+}
+
+
+function showPracticeHint(questionIndex) {
+  const lesson =
+    getCurrentLessons()[currentLessonId];
+
+  const question =
+    lesson.questions[questionIndex];
+
+  const hintBox =
+    document.getElementById(
+      "hint" + questionIndex
+    );
+
+  hintBox.textContent =
+    "Hint: " + question.hint;
+
+  hintBox.classList.remove("hidden");
 }
 
 
@@ -2909,10 +3205,10 @@ function checkPracticeAnswer(questionIndex) {
 
   if (working.length < 5) {
     feedback.textContent =
-      "Please show your formula or calculation before checking.";
+      "Start by writing the formula or your first calculation step. Your working does not need to be perfect.";
 
     feedback.className =
-      "feedback-message incorrect";
+      "feedback-message supportive";
 
     return;
   }
@@ -2922,16 +3218,15 @@ function checkPracticeAnswer(questionIndex) {
 
   if (Number.isNaN(studentNumber)) {
     feedback.textContent =
-      "Please enter a numerical final answer.";
+      "Add a numerical final answer, then check it again. You may use the hint when you need support.";
 
     feedback.className =
-      "feedback-message incorrect";
+      "feedback-message supportive";
 
     return;
   }
 
-  const allowedDifference =
-    0.005;
+  const allowedDifference = 0.005;
 
   const numberCorrect =
     Math.abs(
@@ -2953,71 +3248,78 @@ function checkPracticeAnswer(questionIndex) {
     unitCorrect &&
     decimalFormatCorrect
   ) {
-    currentQuestionResults[
-      questionIndex
-    ] = true;
+    currentQuestionResults[questionIndex] = true;
+
+    const attempts =
+      currentQuestionAttempts[questionIndex] || 0;
 
     feedback.textContent =
-      "Correct. Final answer: " +
-      question.displayAnswer + ".";
+      attempts > 0
+        ? "Correct—great persistence. You adjusted your method and reached " +
+          question.displayAnswer + "."
+        : "Correct. Final answer: " +
+          question.displayAnswer + ".";
 
     feedback.className =
       "feedback-message correct";
 
-    questionCard.classList.add(
-      "correct"
-    );
+    questionCard.classList.add("correct");
   } else if (
     numberCorrect &&
     unitCorrect &&
     !decimalFormatCorrect
   ) {
-    currentQuestionResults[
-      questionIndex
-    ] = false;
+    currentQuestionResults[questionIndex] = false;
 
     feedback.textContent =
-      "Your numerical answer is correct. Rewrite it using exactly two decimal places, for example " +
+      "Your calculation is correct. You are one small step away—rewrite the final answer using exactly two decimal places, for example " +
       question.displayAnswer + ".";
 
     feedback.className =
-      "feedback-message incorrect";
+      "feedback-message supportive";
 
-    questionCard.classList.remove(
-      "correct"
-    );
+    questionCard.classList.remove("correct");
   } else if (
     numberCorrect &&
     !unitCorrect
   ) {
-    currentQuestionResults[
-      questionIndex
-    ] = false;
+    currentQuestionResults[questionIndex] = false;
 
     feedback.textContent =
-      "Your number is correct, but the unit is missing or incorrect.";
+      "Your number is correct. Now add or correct the final unit, then check again.";
 
     feedback.className =
-      "feedback-message incorrect";
+      "feedback-message supportive";
 
-    questionCard.classList.remove(
-      "correct"
-    );
+    questionCard.classList.remove("correct");
   } else {
-    currentQuestionResults[
-      questionIndex
-    ] = false;
+    currentQuestionResults[questionIndex] = false;
+    currentQuestionAttempts[questionIndex] =
+      (currentQuestionAttempts[questionIndex] || 0) + 1;
 
-    feedback.textContent =
-      "Not correct yet. " +
-      question.hint;
+    const attempts =
+      currentQuestionAttempts[questionIndex];
+
+    if (attempts === 1) {
+      feedback.textContent =
+        "Not quite yet. Check the formula and try again. You can open the hint whenever you need it.";
+    } else if (attempts === 2) {
+      feedback.textContent =
+        "You’re getting there. Hint: " +
+        question.hint;
+    } else if (attempts === 3) {
+      feedback.textContent =
+        "Let’s complete the first step together: " +
+        question.hint;
+    } else {
+      feedback.textContent =
+        "Good persistence. Review the worked example above, use the same steps, and try once more. Your progress is not lost.";
+    }
 
     feedback.className =
-      "feedback-message incorrect";
+      "feedback-message supportive";
 
-    questionCard.classList.remove(
-      "correct"
-    );
+    questionCard.classList.remove("correct");
   }
 
   updateLessonCompletionButton();
@@ -3668,14 +3970,7 @@ function formatDate(isoDate) {
    ========================================================= */
 
 function returnToActivities() {
-  document
-    .getElementById("lessonSection")
-    .classList.add("hidden");
-
-  document
-    .getElementById("activitiesSection")
-    .classList.remove("hidden");
-
+  showWeekDashboard();
   updateWholeWeek();
 
   window.scrollTo({
@@ -3706,6 +4001,7 @@ function resetStudentProgress() {
 
   currentLessonId = null;
   currentQuestionResults = {};
+  currentQuestionAttempts = {};
 
   returnToActivities();
 
@@ -3778,6 +4074,30 @@ document.getElementById(
 ).addEventListener(
   "click",
   returnToActivities
+);
+
+
+document.getElementById(
+  "outcomesContinueButton"
+).addEventListener(
+  "click",
+  completeOutcomesAndContinue
+);
+
+
+document.getElementById(
+  "backFromLearningPathButton"
+).addEventListener(
+  "click",
+  showWeekDashboard
+);
+
+
+document.getElementById(
+  "learningPathContinueButton"
+).addEventListener(
+  "click",
+  completeLearningPath
 );
 
 

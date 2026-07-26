@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Foundation Math Hub for Higher Nitec in Chemical Process Technology">
   <title>Foundation Math Hub</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+  <link rel="stylesheet" href="style.css?v=4">
+  <script src="script.js?v=4" defer></script>
 </head>
 <body>
 
@@ -157,9 +157,96 @@
     </section>
 
 
+    <!-- WEEK 2 LEARNING OUTCOMES -->
+
+    <section
+      class="section-card onboarding-card hidden"
+      id="outcomesSection"
+    >
+      <span class="small-label">Start Here</span>
+
+      <h2>What are we learning?</h2>
+
+      <p class="onboarding-intro">
+        In Week 2, you will learn how composition, flow rates and
+        molarity are used to describe a chemical process stream.
+      </p>
+
+      <div class="outcomes-box">
+        <h3>By the end of this lesson, you should be able to:</h3>
+
+        <ul class="outcome-list">
+          <li>Convert between percentage and fraction.</li>
+          <li>Calculate mass fraction and mole fraction.</li>
+          <li>Calculate the flow rate of an individual component.</li>
+          <li>Distinguish between mass, molar and volumetric flow rates.</li>
+          <li>Use density, molar mass and molarity in flow calculations.</li>
+          <li>Combine several formulas to analyse a process stream.</li>
+          <li>Check whether fractions, flow rates and units are reasonable.</li>
+        </ul>
+      </div>
+
+      <p class="onboarding-note">
+        You will move through the lesson one checkpoint at a time.
+        Choose one learning method, complete the guided activities and
+        finish with the Week 2 MEB Challenge.
+      </p>
+
+      <div class="onboarding-actions">
+        <button
+          class="button button-primary"
+          id="outcomesContinueButton"
+        >
+          Continue to Learn Your Way →
+        </button>
+      </div>
+    </section>
+
+
+    <!-- WEEK 2 LEARNING METHOD PAGE -->
+
+    <section
+      class="section-card learning-path-page hidden"
+      id="learningPathSection"
+    >
+      <button
+        class="button button-light"
+        id="backFromLearningPathButton"
+      >
+        ← Back to Activities
+      </button>
+
+      <div class="learning-path-heading">
+        <span class="small-label">Choose Your Learning Path</span>
+        <h2>Learn Your Way</h2>
+        <p><strong>Pick one way to learn.</strong></p>
+        <p>You can always return and try another method later.</p>
+      </div>
+
+      <div
+        class="learning-choice-grid"
+        id="learningChoiceGrid"
+      ></div>
+
+      <div class="learning-path-footer">
+        <p id="learningMethodStatus">
+          Choose Read or Listen to begin. Watch is coming soon.
+        </p>
+
+        <button
+          class="button button-green"
+          id="learningPathContinueButton"
+          disabled
+        >
+          I Have Finished — Continue to Guided Practice
+        </button>
+      </div>
+    </section>
+
+
     <!-- STUDENT SUMMARY -->
 
-    <section class="summary-grid">
+    <section class="summary-grid" id="summarySection">
 
       <article class="summary-card">
         <span class="summary-icon">⭐</span>
@@ -204,7 +291,7 @@
 
     <!-- STUDENT ADVENTURE ROUTE -->
 
-    <section class="section-card">
+    <section class="section-card" id="routeSection">
 
       <div class="section-heading">
 
@@ -378,7 +465,7 @@
 
     <!-- WEEKLY CLASSROOM REWARDS -->
 
-    <section class="reward-card">
+    <section class="reward-card" id="rewardSection">
 
       <div class="reward-icon">
         🏆
