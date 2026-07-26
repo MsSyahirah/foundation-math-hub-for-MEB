@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Foundation Math Hub for Higher Nitec in Chemical Process Technology">
   <title>Foundation Math Hub</title>
-  <link rel="stylesheet" href="style.css?v=4">
-  <script src="script.js?v=4" defer></script>
+  <link rel="stylesheet" href="style.css?v=5">
+  <script src="script.js?v=5" defer></script>
 </head>
 <body>
 
@@ -248,33 +248,49 @@
 
     <section class="summary-grid" id="summarySection">
 
-      <article class="summary-card">
+      <article class="summary-card summary-card-action">
         <span class="summary-icon">⭐</span>
 
         <div>
-          <p>Learning Stars</p>
+          <p>Mastery Stars</p>
 
           <strong>
             <span id="starCount">0</span> / 5
           </strong>
+
+          <button
+            class="summary-link-button"
+            type="button"
+            onclick="scrollToRewardCentre()"
+          >
+            View My Stars
+          </button>
         </div>
       </article>
 
 
-      <article class="summary-card">
+      <article class="summary-card summary-card-action">
         <span class="summary-icon">🎟️</span>
 
         <div>
-          <p>Bonus Tokens</p>
+          <p>Reward Tokens</p>
 
           <strong id="bonusTokenCount">
             0
           </strong>
+
+          <button
+            class="summary-link-button"
+            type="button"
+            onclick="scrollToRewardCentre()"
+          >
+            Use My Token
+          </button>
         </div>
       </article>
 
 
-      <article class="summary-card">
+      <article class="summary-card summary-card-action">
         <span class="summary-icon">📚</span>
 
         <div>
@@ -283,6 +299,14 @@
           <strong id="checkpointSummary">
             0 / 5
           </strong>
+
+          <button
+            class="summary-link-button"
+            type="button"
+            onclick="scrollToActivities()"
+          >
+            Continue Learning
+          </button>
         </div>
       </article>
 
@@ -463,9 +487,9 @@
     </section>
 
 
-    <!-- WEEKLY CLASSROOM REWARDS -->
+    <!-- REWARD CENTRE -->
 
-    <section class="reward-card" id="rewardSection">
+    <section class="reward-card reward-centre" id="rewardSection">
 
       <div class="reward-icon">
         🏆
@@ -474,12 +498,19 @@
       <div class="reward-content">
 
         <span class="small-label reward-label">
-          Weekly Classroom Rewards
+          Reward Centre
         </span>
 
         <h2>
-          Accuracy, effort and improvement are rewarded
+          Your rewards recognise learning, effort and improvement
         </h2>
+
+        <p class="reward-intro">
+          Mastery Stars show the skills you have demonstrated.
+          Checkpoint Progress shows what you have completed.
+          Reward Tokens provide one clear classroom privilege.
+          Rewards do not change your official quiz score.
+        </p>
 
 
         <div class="current-week-reward">
@@ -498,38 +529,102 @@
         </div>
 
 
-        <div class="reward-grid">
+        <section class="mastery-panel" aria-labelledby="masteryStarsHeading">
+          <div class="reward-section-heading">
+            <div>
+              <h3 id="masteryStarsHeading">Mastery Stars</h3>
+              <p>
+                Earn each star once by demonstrating an important learning skill.
+              </p>
+            </div>
 
-          <article>
-            <strong>80% and Above</strong>
+            <div class="mastery-total">
+              <strong><span id="rewardMasteryCount">0</span> / 5</strong>
+              <span id="masteryBadgeStatus">Badge in progress</span>
+            </div>
+          </div>
 
-            <p>
-              Unlock the weekly mastery recognition and any class
-              privilege announced by your lecturer.
-            </p>
-          </article>
+          <div class="mastery-star-grid" id="masteryStarGrid">
+
+            <article class="mastery-star-card" id="masteryStarFormula">
+              <span class="mastery-star-icon">☆</span>
+              <div>
+                <strong>Formula Star</strong>
+                <p>Use the correct formula for the calculation.</p>
+              </div>
+            </article>
+
+            <article class="mastery-star-card" id="masteryStarUnit">
+              <span class="mastery-star-icon">☆</span>
+              <div>
+                <strong>Unit Star</strong>
+                <p>Give the correct unit and appropriate decimal places.</p>
+              </div>
+            </article>
+
+            <article class="mastery-star-card" id="masteryStarPractice">
+              <span class="mastery-star-icon">☆</span>
+              <div>
+                <strong>Practice Star</strong>
+                <p>Complete the guided practice activities.</p>
+              </div>
+            </article>
+
+            <article class="mastery-star-card" id="masteryStarPersistence">
+              <span class="mastery-star-icon">☆</span>
+              <div>
+                <strong>Persistence Star</strong>
+                <p>Review feedback, correct your method and try successfully again.</p>
+              </div>
+            </article>
+
+            <article class="mastery-star-card" id="masteryStarApplication">
+              <span class="mastery-star-icon">☆</span>
+              <div>
+                <strong>Application Star</strong>
+                <p>Complete the final multi-step process-stream problem.</p>
+              </div>
+            </article>
+
+          </div>
+
+          <div class="mastery-badge-box" id="masteryBadgeBox">
+            <span class="mastery-badge-icon">🏅</span>
+            <div>
+              <strong id="masteryBadgeTitle">Week 2 Process Problem Solver Badge</strong>
+              <p>Collect all five Mastery Stars to unlock this badge.</p>
+            </div>
+          </div>
+        </section>
 
 
-          <article>
-            <strong>Fast and Accurate</strong>
+        <section class="token-panel" aria-labelledby="rewardTokenHeading">
+          <div class="token-panel-main">
+            <span class="token-large-icon">🎟️</span>
 
-            <p>
-              Recognition may be awarded for fast completion with at
-              least 80% accuracy.
-            </p>
-          </article>
+            <div>
+              <h3 id="rewardTokenHeading">Reward Token</h3>
+              <p id="rewardTokenStatus">
+                Complete all five checkpoints and submit the official quiz to earn one token.
+              </p>
 
+              <ul class="token-rules">
+                <li>Maximum one Reward Token for each weekly lesson.</li>
+                <li>One token = one lecturer-approved five-minute privilege.</li>
+                <li>Tokens do not change quiz marks or replace required learning.</li>
+              </ul>
+            </div>
+          </div>
 
-          <article>
-            <strong>Persistence Award</strong>
-
-            <p>
-              Students who correct mistakes and continue trying may
-              also earn recognition.
-            </p>
-          </article>
-
-        </div>
+          <button
+            class="button button-bonus"
+            id="redeemTokenButton"
+            type="button"
+            disabled
+          >
+            Use My Token
+          </button>
+        </section>
 
 
         <div class="next-release-box">
@@ -544,8 +639,8 @@
 
 
         <p class="reward-note">
-          Official quiz results and classroom rewards will be confirmed
-          by your lecturer using Microsoft Forms.
+          Website rewards are stored on this device. Official quiz results
+          and classroom privileges are confirmed by your lecturer.
         </p>
 
       </div>
@@ -665,12 +760,12 @@
             </tr>
 
             <tr>
-              <th>Learning Stars</th>
+              <th>Mastery Stars</th>
               <td id="evidenceStars"></td>
             </tr>
 
             <tr>
-              <th>Bonus Tokens</th>
+              <th>Reward Tokens</th>
               <td id="evidenceTokens"></td>
             </tr>
 
@@ -765,7 +860,7 @@
 
 
 <!-- ======================================================
-     COMPLETION POPUP AND BONUS GAME
+     COMPLETION POPUP
      ====================================================== -->
 
 <div
@@ -778,6 +873,7 @@
     <button
       class="modal-close"
       id="closeModalButton"
+      aria-label="Close completion message"
     >
       ×
     </button>
@@ -796,26 +892,21 @@
     <p id="celebrationText"></p>
 
 
-    <div class="bonus-game">
+    <div class="bonus-game mastery-update-box">
 
-      <h3>🐍 🪜 Bonus Learning Roll</h3>
+      <h3>⭐ Mastery Update</h3>
 
-      <p>
-        Roll once to discover whether you land on a snake,
-        safe square or ladder.
+      <p id="bonusResult">
+        Visit the Reward Centre to see which Mastery Stars you have earned.
+        A Reward Token is earned only after all checkpoints and the official quiz are completed.
       </p>
 
       <button
         class="button button-bonus"
         id="rollBonusButton"
       >
-        🎲 Roll the Learning Die
+        View My Rewards
       </button>
-
-      <div
-        class="bonus-result hidden"
-        id="bonusResult"
-      ></div>
 
     </div>
 

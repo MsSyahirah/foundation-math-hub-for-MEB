@@ -1916,11 +1916,25 @@ function createEmptyProgress() {
   return {
     completedActivities: [],
     completionDates: {},
+
+    // Kept for backwards compatibility with earlier pilot data.
     bonusTokens: 0,
     bonusRollsUsed: [],
+
     studentName: "",
     studentClass: "",
-    learningMethod: ""
+    learningMethod: "",
+
+    masteryStars: {
+      formula: false,
+      unit: false,
+      practice: false,
+      persistence: false,
+      application: false
+    },
+
+    rewardTokenRedeemed: false,
+    rewardTokenRedeemedAt: ""
   };
 }
 
@@ -1938,7 +1952,21 @@ let studentProgress =
 let currentLessonId = null;
 let currentQuestionResults = {};
 let currentQuestionAttempts = {};
+let currentQuestionHintUsed = {};
 let currentBonusActivity = null;
+
+/* Learning Tools state */
+let learningCalculatorExpression = "";
+let learningCalculatorLastAnswer = 0;
+let learningCalculatorHistory = [];
+
+let whiteboardStrokes = [];
+let whiteboardRedoStack = [];
+let whiteboardActiveStroke = null;
+let whiteboardTool = "pen";
+let whiteboardColour = "#172554";
+let whiteboardGridVisible = true;
+let whiteboardLoadedWeek = null;
 
 
 /* =========================================================
@@ -1964,9 +1992,16 @@ function loadProgress() {
   }
 
   try {
+    const emptyProgress = createEmptyProgress();
+    const parsedProgress = JSON.parse(saved);
+
     return {
-      ...createEmptyProgress(),
-      ...JSON.parse(saved)
+      ...emptyProgress,
+      ...parsedProgress,
+      masteryStars: {
+        ...emptyProgress.masteryStars,
+        ...(parsedProgress.masteryStars || {})
+      }
     };
   } catch (error) {
     console.error(
@@ -2319,22 +2354,34 @@ function renderLearningChoices() {
     return;
   }
 
-  grid.innerHTML = activity.choices
+  const descriptions = {
+    read: "Go through the visual slides slowly at your own pace.",
+    listen: "Listen to the explanation and follow the calculation steps.",
+    watch: "Use a video explanation to learn the steps."
+  };
+
+  const positionClasses = {
+    watch: "mind-branch-watch",
+    read: "mind-branch-read",
+    listen: "mind-branch-listen"
+  };
+
+  const choiceCards = activity.choices
     .map(choice => {
       const link = getCurrentLinks()[choice.linkKey];
       const unavailable = choice.comingSoon || !link;
       const selected =
         studentProgress.learningMethod === choice.linkKey;
 
-      const descriptions = {
-        read: "Go through the visual slides slowly at your own pace.",
-        listen: "Listen to the explanation and follow the calculation steps.",
-        watch: "Use a video explanation to learn the steps."
-      };
+      const cleanLabel =
+        choice.linkKey === "read"
+          ? "Read"
+          : choice.label;
 
       return `
         <article
-          class="learning-choice-card
+          class="learning-choice-card mind-branch
+            ${positionClasses[choice.linkKey] || ""}
             ${selected ? "selected" : ""}
             ${unavailable ? "unavailable" : ""}"
         >
@@ -2342,7 +2389,7 @@ function renderLearningChoices() {
             ${choice.icon}
           </div>
 
-          <h3>${choice.label.replace("the Slides", "")}</h3>
+          <h3>${cleanLabel}</h3>
 
           <p>${descriptions[choice.linkKey]}</p>
 
@@ -2372,6 +2419,19 @@ function renderLearningChoices() {
       `;
     })
     .join("");
+
+  grid.innerHTML = `
+    <div class="mind-map-line line-up" aria-hidden="true"></div>
+    <div class="mind-map-line line-left" aria-hidden="true"></div>
+    <div class="mind-map-line line-right" aria-hidden="true"></div>
+
+    <div class="learning-mind-centre">
+      <span>🧠</span>
+      <strong>Learn<br>Your Way</strong>
+    </div>
+
+    ${choiceCards}
+  `;
 
   updateLearningPathStatus();
 }
@@ -2876,11 +2936,13 @@ function openLesson(lessonId) {
   currentLessonId = lessonId;
   currentQuestionResults = {};
   currentQuestionAttempts = {};
+  currentQuestionHintUsed = {};
 
   lesson.questions.forEach(
     (question, index) => {
       currentQuestionResults[index] = false;
       currentQuestionAttempts[index] = 0;
+      currentQuestionHintUsed[index] = false;
     }
   );
 
@@ -2909,6 +2971,8 @@ function openLesson(lessonId) {
   ).innerHTML =
     lesson.content +
     createPracticeSection(lesson);
+
+  initialiseLearningTools();
 
   const completeButton =
     document.getElementById(
@@ -3041,6 +3105,159 @@ function createPracticeSection(lesson) {
       </p>
 
 
+      <section class="learning-tools" aria-labelledby="learningToolsHeading">
+        <div class="learning-tools-heading">
+          <div>
+            <span class="small-label">Learning Tools</span>
+            <h3 id="learningToolsHeading">Use support without leaving the lesson</h3>
+            <p>
+              Open the calculator, notes or whiteboard whenever you need them.
+              These tools are saved on this device and are not official submissions.
+            </p>
+          </div>
+        </div>
+
+        <div class="learning-tools-bar" role="toolbar" aria-label="Learning tools">
+          <button
+            class="button button-light learning-tool-button"
+            type="button"
+            onclick="toggleLearningTool('calculator')"
+          >
+            🧮 Open Calculator
+          </button>
+
+          <button
+            class="button button-light learning-tool-button"
+            type="button"
+            onclick="toggleLearningTool('notes')"
+          >
+            📝 Open Sticky Notes
+          </button>
+
+          <button
+            class="button button-light learning-tool-button"
+            type="button"
+            onclick="toggleLearningTool('whiteboard')"
+          >
+            🖍️ Open Whiteboard
+          </button>
+        </div>
+
+
+        <div class="learning-tool-panel hidden" id="learningToolCalculator">
+          <div class="learning-tool-panel-heading">
+            <div>
+              <h4>🧮 MEB Calculator</h4>
+              <p>Use the calculator to support your working. Enter the final answer separately.</p>
+            </div>
+            <button class="tool-close-button" type="button" onclick="toggleLearningTool('calculator')">×</button>
+          </div>
+
+          <div class="embedded-calculator">
+            <div class="embedded-calculator-screen">
+              <div id="learningCalculatorDisplay">0</div>
+              <small id="learningCalculatorStatus">Ready · Report final answers to 2 d.p.</small>
+            </div>
+
+            <div class="embedded-calculator-keys">
+              <button class="calc-key calc-control" type="button" onclick="clearLearningCalculator()">AC</button>
+              <button class="calc-key calc-control" type="button" onclick="deleteLearningCalculatorValue()">DEL</button>
+              <button class="calc-key" type="button" onclick="appendLearningCalculator('(')">(</button>
+              <button class="calc-key" type="button" onclick="appendLearningCalculator(')')">)</button>
+
+              <button class="calc-key calc-number" type="button" onclick="appendLearningCalculator('7')">7</button>
+              <button class="calc-key calc-number" type="button" onclick="appendLearningCalculator('8')">8</button>
+              <button class="calc-key calc-number" type="button" onclick="appendLearningCalculator('9')">9</button>
+              <button class="calc-key calc-operator" type="button" onclick="appendLearningCalculator('÷')">÷</button>
+
+              <button class="calc-key calc-number" type="button" onclick="appendLearningCalculator('4')">4</button>
+              <button class="calc-key calc-number" type="button" onclick="appendLearningCalculator('5')">5</button>
+              <button class="calc-key calc-number" type="button" onclick="appendLearningCalculator('6')">6</button>
+              <button class="calc-key calc-operator" type="button" onclick="appendLearningCalculator('×')">×</button>
+
+              <button class="calc-key calc-number" type="button" onclick="appendLearningCalculator('1')">1</button>
+              <button class="calc-key calc-number" type="button" onclick="appendLearningCalculator('2')">2</button>
+              <button class="calc-key calc-number" type="button" onclick="appendLearningCalculator('3')">3</button>
+              <button class="calc-key calc-operator" type="button" onclick="appendLearningCalculator('-')">−</button>
+
+              <button class="calc-key calc-number" type="button" onclick="appendLearningCalculator('0')">0</button>
+              <button class="calc-key" type="button" onclick="appendLearningCalculator('.')">.</button>
+              <button class="calc-key" type="button" onclick="appendLearningCalculator('%')">%</button>
+              <button class="calc-key calc-operator" type="button" onclick="appendLearningCalculator('+')">+</button>
+
+              <button class="calc-key" type="button" onclick="insertLearningCalculatorAnswer()">Ans</button>
+              <button class="calc-key" type="button" onclick="appendLearningCalculator('^2')">x²</button>
+              <button class="calc-key calc-equals calc-span-two" type="button" onclick="calculateLearningCalculator()">=</button>
+            </div>
+
+            <div class="calculator-history-box">
+              <div class="calculator-history-heading">
+                <strong>Recent calculations</strong>
+                <button type="button" onclick="clearLearningCalculatorHistory()">Clear history</button>
+              </div>
+              <ol id="learningCalculatorHistory"></ol>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="learning-tool-panel hidden" id="learningToolNotes">
+          <div class="learning-tool-panel-heading">
+            <div>
+              <h4>📝 Sticky Notes</h4>
+              <p>Your notes autosave for this learning week on this device.</p>
+            </div>
+            <button class="tool-close-button" type="button" onclick="toggleLearningTool('notes')">×</button>
+          </div>
+
+          <textarea
+            class="learning-notes-textarea"
+            id="learningNotesInput"
+            aria-label="Learning notes"
+            oninput="saveLearningNotes()"
+          ></textarea>
+
+          <div class="learning-notes-actions">
+            <span id="learningNotesStatus">Ready</span>
+            <div>
+              <button class="button button-light button-small" type="button" onclick="copyLearningNotes()">Copy Notes</button>
+              <button class="button button-light button-small" type="button" onclick="clearLearningNotes()">Clear Notes</button>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="learning-tool-panel hidden" id="learningToolWhiteboard">
+          <div class="learning-tool-panel-heading">
+            <div>
+              <h4>🖍️ Whiteboard</h4>
+              <p>Sketch a process stream, system boundary, arrows or calculation steps.</p>
+            </div>
+            <button class="tool-close-button" type="button" onclick="toggleLearningTool('whiteboard')">×</button>
+          </div>
+
+          <div class="whiteboard-toolbar" role="toolbar" aria-label="Whiteboard controls">
+            <button class="whiteboard-tool active" id="whiteboardPenButton" type="button" onclick="setWhiteboardTool('pen')">✏️ Pen</button>
+            <button class="whiteboard-tool" id="whiteboardEraserButton" type="button" onclick="setWhiteboardTool('eraser')">🧽 Eraser</button>
+            <label class="whiteboard-colour-label">Colour <input id="whiteboardColourInput" type="color" value="#172554" onchange="setWhiteboardColour(this.value)"></label>
+            <button class="whiteboard-tool" type="button" onclick="undoWhiteboard()">↶ Undo</button>
+            <button class="whiteboard-tool" type="button" onclick="redoWhiteboard()">↷ Redo</button>
+            <button class="whiteboard-tool" type="button" onclick="toggleWhiteboardGrid()"># Grid</button>
+            <button class="whiteboard-tool" type="button" onclick="clearWhiteboard()">Clear</button>
+            <button class="whiteboard-tool whiteboard-save" type="button" onclick="saveWhiteboardAsPng()">Save PNG</button>
+          </div>
+
+          <div class="whiteboard-canvas-wrap">
+            <canvas id="learningWhiteboardCanvas" aria-label="Drawing whiteboard"></canvas>
+          </div>
+
+          <p class="whiteboard-status" id="whiteboardStatus">
+            Whiteboard saves automatically on this device.
+          </p>
+        </div>
+      </section>
+
+
       ${questionCards}
 
     </div>
@@ -3064,7 +3281,900 @@ function showPracticeHint(questionIndex) {
     "Hint: " + question.hint;
 
   hintBox.classList.remove("hidden");
+  currentQuestionHintUsed[questionIndex] = true;
 }
+
+
+/* =========================================================
+   22. LEARNING TOOLS
+   Calculator, autosaving notes and whiteboard.
+   ========================================================= */
+
+const learningNotesTemplate = `Known values:
+
+Unknown:
+
+Formula:
+
+Substitution:
+
+Final answer:`;
+
+
+function initialiseLearningTools() {
+  learningCalculatorExpression = "";
+  loadLearningCalculatorHistory();
+  renderLearningCalculator();
+
+  const notesInput =
+    document.getElementById("learningNotesInput");
+
+  if (notesInput) {
+    notesInput.value =
+      localStorage.getItem(getLearningNotesKey()) ||
+      learningNotesTemplate;
+  }
+
+  whiteboardLoadedWeek = null;
+}
+
+
+function toggleLearningTool(toolName) {
+  const panelIds = {
+    calculator: "learningToolCalculator",
+    notes: "learningToolNotes",
+    whiteboard: "learningToolWhiteboard"
+  };
+
+  const targetId = panelIds[toolName];
+  const target = document.getElementById(targetId);
+
+  if (!target) {
+    return;
+  }
+
+  const willOpen = target.classList.contains("hidden");
+
+  Object.values(panelIds).forEach(panelId => {
+    const panel = document.getElementById(panelId);
+
+    if (panel && panelId !== targetId) {
+      panel.classList.add("hidden");
+    }
+  });
+
+  target.classList.toggle("hidden");
+
+  if (willOpen) {
+    target.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest"
+    });
+
+    if (toolName === "whiteboard") {
+      window.setTimeout(initialiseWhiteboard, 60);
+    }
+  }
+}
+
+
+/* ---------------- CALCULATOR ---------------- */
+
+function getLearningCalculatorHistoryKey() {
+  return "foundationMathHubCalculatorHistory_" + selectedWeekId;
+}
+
+
+function loadLearningCalculatorHistory() {
+  try {
+    learningCalculatorHistory = JSON.parse(
+      localStorage.getItem(getLearningCalculatorHistoryKey())
+    ) || [];
+  } catch (error) {
+    learningCalculatorHistory = [];
+  }
+
+  renderLearningCalculatorHistory();
+}
+
+
+function saveLearningCalculatorHistory() {
+  localStorage.setItem(
+    getLearningCalculatorHistoryKey(),
+    JSON.stringify(learningCalculatorHistory.slice(0, 6))
+  );
+}
+
+
+function renderLearningCalculator() {
+  const display =
+    document.getElementById("learningCalculatorDisplay");
+
+  if (display) {
+    display.textContent =
+      learningCalculatorExpression || "0";
+  }
+}
+
+
+function setLearningCalculatorStatus(message) {
+  const status =
+    document.getElementById("learningCalculatorStatus");
+
+  if (status) {
+    status.textContent = message;
+  }
+}
+
+
+function appendLearningCalculator(value) {
+  learningCalculatorExpression += value;
+  renderLearningCalculator();
+  setLearningCalculatorStatus("Typing…");
+}
+
+
+function clearLearningCalculator() {
+  learningCalculatorExpression = "";
+  renderLearningCalculator();
+  setLearningCalculatorStatus("Ready · Report final answers to 2 d.p.");
+}
+
+
+function deleteLearningCalculatorValue() {
+  learningCalculatorExpression =
+    learningCalculatorExpression.slice(0, -1);
+
+  renderLearningCalculator();
+  setLearningCalculatorStatus("Last entry deleted");
+}
+
+
+function insertLearningCalculatorAnswer() {
+  learningCalculatorExpression +=
+    formatLearningCalculatorNumber(
+      learningCalculatorLastAnswer
+    );
+
+  renderLearningCalculator();
+  setLearningCalculatorStatus("Previous answer inserted");
+}
+
+
+function formatLearningCalculatorNumber(value) {
+  if (Number.isInteger(value)) {
+    return String(value);
+  }
+
+  return Number(value.toPrecision(12)).toString();
+}
+
+
+function tokeniseLearningExpression(expression) {
+  const normalised = expression
+    .replaceAll("×", "*")
+    .replaceAll("÷", "/")
+    .replace(/\s+/g, "");
+
+  const tokens = [];
+  let index = 0;
+
+  while (index < normalised.length) {
+    const character = normalised[index];
+
+    if (/[0-9.]/.test(character)) {
+      let numberText = "";
+      let decimalCount = 0;
+
+      while (
+        index < normalised.length &&
+        /[0-9.]/.test(normalised[index])
+      ) {
+        if (normalised[index] === ".") {
+          decimalCount += 1;
+        }
+
+        numberText += normalised[index];
+        index += 1;
+      }
+
+      if (decimalCount > 1 || numberText === ".") {
+        throw new Error("Invalid number");
+      }
+
+      tokens.push({
+        type: "number",
+        value: Number(numberText)
+      });
+
+      continue;
+    }
+
+    if ("+-*/^()%".includes(character)) {
+      tokens.push({
+        type: character,
+        value: character
+      });
+
+      index += 1;
+      continue;
+    }
+
+    throw new Error("Unsupported character");
+  }
+
+  return tokens;
+}
+
+
+function evaluateLearningExpression(expression) {
+  const tokens = tokeniseLearningExpression(expression);
+  let position = 0;
+
+  function peek(type) {
+    return tokens[position] && tokens[position].type === type;
+  }
+
+  function consume(type) {
+    if (!peek(type)) {
+      throw new Error("Unexpected input");
+    }
+
+    return tokens[position++];
+  }
+
+  function parseExpression() {
+    let value = parseTerm();
+
+    while (peek("+") || peek("-")) {
+      const operator = tokens[position++].type;
+      const rightValue = parseTerm();
+      value = operator === "+"
+        ? value + rightValue
+        : value - rightValue;
+    }
+
+    return value;
+  }
+
+  function parseTerm() {
+    let value = parsePower();
+
+    while (peek("*") || peek("/")) {
+      const operator = tokens[position++].type;
+      const rightValue = parsePower();
+
+      if (operator === "/" && rightValue === 0) {
+        throw new Error("Cannot divide by zero");
+      }
+
+      value = operator === "*"
+        ? value * rightValue
+        : value / rightValue;
+    }
+
+    return value;
+  }
+
+  function parsePower() {
+    let value = parseUnary();
+
+    if (peek("^")) {
+      consume("^");
+      value = Math.pow(value, parsePower());
+    }
+
+    return value;
+  }
+
+  function parseUnary() {
+    if (peek("+")) {
+      consume("+");
+      return parseUnary();
+    }
+
+    if (peek("-")) {
+      consume("-");
+      return -parseUnary();
+    }
+
+    return parsePostfix();
+  }
+
+  function parsePostfix() {
+    let value = parsePrimary();
+
+    while (peek("%")) {
+      consume("%");
+      value /= 100;
+    }
+
+    return value;
+  }
+
+  function parsePrimary() {
+    if (peek("number")) {
+      return consume("number").value;
+    }
+
+    if (peek("(")) {
+      consume("(");
+      const value = parseExpression();
+      consume(")");
+      return value;
+    }
+
+    throw new Error("Number or bracket expected");
+  }
+
+  if (tokens.length === 0) {
+    throw new Error("Empty expression");
+  }
+
+  const result = parseExpression();
+
+  if (position !== tokens.length || !Number.isFinite(result)) {
+    throw new Error("Invalid expression");
+  }
+
+  return result;
+}
+
+
+function calculateLearningCalculator() {
+  if (!learningCalculatorExpression.trim()) {
+    return;
+  }
+
+  const originalExpression = learningCalculatorExpression;
+
+  try {
+    const result =
+      evaluateLearningExpression(originalExpression);
+
+    learningCalculatorLastAnswer = result;
+    learningCalculatorExpression =
+      formatLearningCalculatorNumber(result);
+
+    learningCalculatorHistory.unshift({
+      expression: originalExpression,
+      result: learningCalculatorExpression
+    });
+
+    learningCalculatorHistory =
+      learningCalculatorHistory.slice(0, 6);
+
+    saveLearningCalculatorHistory();
+    renderLearningCalculator();
+    renderLearningCalculatorHistory();
+
+    setLearningCalculatorStatus(
+      "Answer = " + learningCalculatorExpression +
+      " · Round the reported answer to 2 d.p."
+    );
+  } catch (error) {
+    setLearningCalculatorStatus(
+      error.message === "Cannot divide by zero"
+        ? "Math error · Cannot divide by zero"
+        : "Check the calculation entry and brackets"
+    );
+  }
+}
+
+
+function renderLearningCalculatorHistory() {
+  const historyList =
+    document.getElementById("learningCalculatorHistory");
+
+  if (!historyList) {
+    return;
+  }
+
+  historyList.innerHTML = learningCalculatorHistory.length
+    ? learningCalculatorHistory
+        .map(item => `
+          <li>
+            <span>${escapeHtml(item.expression)}</span>
+            <strong>= ${escapeHtml(item.result)}</strong>
+          </li>
+        `)
+        .join("")
+    : "<li class=\"empty-history\">No calculations yet.</li>";
+}
+
+
+function clearLearningCalculatorHistory() {
+  learningCalculatorHistory = [];
+  saveLearningCalculatorHistory();
+  renderLearningCalculatorHistory();
+}
+
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+
+/* ---------------- STICKY NOTES ---------------- */
+
+function getLearningNotesKey() {
+  return "foundationMathHubNotes_" + selectedWeekId;
+}
+
+
+function saveLearningNotes() {
+  const notesInput =
+    document.getElementById("learningNotesInput");
+
+  const status =
+    document.getElementById("learningNotesStatus");
+
+  if (!notesInput) {
+    return;
+  }
+
+  localStorage.setItem(
+    getLearningNotesKey(),
+    notesInput.value
+  );
+
+  if (status) {
+    status.textContent = "Saved on this device";
+  }
+}
+
+
+async function copyLearningNotes() {
+  const notesInput =
+    document.getElementById("learningNotesInput");
+
+  if (!notesInput) {
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(notesInput.value);
+    showToast("Notes copied.");
+  } catch (error) {
+    notesInput.select();
+    document.execCommand("copy");
+    showToast("Notes copied.");
+  }
+}
+
+
+function clearLearningNotes() {
+  const confirmed = window.confirm(
+    "Clear your saved notes for this week?"
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  const notesInput =
+    document.getElementById("learningNotesInput");
+
+  if (notesInput) {
+    notesInput.value = learningNotesTemplate;
+  }
+
+  saveLearningNotes();
+  showToast("Notes cleared and the template was restored.");
+}
+
+
+/* ---------------- WHITEBOARD ---------------- */
+
+function getWhiteboardStorageKey() {
+  return "foundationMathHubWhiteboard_" + selectedWeekId;
+}
+
+
+function loadWhiteboard() {
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem(getWhiteboardStorageKey())
+    );
+
+    whiteboardStrokes =
+      Array.isArray(saved?.strokes)
+        ? saved.strokes
+        : [];
+
+    whiteboardGridVisible =
+      saved?.gridVisible !== false;
+  } catch (error) {
+    whiteboardStrokes = [];
+    whiteboardGridVisible = true;
+  }
+
+  whiteboardRedoStack = [];
+  whiteboardLoadedWeek = selectedWeekId;
+}
+
+
+function saveWhiteboard() {
+  localStorage.setItem(
+    getWhiteboardStorageKey(),
+    JSON.stringify({
+      strokes: whiteboardStrokes.slice(-250),
+      gridVisible: whiteboardGridVisible
+    })
+  );
+
+  const status =
+    document.getElementById("whiteboardStatus");
+
+  if (status) {
+    status.textContent =
+      "Whiteboard saved automatically on this device.";
+  }
+}
+
+
+function initialiseWhiteboard() {
+  const canvas =
+    document.getElementById("learningWhiteboardCanvas");
+
+  if (!canvas) {
+    return;
+  }
+
+  if (whiteboardLoadedWeek !== selectedWeekId) {
+    loadWhiteboard();
+  }
+
+  if (!canvas.dataset.ready) {
+    canvas.dataset.ready = "true";
+    canvas.style.touchAction = "none";
+
+    canvas.addEventListener("pointerdown", startWhiteboardStroke);
+    canvas.addEventListener("pointermove", continueWhiteboardStroke);
+    canvas.addEventListener("pointerup", finishWhiteboardStroke);
+    canvas.addEventListener("pointercancel", finishWhiteboardStroke);
+  }
+
+  resizeWhiteboardCanvas();
+  updateWhiteboardToolButtons();
+}
+
+
+function resizeWhiteboardCanvas() {
+  const canvas =
+    document.getElementById("learningWhiteboardCanvas");
+
+  if (!canvas) {
+    return;
+  }
+
+  const width = Math.max(
+    300,
+    Math.floor(canvas.parentElement.clientWidth)
+  );
+
+  const height = width < 600 ? 360 : 460;
+  const pixelRatio = Math.max(1, window.devicePixelRatio || 1);
+
+  canvas.style.width = width + "px";
+  canvas.style.height = height + "px";
+  canvas.width = Math.floor(width * pixelRatio);
+  canvas.height = Math.floor(height * pixelRatio);
+
+  canvas.dataset.logicalWidth = String(width);
+  canvas.dataset.logicalHeight = String(height);
+  canvas.dataset.pixelRatio = String(pixelRatio);
+
+  renderWhiteboard();
+}
+
+
+function getWhiteboardPoint(event) {
+  const canvas =
+    document.getElementById("learningWhiteboardCanvas");
+
+  const rectangle = canvas.getBoundingClientRect();
+
+  return {
+    x: Math.min(1, Math.max(0,
+      (event.clientX - rectangle.left) / rectangle.width
+    )),
+    y: Math.min(1, Math.max(0,
+      (event.clientY - rectangle.top) / rectangle.height
+    ))
+  };
+}
+
+
+function startWhiteboardStroke(event) {
+  event.preventDefault();
+
+  const canvas = event.currentTarget;
+  canvas.setPointerCapture(event.pointerId);
+
+  whiteboardActiveStroke = {
+    tool: whiteboardTool,
+    colour: whiteboardColour,
+    width: whiteboardTool === "eraser" ? 26 : 3,
+    points: [getWhiteboardPoint(event)]
+  };
+
+  whiteboardRedoStack = [];
+  renderWhiteboard();
+}
+
+
+function continueWhiteboardStroke(event) {
+  if (!whiteboardActiveStroke) {
+    return;
+  }
+
+  event.preventDefault();
+
+  const nextPoint = getWhiteboardPoint(event);
+  const lastPoint =
+    whiteboardActiveStroke.points[
+      whiteboardActiveStroke.points.length - 1
+    ];
+
+  const distance = Math.hypot(
+    nextPoint.x - lastPoint.x,
+    nextPoint.y - lastPoint.y
+  );
+
+  if (
+    distance >= 0.002 &&
+    whiteboardActiveStroke.points.length < 1500
+  ) {
+    whiteboardActiveStroke.points.push(nextPoint);
+    renderWhiteboard();
+  }
+}
+
+
+function finishWhiteboardStroke(event) {
+  if (!whiteboardActiveStroke) {
+    return;
+  }
+
+  event.preventDefault();
+
+  if (whiteboardActiveStroke.points.length === 1) {
+    whiteboardActiveStroke.points.push(
+      whiteboardActiveStroke.points[0]
+    );
+  }
+
+  whiteboardStrokes.push(whiteboardActiveStroke);
+  whiteboardActiveStroke = null;
+  saveWhiteboard();
+  renderWhiteboard();
+}
+
+
+function drawWhiteboardGrid(context, width, height) {
+  context.save();
+  context.strokeStyle = "#e5e7eb";
+  context.lineWidth = 1;
+
+  for (let x = 24; x < width; x += 24) {
+    context.beginPath();
+    context.moveTo(x, 0);
+    context.lineTo(x, height);
+    context.stroke();
+  }
+
+  for (let y = 24; y < height; y += 24) {
+    context.beginPath();
+    context.moveTo(0, y);
+    context.lineTo(width, y);
+    context.stroke();
+  }
+
+  context.restore();
+}
+
+
+function drawWhiteboardStroke(
+  context,
+  stroke,
+  width,
+  height
+) {
+  if (!stroke.points.length) {
+    return;
+  }
+
+  context.save();
+  context.globalCompositeOperation =
+    stroke.tool === "eraser"
+      ? "destination-out"
+      : "source-over";
+
+  context.strokeStyle = stroke.colour;
+  context.lineWidth = stroke.width;
+  context.lineCap = "round";
+  context.lineJoin = "round";
+  context.beginPath();
+
+  stroke.points.forEach((point, index) => {
+    const x = point.x * width;
+    const y = point.y * height;
+
+    if (index === 0) {
+      context.moveTo(x, y);
+    } else {
+      context.lineTo(x, y);
+    }
+  });
+
+  context.stroke();
+  context.restore();
+}
+
+
+function renderWhiteboard() {
+  const canvas =
+    document.getElementById("learningWhiteboardCanvas");
+
+  if (!canvas || !canvas.width) {
+    return;
+  }
+
+  const context = canvas.getContext("2d");
+  const width = Number(canvas.dataset.logicalWidth);
+  const height = Number(canvas.dataset.logicalHeight);
+  const pixelRatio = Number(canvas.dataset.pixelRatio) || 1;
+
+  context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+  context.clearRect(0, 0, width, height);
+  context.fillStyle = "#ffffff";
+  context.fillRect(0, 0, width, height);
+
+  if (whiteboardGridVisible) {
+    drawWhiteboardGrid(context, width, height);
+  }
+
+  const layer = document.createElement("canvas");
+  layer.width = canvas.width;
+  layer.height = canvas.height;
+
+  const layerContext = layer.getContext("2d");
+  layerContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
+  const strokesToRender = whiteboardActiveStroke
+    ? [...whiteboardStrokes, whiteboardActiveStroke]
+    : whiteboardStrokes;
+
+  strokesToRender.forEach(stroke => {
+    drawWhiteboardStroke(layerContext, stroke, width, height);
+  });
+
+  context.drawImage(layer, 0, 0, width, height);
+}
+
+
+function setWhiteboardTool(tool) {
+  whiteboardTool = tool;
+  updateWhiteboardToolButtons();
+}
+
+
+function setWhiteboardColour(colour) {
+  whiteboardColour = colour;
+  setWhiteboardTool("pen");
+}
+
+
+function updateWhiteboardToolButtons() {
+  const penButton =
+    document.getElementById("whiteboardPenButton");
+
+  const eraserButton =
+    document.getElementById("whiteboardEraserButton");
+
+  if (penButton) {
+    penButton.classList.toggle(
+      "active",
+      whiteboardTool === "pen"
+    );
+  }
+
+  if (eraserButton) {
+    eraserButton.classList.toggle(
+      "active",
+      whiteboardTool === "eraser"
+    );
+  }
+}
+
+
+function undoWhiteboard() {
+  if (!whiteboardStrokes.length) {
+    return;
+  }
+
+  whiteboardRedoStack.push(
+    whiteboardStrokes.pop()
+  );
+
+  saveWhiteboard();
+  renderWhiteboard();
+}
+
+
+function redoWhiteboard() {
+  if (!whiteboardRedoStack.length) {
+    return;
+  }
+
+  whiteboardStrokes.push(
+    whiteboardRedoStack.pop()
+  );
+
+  saveWhiteboard();
+  renderWhiteboard();
+}
+
+
+function toggleWhiteboardGrid() {
+  whiteboardGridVisible = !whiteboardGridVisible;
+  saveWhiteboard();
+  renderWhiteboard();
+}
+
+
+function clearWhiteboard() {
+  const confirmed = window.confirm(
+    "Clear your whiteboard for this week?"
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  whiteboardStrokes = [];
+  whiteboardRedoStack = [];
+  saveWhiteboard();
+  renderWhiteboard();
+  showToast("Whiteboard cleared.");
+}
+
+
+function saveWhiteboardAsPng() {
+  const canvas =
+    document.getElementById("learningWhiteboardCanvas");
+
+  if (!canvas) {
+    return;
+  }
+
+  renderWhiteboard();
+
+  const link = document.createElement("a");
+  link.download =
+    `${selectedWeekId || "learning"}-whiteboard.png`;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+
+
+window.addEventListener("resize", () => {
+  const whiteboardPanel =
+    document.getElementById("learningToolWhiteboard");
+
+  if (
+    whiteboardPanel &&
+    !whiteboardPanel.classList.contains("hidden")
+  ) {
+    resizeWhiteboardCanvas();
+  }
+});
 
 
 /* =========================================================
@@ -3167,6 +4277,96 @@ function containsAcceptedUnit(
 
 
 /* =========================================================
+   MASTERY STAR HELPERS
+   ========================================================= */
+
+const masteryStarKeys = [
+  "formula",
+  "unit",
+  "practice",
+  "persistence",
+  "application"
+];
+
+
+function awardMasteryStar(starKey) {
+  if (!masteryStarKeys.includes(starKey)) {
+    return;
+  }
+
+  if (!studentProgress.masteryStars) {
+    studentProgress.masteryStars =
+      createEmptyProgress().masteryStars;
+  }
+
+  if (!studentProgress.masteryStars[starKey]) {
+    studentProgress.masteryStars[starKey] = true;
+    saveProgress();
+  }
+}
+
+
+function refreshAutomaticMasteryStars() {
+  if (selectedWeekId === "week-2") {
+    if (isActivityCompleted("composition")) {
+      awardMasteryStar("formula");
+    }
+
+    if (
+      isActivityCompleted("composition") &&
+      isActivityCompleted("flow-rates")
+    ) {
+      awardMasteryStar("practice");
+    }
+
+    if (
+      isActivityCompleted("integrated-stream") ||
+      isActivityCompleted("meb-challenge")
+    ) {
+      awardMasteryStar("application");
+    }
+
+    return;
+  }
+
+  /* Week 1 migration: map completed checkpoints to the five stars. */
+  const completedCount = getCompletedCheckpointCount();
+
+  masteryStarKeys.forEach((starKey, index) => {
+    if (completedCount > index) {
+      awardMasteryStar(starKey);
+    }
+  });
+}
+
+
+function getMasteryStarCount() {
+  refreshAutomaticMasteryStars();
+
+  return masteryStarKeys.filter(
+    starKey => studentProgress.masteryStars?.[starKey]
+  ).length;
+}
+
+
+function rewardTokenIsEarned() {
+  return (
+    getCompletedCheckpointCount() ===
+      getCurrentCheckpointIds().length &&
+    isActivityCompleted("official-quiz")
+  );
+}
+
+
+function getAvailableRewardTokenCount() {
+  return rewardTokenIsEarned() &&
+    !studentProgress.rewardTokenRedeemed
+      ? 1
+      : 0;
+}
+
+
+/* =========================================================
    23. CHECK A PRACTICE ANSWER
    ========================================================= */
 
@@ -3264,6 +4464,23 @@ function checkPracticeAnswer(questionIndex) {
       "feedback-message correct";
 
     questionCard.classList.add("correct");
+
+    if (
+      selectedWeekId === "week-2" &&
+      question.acceptedUnits.length > 0
+    ) {
+      awardMasteryStar("unit");
+    }
+
+    if (
+      selectedWeekId === "week-2" &&
+      (attempts > 0 || currentQuestionHintUsed[questionIndex])
+    ) {
+      awardMasteryStar("persistence");
+    }
+
+    updateStudentSummary();
+    renderWeeklyRewards();
   } else if (
     numberCorrect &&
     unitCorrect &&
@@ -3393,8 +4610,7 @@ function completeCurrentLesson() {
    ========================================================= */
 
 function showCelebration(activityId) {
-  currentBonusActivity =
-    activityId;
+  currentBonusActivity = activityId;
 
   const completedCount =
     getCompletedCheckpointCount();
@@ -3407,10 +4623,11 @@ function showCelebration(activityId) {
       )
     ];
 
+  refreshAutomaticMasteryStars();
+
   document.getElementById(
     "celebrationCharacter"
-  ).textContent =
-    level.character;
+  ).textContent = level.character;
 
   document.getElementById(
     "celebrationTitle"
@@ -3423,30 +4640,20 @@ function showCelebration(activityId) {
     "celebrationText"
   ).textContent =
     completedCount === getCurrentCheckpointIds().length
-      ? "You transformed into a Process Problem Solver and earned all five learning stars."
-      : "You earned one learning star and moved closer to the goal.";
+      ? "Your five checkpoints are complete. Submit the official quiz to earn the weekly Reward Token."
+      : "Good work. Your checkpoint progress and Mastery Stars have been updated.";
 
-  const rollButton =
-    document.getElementById(
-      "rollBonusButton"
-    );
+  document.getElementById(
+    "bonusResult"
+  ).textContent =
+    "You now have " + getMasteryStarCount() +
+    " of 5 Mastery Stars. Reward Tokens are not awarded by chance.";
 
-  const alreadyRolled =
-    studentProgress
-      .bonusRollsUsed
-      .includes(activityId);
+  const rewardButton =
+    document.getElementById("rollBonusButton");
 
-  rollButton.disabled =
-    alreadyRolled;
-
-  rollButton.textContent =
-    alreadyRolled
-      ? "Bonus Roll Already Used"
-      : "🎲 Roll the Learning Die";
-
-  document
-    .getElementById("bonusResult")
-    .classList.add("hidden");
+  rewardButton.disabled = false;
+  rewardButton.textContent = "View My Rewards";
 
   document
     .getElementById("celebrationModal")
@@ -3455,76 +4662,17 @@ function showCelebration(activityId) {
 
 
 /* =========================================================
-   27. MINI SNAKES AND LADDERS BONUS
+   27. OPEN THE REWARD CENTRE FROM THE COMPLETION MESSAGE
    ========================================================= */
 
 function rollBonusGame() {
-  if (!currentBonusActivity) {
-    return;
-  }
+  document
+    .getElementById("celebrationModal")
+    .classList.add("hidden");
 
-  if (
-    studentProgress
-      .bonusRollsUsed
-      .includes(currentBonusActivity)
-  ) {
-    return;
-  }
-
-  const roll =
-    Math.floor(
-      Math.random() * 6
-    ) + 1;
-
-  const resultBox =
-    document.getElementById(
-      "bonusResult"
-    );
-
-  let message = "";
-
-  if (roll <= 2) {
-    message =
-      "🎲 You rolled " +
-      roll +
-      ". 🐍 Snake square! Review one common mistake before continuing. Your learning progress remains safe.";
-  } else if (roll <= 4) {
-    message =
-      "🎲 You rolled " +
-      roll +
-      ". 🟦 Safe square! Continue making steady progress.";
-  } else {
-    message =
-      "🎲 You rolled " +
-      roll +
-      ". 🪜 Ladder! You earned one bonus token.";
-
-    studentProgress.bonusTokens += 1;
-  }
-
-  studentProgress
-    .bonusRollsUsed
-    .push(currentBonusActivity);
-
-  saveProgress();
-
-  resultBox.textContent =
-    message;
-
-  resultBox.classList.remove(
-    "hidden"
-  );
-
-  document.getElementById(
-    "rollBonusButton"
-  ).disabled = true;
-
-  document.getElementById(
-    "rollBonusButton"
-  ).textContent =
-    "Bonus Roll Completed";
-
+  showWeekDashboard();
   updateWholeWeek();
+  scrollToRewardCentre();
 }
 
 
@@ -3655,6 +4803,9 @@ function updateStudentSummary() {
   const completedCount =
     getCompletedCheckpointCount();
 
+  const masteryCount =
+    getMasteryStarCount();
+
   const level =
     studentLevels[
       Math.min(
@@ -3665,13 +4816,11 @@ function updateStudentSummary() {
 
   document.getElementById(
     "starCount"
-  ).textContent =
-    completedCount;
+  ).textContent = masteryCount;
 
   document.getElementById(
     "bonusTokenCount"
-  ).textContent =
-    studentProgress.bonusTokens;
+  ).textContent = getAvailableRewardTokenCount();
 
   document.getElementById(
     "checkpointSummary"
@@ -3680,39 +4829,33 @@ function updateStudentSummary() {
 
   document.getElementById(
     "heroCharacter"
-  ).textContent =
-    level.character;
+  ).textContent = level.character;
 
   document.getElementById(
     "studentMarker"
-  ).textContent =
-    level.character;
+  ).textContent = level.character;
 
   document.getElementById(
     "heroLevel"
-  ).textContent =
-    level.name;
+  ).textContent = level.name;
 
   if (completedCount === getCurrentCheckpointIds().length) {
     document.getElementById(
       "routeStatus"
-    ).textContent =
-      "🏁 Weekly goal completed!";
+    ).textContent = "🏁 Weekly goal completed!";
   } else {
     const nextCheckpointId =
       getCurrentCheckpointIds()[completedCount];
 
     const nextActivity =
       getCurrentActivities().find(
-        item =>
-          item.id === nextCheckpointId
+        item => item.id === nextCheckpointId
       );
 
     document.getElementById(
       "routeStatus"
     ).textContent =
-      "Next checkpoint: " +
-      nextActivity.routeLabel;
+      "Next checkpoint: " + nextActivity.routeLabel;
   }
 }
 
@@ -3725,23 +4868,99 @@ function renderWeeklyRewards() {
   document.getElementById(
     "rewardWeekTitle"
   ).textContent =
-    selectedWeek.number +
-    ": " +
-    selectedWeek.title;
+    selectedWeek.number + ": " + selectedWeek.title;
 
   document.getElementById(
     "rewardReleaseStatus"
+  ).textContent = selectedWeek.status;
+
+  const badgeTitle =
+    document.getElementById("masteryBadgeTitle");
+
+  if (badgeTitle) {
+    badgeTitle.textContent =
+      selectedWeek.number + " Process Problem Solver Badge";
+  }
+
+  const masteryCount = getMasteryStarCount();
+
+  document.getElementById(
+    "rewardMasteryCount"
+  ).textContent = masteryCount;
+
+  const starElementIds = {
+    formula: "masteryStarFormula",
+    unit: "masteryStarUnit",
+    practice: "masteryStarPractice",
+    persistence: "masteryStarPersistence",
+    application: "masteryStarApplication"
+  };
+
+  Object.entries(starElementIds).forEach(
+    ([starKey, elementId]) => {
+      const card = document.getElementById(elementId);
+
+      if (!card) {
+        return;
+      }
+
+      const earned =
+        Boolean(studentProgress.masteryStars?.[starKey]);
+
+      card.classList.toggle("earned", earned);
+
+      const icon = card.querySelector(".mastery-star-icon");
+
+      if (icon) {
+        icon.textContent = earned ? "⭐" : "☆";
+      }
+    }
+  );
+
+  const badgeUnlocked = masteryCount === 5;
+  const badgeBox = document.getElementById("masteryBadgeBox");
+
+  badgeBox.classList.toggle("unlocked", badgeUnlocked);
+
+  document.getElementById(
+    "masteryBadgeStatus"
   ).textContent =
-    selectedWeek.status;
+    badgeUnlocked
+      ? "🏅 Badge unlocked"
+      : "Badge in progress";
+
+  const tokenStatus =
+    document.getElementById("rewardTokenStatus");
+
+  const redeemButton =
+    document.getElementById("redeemTokenButton");
+
+  if (studentProgress.rewardTokenRedeemed) {
+    tokenStatus.textContent =
+      "Token redeemed on this device. Lecturer confirmation is still the official record.";
+
+    redeemButton.disabled = true;
+    redeemButton.textContent = "Token Redeemed";
+  } else if (rewardTokenIsEarned()) {
+    tokenStatus.textContent =
+      "Reward Token earned! Show this screen to your lecturer before using the five-minute privilege.";
+
+    redeemButton.disabled = false;
+    redeemButton.textContent = "Use My Token";
+  } else {
+    tokenStatus.textContent =
+      "Complete all five checkpoints and submit the official quiz to earn one token.";
+
+    redeemButton.disabled = true;
+    redeemButton.textContent = "Token Locked";
+  }
 
   const currentWeekIndex =
     weeks.findIndex(
-      week =>
-        week.id === selectedWeekId
+      week => week.id === selectedWeekId
     );
 
-  const nextWeek =
-    weeks[currentWeekIndex + 1];
+  const nextWeek = weeks[currentWeekIndex + 1];
 
   document.getElementById(
     "nextReleaseText"
@@ -3749,6 +4968,65 @@ function renderWeeklyRewards() {
     nextWeek
       ? nextWeek.releaseNote
       : "This is the final scheduled learning week.";
+}
+
+
+function scrollToRewardCentre() {
+  showWeekDashboard();
+  updateWholeWeek();
+
+  window.setTimeout(() => {
+    document.getElementById("rewardSection")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }, 40);
+}
+
+
+function scrollToActivities() {
+  showWeekDashboard();
+
+  window.setTimeout(() => {
+    document.getElementById("activitiesSection")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }, 40);
+}
+
+
+function redeemRewardToken() {
+  if (!rewardTokenIsEarned()) {
+    showToast(
+      "Complete all checkpoints and the official quiz before using the token."
+    );
+    return;
+  }
+
+  if (studentProgress.rewardTokenRedeemed) {
+    showToast("This weekly token is already marked as redeemed.");
+    return;
+  }
+
+  const confirmed = window.confirm(
+    "Only continue after your lecturer approves the five-minute privilege. Mark this Reward Token as redeemed?"
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  studentProgress.rewardTokenRedeemed = true;
+  studentProgress.rewardTokenRedeemedAt =
+    new Date().toISOString();
+
+  saveProgress();
+  updateWholeWeek();
+
+  showToast(
+    "Reward Token marked as redeemed on this device."
+  );
 }
 
 
@@ -3868,12 +5146,16 @@ function updateEvidenceDocument() {
   document.getElementById(
     "evidenceStars"
   ).textContent =
-    completedCount + " / " + getCurrentCheckpointIds().length;
+    getMasteryStarCount() + " / 5";
 
   document.getElementById(
     "evidenceTokens"
   ).textContent =
-    studentProgress.bonusTokens;
+    rewardTokenIsEarned()
+      ? studentProgress.rewardTokenRedeemed
+        ? "1 (Redeemed)"
+        : "1"
+      : "0";
 
   document.getElementById(
     "evidenceLevel"
@@ -4002,6 +5284,12 @@ function resetStudentProgress() {
   currentLessonId = null;
   currentQuestionResults = {};
   currentQuestionAttempts = {};
+  currentQuestionHintUsed = {};
+  whiteboardLoadedWeek = null;
+
+  localStorage.removeItem(getLearningNotesKey());
+  localStorage.removeItem(getWhiteboardStorageKey());
+  localStorage.removeItem(getLearningCalculatorHistoryKey());
 
   returnToActivities();
 
@@ -4130,6 +5418,14 @@ document.getElementById(
 ).addEventListener(
   "click",
   rollBonusGame
+);
+
+
+document.getElementById(
+  "redeemTokenButton"
+).addEventListener(
+  "click",
+  redeemRewardToken
 );
 
 
