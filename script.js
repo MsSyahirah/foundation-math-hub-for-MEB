@@ -1,39 +1,53 @@
 /* =========================================================
    FOUNDATION MATH HUB
-   MULTI-WEEK WEBSITE
+   MULTI-WEEK WEBSITE — WEEK 1 AND WEEK 2
 
-   The green comments explain what each section controls.
+   Week 1 remains unchanged.
+   Week 2 adds learning choices, guided calculations and
+   the new Edcafe resources.
    ========================================================= */
 
 
 /* =========================================================
    1. ACTIVITY LINKS
-
-   These are the student links for Edcafe and Microsoft Forms.
    ========================================================= */
 
 const websiteLinks = {
-  flashcards:
-    "https://app.edcafe.ai/flashcards/6a5cc6d2c039e008d0265d68",
+  "week-1": {
+    flashcards:
+      "https://app.edcafe.ai/flashcards/6a5cc6d2c039e008d0265d68",
 
-  practiceQuiz:
-    "https://app.edcafe.ai/quizzes/6a5cc92ba63cac6f1f1c5630",
+    practiceQuiz:
+      "https://app.edcafe.ai/quizzes/6a5cc92ba63cac6f1f1c5630",
 
-  officialQuiz:
-    "https://forms.office.com/r/ggAmQUyqej"
+    officialQuiz:
+      "https://forms.office.com/r/ggAmQUyqej"
+  },
+
+  "week-2": {
+    read:
+      "https://app.edcafe.ai/slidedeck/6a65d9a004b551af8b1fe303",
+
+    listen:
+      "https://app.edcafe.ai/share/ai-speech/week-2-listen:-composition,-flow-rates-and-molarity-6a65e0d604b551af8b1ff1d7",
+
+    watch:
+      "",
+
+    flashcards:
+      "https://app.edcafe.ai/share/flashcards/week-2-optional-flashcards:-composition,-flow-rates-and-molarity-6a65e50c04b551af8b1ffdad",
+
+    practiceQuiz:
+      "https://app.edcafe.ai/share/quiz/week-2-practice-quiz:-composition,-flow-rates-and-molarity-6a65e59404b551af8b1fff86",
+
+    officialQuiz:
+      "https://forms.cloud.microsoft/r/fNZjGCHmNt"
+  }
 };
 
 
 /* =========================================================
    2. WEEKLY RELEASE SETTINGS
-
-   To release Week 2, change:
-
-   available: false
-
-   to:
-
-   available: true
    ========================================================= */
 
 const weeks = [
@@ -63,19 +77,24 @@ const weeks = [
   {
     id: "week-2",
     number: "Week 2",
-    title: "Composition and Component Flow",
+    title: "Composition, Flow Rates and Molarity",
     icon: "🧫",
     colour: "#8b5cf6",
 
     description:
-      "Mass percentage, mass fraction, component flow and molarity.",
+      "Mass and mole composition, component flow, process flow rates and molarity.",
 
-    available: false,
-    status: "Releases after Wednesday’s mass lecture",
-    releaseNote:
-      "Week 2 will be released after Wednesday’s mass lecture.",
+    available: true,
+    status: "Available now",
+    releaseNote: "Week 2 is available now.",
 
-    tags: []
+    tags: [
+      "🧪 Composition",
+      "⚖️ Mass Fraction",
+      "🔢 Mole Fraction",
+      "➡️ Flow Rates",
+      "🧴 Molarity"
+    ]
   },
 
   {
@@ -161,24 +180,30 @@ const weeks = [
 
 
 /* =========================================================
-   3. WEEK 1 CHECKPOINTS
-
-   These five activities award learning stars.
+   3. CHECKPOINTS FOR EACH WEEK
    ========================================================= */
 
-const checkpointIds = [
-  "fractions",
-  "formulae",
-  "units",
-  "calculator",
-  "meb-challenge"
-];
+const checkpointIdsByWeek = {
+  "week-1": [
+    "fractions",
+    "formulae",
+    "units",
+    "calculator",
+    "meb-challenge"
+  ],
+
+  "week-2": [
+    "learning-method",
+    "composition",
+    "flow-rates",
+    "integrated-stream",
+    "meb-challenge"
+  ]
+};
 
 
 /* =========================================================
    4. STUDENT LEVELS
-
-   The student becomes a scientist at the final goal.
    ========================================================= */
 
 const studentLevels = [
@@ -216,9 +241,6 @@ const studentLevels = [
 
 /* =========================================================
    5. WEEK 1 ACTIVITIES
-
-   prerequisites tells the website what students must finish
-   before the next activity becomes available.
    ========================================================= */
 
 const week1Activities = [
@@ -373,12 +395,194 @@ const week1Activities = [
   }
 ];
 
-
 /* =========================================================
-   6. WEEK 1 LESSON CONTENT
+   6. WEEK 2 ACTIVITIES
    ========================================================= */
 
-const lessons = {
+const week2Activities = [
+  {
+    id: "learning-method",
+    number: "Checkpoint 1",
+    title: "Choose Your Learning Method",
+    routeLabel: "Choose a Method",
+
+    icon: "🧭",
+    colour: "#8b5cf6",
+
+    description:
+      "Choose one main resource: Read the slides or Listen to the explanation. The Watch option is coming soon.",
+
+    type: "choice",
+    prerequisites: [],
+
+    choices: [
+      {
+        label: "Read the Slides",
+        icon: "📑",
+        linkKey: "read"
+      },
+
+      {
+        label: "Listen",
+        icon: "🔊",
+        linkKey: "listen"
+      },
+
+      {
+        label: "Watch",
+        icon: "🎥",
+        linkKey: "watch",
+        comingSoon: true
+      }
+    ]
+  },
+
+  {
+    id: "composition",
+    number: "Checkpoint 2",
+    title: "Composition and Fractions",
+    routeLabel: "Composition",
+
+    icon: "⚖️",
+    colour: "#2563eb",
+
+    description:
+      "Calculate mass fraction, mass percentage, mole fraction and component flow.",
+
+    type: "lesson",
+    prerequisites: ["learning-method"]
+  },
+
+  {
+    id: "flashcards",
+    number: "Optional Revision",
+    title: "Week 2 Optional Flashcards",
+
+    icon: "🃏",
+    colour: "#eab308",
+
+    description:
+      "Review composition, flow-rate and molarity formulas at your own pace.",
+
+    type: "external",
+    linkKey: "flashcards",
+    optional: true,
+    prerequisites: []
+  },
+
+  {
+    id: "flow-rates",
+    number: "Checkpoint 3",
+    title: "Flow Rates and Molarity",
+    routeLabel: "Flow and Molarity",
+
+    icon: "➡️",
+    colour: "#14b8a6",
+
+    description:
+      "Connect mass, volume, moles, density, molar mass and molarity.",
+
+    type: "lesson",
+    prerequisites: ["composition"]
+  },
+
+  {
+    id: "practice-quiz",
+    number: "Optional Revision",
+    title: "Week 2 Edcafe Practice Quiz",
+
+    icon: "🎯",
+    colour: "#ec4899",
+
+    description:
+      "Practise Week 2 questions with immediate feedback before the final challenge.",
+
+    type: "external",
+    linkKey: "practiceQuiz",
+    optional: true,
+    prerequisites: []
+  },
+
+  {
+    id: "integrated-stream",
+    number: "Checkpoint 4",
+    title: "Integrated Process Stream",
+    routeLabel: "Integrated Stream",
+
+    icon: "🏭",
+    colour: "#f97316",
+
+    description:
+      "Select and connect several relationships in one process-stream problem.",
+
+    type: "lesson",
+    prerequisites: ["flow-rates"]
+  },
+
+  {
+    id: "calculator-lab",
+    number: "Optional Support",
+    title: "Calculator Practice Lab",
+
+    icon: "🧮",
+    colour: "#64748b",
+
+    description:
+      "A separate calculator-entry practice page will be added later.",
+
+    type: "coming-soon",
+    optional: true,
+    prerequisites: []
+  },
+
+  {
+    id: "meb-challenge",
+    number: "Checkpoint 5",
+    title: "Week 2 MEB Challenge",
+    routeLabel: "MEB Challenge",
+
+    icon: "🧪",
+    colour: "#172554",
+
+    description:
+      "Apply composition, flow-rate and molarity mathematics in a final challenge.",
+
+    type: "lesson",
+    prerequisites: ["integrated-stream"]
+  },
+
+  {
+    id: "official-quiz",
+    number: "Official Submission",
+    title: "Week 2 Official Quiz — 50 Marks",
+
+    icon: "✅",
+    colour: "#16a34a",
+
+    description:
+      "Complete the official Microsoft Forms quiz and student feedback survey.",
+
+    type: "external",
+    linkKey: "officialQuiz",
+    official: true,
+
+    prerequisites: ["meb-challenge"]
+  }
+];
+
+
+const activitiesByWeek = {
+  "week-1": week1Activities,
+  "week-2": week2Activities
+};
+
+
+
+/* =========================================================
+   7. WEEK 1 LESSON CONTENT
+   ========================================================= */
+
+const week1Lessons = {
 
   /* -----------------------------------------------------
      FRACTIONS AND RATIOS
@@ -1058,6 +1262,634 @@ const lessons = {
   }
 };
 
+/* =========================================================
+   8. WEEK 2 LESSON CONTENT
+   ========================================================= */
+
+const week2Lessons = {
+
+  composition: {
+    badge: "Checkpoint 2",
+    title: "Composition and Fractions",
+    icon: "⚖️",
+
+    description:
+      "Describe a mixture using mass fraction, mass percentage, mole fraction and component flow.",
+
+    content: `
+      <div class="content-block">
+        <h3>1. What Is Chemical Composition?</h3>
+
+        <p>
+          A mixture contains two or more components. Composition tells us
+          how much of each component is present in the total mixture.
+        </p>
+
+        <div class="formula-grid">
+
+          <div class="mini-formula">
+            Mass fraction
+            <br><br>
+            x<sub>A</sub> =
+            mass of A ÷ total mass
+          </div>
+
+          <div class="mini-formula">
+            Mass percentage
+            <br><br>
+            x<sub>A</sub> × 100%
+          </div>
+
+          <div class="mini-formula">
+            Mole fraction
+            <br><br>
+            y<sub>A</sub> =
+            moles of A ÷ total moles
+          </div>
+
+        </div>
+      </div>
+
+
+      <div class="content-block">
+        <h3>2. Fraction and Percentage</h3>
+
+        <div class="formula-box">
+          Percentage ÷ 100 = Fraction
+          <br>
+          Fraction × 100% = Percentage
+        </div>
+
+        <p>
+          A fraction has no unit. The fractions of all components in a
+          complete mixture must add up to <strong>1.00</strong>.
+        </p>
+      </div>
+
+
+      <div class="example-box">
+        <h3>Worked Example: Component Mass Flow</h3>
+
+        <p>
+          A stream flows at 200 kg/h and contains 15% Component A.
+        </p>
+
+        <p>
+          <strong>Convert:</strong>
+          15% ÷ 100 = 0.15
+        </p>
+
+        <p>
+          <strong>Component A flow:</strong>
+          0.15 × 200 = 30.00 kg/h
+        </p>
+
+        <p>
+          <strong>Remaining component:</strong>
+          200.00 − 30.00 = 170.00 kg/h
+        </p>
+
+        <p>
+          <strong>Check:</strong>
+          30.00 + 170.00 = 200.00 kg/h
+        </p>
+      </div>
+
+
+      <div class="warning-box">
+        <h3>Common Mistakes</h3>
+
+        <ul>
+          <li>Use 0.15, not 15, when calculating 15% of a total.</li>
+          <li>Use mass values for mass fraction.</li>
+          <li>Use mole values for mole fraction.</li>
+          <li>Check that all fractions add up to 1.00.</li>
+        </ul>
+      </div>
+    `,
+
+    questions: [
+      {
+        question:
+          "Convert 25% into a mass fraction.",
+
+        hint:
+          "Divide the percentage by 100.",
+
+        expectedNumber: 0.25,
+
+        acceptedUnits: [],
+
+        displayAnswer:
+          "0.25"
+      },
+
+      {
+        question:
+          "A stream flows at 400 kg/h and contains 20% Component A. Calculate the mass flow rate of Component A.",
+
+        hint:
+          "Convert 20% into 0.20, then multiply by the total flow.",
+
+        expectedNumber: 80.00,
+
+        acceptedUnits: [
+          "kg/h"
+        ],
+
+        displayAnswer:
+          "80.00 kg/h"
+      },
+
+      {
+        question:
+          "A gas mixture contains 3 mol A, 5 mol B and 2 mol C. Calculate the mole fraction of A.",
+
+        hint:
+          "First calculate the total number of moles.",
+
+        expectedNumber: 0.30,
+
+        acceptedUnits: [],
+
+        displayAnswer:
+          "0.30"
+      }
+    ]
+  },
+
+
+  "flow-rates": {
+    badge: "Checkpoint 3",
+    title: "Flow Rates and Molarity",
+    icon: "➡️",
+
+    description:
+      "Use density, molar mass and molarity to convert between different descriptions of a flowing stream.",
+
+    content: `
+      <div class="content-block">
+        <h3>1. Three Types of Flow Rate</h3>
+
+        <div class="formula-grid">
+
+          <div class="mini-formula">
+            Mass flow rate
+            <br><br>
+            ṁ = mass ÷ time
+          </div>
+
+          <div class="mini-formula">
+            Volumetric flow rate
+            <br><br>
+            Q = volume ÷ time
+          </div>
+
+          <div class="mini-formula">
+            Molar flow rate
+            <br><br>
+            ṅ = moles ÷ time
+          </div>
+
+        </div>
+      </div>
+
+
+      <div class="content-block">
+        <h3>2. Converting Between Flow Rates</h3>
+
+        <div class="formula-grid">
+
+          <div class="mini-formula">
+            ṁ = ρQ
+          </div>
+
+          <div class="mini-formula">
+            ṅ = ṁ ÷ MW
+          </div>
+
+          <div class="mini-formula">
+            ṁ = ṅ × MW
+          </div>
+
+        </div>
+
+        <p>
+          Use density to connect volume flow and mass flow.
+          Use molar mass to connect mass flow and molar flow.
+        </p>
+      </div>
+
+
+      <div class="content-block">
+        <h3>3. Molarity</h3>
+
+        <div class="formula-grid">
+
+          <div class="mini-formula">
+            M = n ÷ V
+          </div>
+
+          <div class="mini-formula">
+            n = M × V
+          </div>
+
+          <div class="mini-formula">
+            ṅ<sub>solute</sub> = M × Q
+          </div>
+
+        </div>
+
+        <p>
+          Molarity uses litres. Convert millilitres into litres before
+          substituting into the formula.
+        </p>
+      </div>
+
+
+      <div class="example-box">
+        <h3>Worked Example: Density to Mass Flow</h3>
+
+        <p>
+          Density = 1050 kg/m³ and Q = 0.20 m³/min.
+        </p>
+
+        <p>
+          <strong>Formula:</strong>
+          ṁ = ρQ
+        </p>
+
+        <p>
+          <strong>Substitution:</strong>
+          ṁ = 1050 × 0.20
+        </p>
+
+        <p>
+          <strong>Final answer:</strong>
+          ṁ = 210.00 kg/min
+        </p>
+      </div>
+
+
+      <div class="warning-box">
+        <h3>Unit Check</h3>
+
+        <p>
+          (kg/m³)(m³/min) gives kg/min because the m³ units cancel.
+        </p>
+      </div>
+    `,
+
+    questions: [
+      {
+        question:
+          "A liquid has a density of 900 kg/m³ and flows at 0.50 m³/min. Calculate the mass flow rate.",
+
+        hint:
+          "Use Mass flow rate = Density × Volumetric flow rate.",
+
+        expectedNumber: 450.00,
+
+        acceptedUnits: [
+          "kg/min"
+        ],
+
+        displayAnswer:
+          "450.00 kg/min"
+      },
+
+      {
+        question:
+          "A carbon dioxide stream flows at 88.00 kg/h. Its molar mass is 44.00 kg/kmol. Calculate the molar flow rate.",
+
+        hint:
+          "Divide mass flow rate by molar mass.",
+
+        expectedNumber: 2.00,
+
+        acceptedUnits: [
+          "kmol/h"
+        ],
+
+        displayAnswer:
+          "2.00 kmol/h"
+      },
+
+      {
+        question:
+          "A 0.80 mol/L solution flows at 1.50 L/min. Calculate the molar flow rate of the solute.",
+
+        hint:
+          "Use Solute molar flow = Molarity × Volumetric flow rate.",
+
+        expectedNumber: 1.20,
+
+        acceptedUnits: [
+          "mol/min"
+        ],
+
+        displayAnswer:
+          "1.20 mol/min"
+      }
+    ]
+  },
+
+
+  "integrated-stream": {
+    badge: "Checkpoint 4",
+    title: "Integrated Process Stream",
+    icon: "🏭",
+
+    description:
+      "Connect composition, flow rate, density, molar mass and molarity in a logical calculation pathway.",
+
+    content: `
+      <div class="content-block">
+        <h3>The Integrated Calculation Pathway</h3>
+
+        <ol>
+          <li>Identify the required final quantity.</li>
+          <li>List all known values and units.</li>
+          <li>Convert percentages into fractions.</li>
+          <li>Make units compatible.</li>
+          <li>Select the first relationship.</li>
+          <li>Use its answer in the next relationship.</li>
+          <li>Check totals and final units.</li>
+        </ol>
+      </div>
+
+
+      <div class="example-box">
+        <h3>Example 1: Mass Composition to Mole Composition</h3>
+
+        <p>
+          A 100 kg/h gas stream contains 44 kg/h CO₂ and 56 kg/h N₂.
+        </p>
+
+        <p>
+          CO₂ molar flow = 44 ÷ 44 = 1.00 kmol/h
+        </p>
+
+        <p>
+          N₂ molar flow = 56 ÷ 28 = 2.00 kmol/h
+        </p>
+
+        <p>
+          Total molar flow = 3.00 kmol/h
+        </p>
+
+        <p>
+          yCO₂ = 1 ÷ 3 = 0.33 and yN₂ = 2 ÷ 3 = 0.67
+        </p>
+      </div>
+
+
+      <div class="example-box">
+        <h3>Example 2: Molarity to Solute Mass Flow</h3>
+
+        <p>
+          A 0.50 mol/L NaCl solution flows at 2.00 L/min.
+          MW of NaCl = 58.44 g/mol.
+        </p>
+
+        <p>
+          Solute molar flow = 0.50 × 2.00 = 1.00 mol/min
+        </p>
+
+        <p>
+          Solute mass flow = 1.00 × 58.44 = 58.44 g/min
+        </p>
+      </div>
+
+
+      <div class="success-box">
+        <h3>Reasonableness Checks</h3>
+
+        <ul>
+          <li>Composition fractions should total 1.00.</li>
+          <li>Component flows should total the full stream flow.</li>
+          <li>Units should cancel logically.</li>
+          <li>Do not round intermediate values too early.</li>
+        </ul>
+      </div>
+    `,
+
+    questions: [
+      {
+        question:
+          "A gas stream contains 44.00 kg/h CO₂ and 56.00 kg/h N₂. Their molar masses are 44.00 kg/kmol and 28.00 kg/kmol. Calculate the mole fraction of CO₂.",
+
+        hint:
+          "Convert each component mass flow into molar flow, then divide the CO₂ molar flow by the total molar flow.",
+
+        expectedNumber: 0.33,
+
+        acceptedUnits: [],
+
+        displayAnswer:
+          "0.33"
+      },
+
+      {
+        question:
+          "A 0.50 mol/L sodium chloride solution flows at 2.00 L/min. The molar mass of NaCl is 58.44 g/mol. Calculate the NaCl mass flow rate.",
+
+        hint:
+          "First calculate molar flow using M × Q, then multiply by molar mass.",
+
+        expectedNumber: 58.44,
+
+        acceptedUnits: [
+          "g/min"
+        ],
+
+        displayAnswer:
+          "58.44 g/min"
+      }
+    ]
+  },
+
+
+  "meb-challenge": {
+    badge: "Checkpoint 5",
+    title: "Week 2 MEB Challenge",
+    icon: "🧪",
+
+    description:
+      "Apply the Week 2 relationships independently before attempting the official 50-mark quiz.",
+
+    content: `
+      <div class="success-box">
+        <h3>Final Week 2 Mission</h3>
+
+        <p>
+          For each calculation, show:
+        </p>
+
+        <ol>
+          <li>Known values</li>
+          <li>Required quantity</li>
+          <li>Formula</li>
+          <li>Substitution</li>
+          <li>Final answer with unit</li>
+          <li>A total or unit check where relevant</li>
+        </ol>
+      </div>
+
+
+      <div class="content-block">
+        <h3>Week 2 Formula Summary</h3>
+
+        <div class="formula-grid">
+
+          <div class="mini-formula">
+            x<sub>A</sub> =
+            mass A ÷ total mass
+          </div>
+
+          <div class="mini-formula">
+            y<sub>A</sub> =
+            moles A ÷ total moles
+          </div>
+
+          <div class="mini-formula">
+            ṁ = ρQ
+          </div>
+
+          <div class="mini-formula">
+            ṅ = ṁ ÷ MW
+          </div>
+
+          <div class="mini-formula">
+            M = n ÷ V
+          </div>
+
+          <div class="mini-formula">
+            ṅ<sub>solute</sub> = MQ
+          </div>
+
+        </div>
+      </div>
+    `,
+
+    questions: [
+      {
+        question:
+          "Convert 18% into a mass fraction.",
+
+        hint:
+          "Divide by 100.",
+
+        expectedNumber: 0.18,
+
+        acceptedUnits: [],
+
+        displayAnswer:
+          "0.18"
+      },
+
+      {
+        question:
+          "Convert a mole fraction of 0.35 into mole percentage.",
+
+        hint:
+          "Multiply the fraction by 100%.",
+
+        expectedNumber: 35.00,
+
+        acceptedUnits: [
+          "%"
+        ],
+
+        displayAnswer:
+          "35.00%"
+      },
+
+      {
+        question:
+          "A liquid with a density of 800 kg/m³ flows at 0.25 m³/min. Calculate its mass flow rate.",
+
+        hint:
+          "Use ṁ = ρQ.",
+
+        expectedNumber: 200.00,
+
+        acceptedUnits: [
+          "kg/min"
+        ],
+
+        displayAnswer:
+          "200.00 kg/min"
+      },
+
+      {
+        question:
+          "A gas flows at 6.00 kmol/h and has an average molar mass of 30.00 kg/kmol. Calculate the mass flow rate.",
+
+        hint:
+          "Use Mass flow rate = Molar flow rate × Molar mass.",
+
+        expectedNumber: 180.00,
+
+        acceptedUnits: [
+          "kg/h"
+        ],
+
+        displayAnswer:
+          "180.00 kg/h"
+      },
+
+      {
+        question:
+          "A 0.40 mol/L solution flows at 3.00 L/min. The solute molar mass is 50.00 g/mol. Calculate the solute mass flow rate.",
+
+        hint:
+          "First calculate solute molar flow using M × Q, then multiply by molar mass.",
+
+        expectedNumber: 60.00,
+
+        acceptedUnits: [
+          "g/min"
+        ],
+
+        displayAnswer:
+          "60.00 g/min"
+      }
+    ]
+  }
+};
+
+
+const lessonsByWeek = {
+  "week-1": week1Lessons,
+  "week-2": week2Lessons
+};
+
+
+/* =========================================================
+   CURRENT-WEEK HELPERS
+   ========================================================= */
+
+function getCurrentActivities() {
+  return activitiesByWeek[selectedWeekId] || [];
+}
+
+
+function getCurrentLessons() {
+  return lessonsByWeek[selectedWeekId] || {};
+}
+
+
+function getCurrentCheckpointIds() {
+  return checkpointIdsByWeek[selectedWeekId] || [];
+}
+
+
+function getCurrentLinks() {
+  return websiteLinks[selectedWeekId] || {};
+}
+
+
 
 /* =========================================================
    7. EMPTY STUDENT PROGRESS
@@ -1251,14 +2083,6 @@ function openWeek(weekId) {
     return;
   }
 
-  if (weekId !== "week-1") {
-    showToast(
-      "The content for this week will be added soon."
-    );
-
-    return;
-  }
-
   selectedWeekId = weekId;
   selectedWeek = week;
 
@@ -1389,7 +2213,7 @@ function renderActivityCards() {
 
   grid.innerHTML = "";
 
-  week1Activities.forEach(activity => {
+  getCurrentActivities().forEach(activity => {
     const completed =
       isActivityCompleted(activity.id);
 
@@ -1489,6 +2313,63 @@ function createActivityButtons(
   unlocked,
   completed
 ) {
+  if (activity.type === "choice") {
+    if (!unlocked) {
+      return `
+        <button
+          class="button button-light button-small"
+          disabled
+        >
+          Complete the previous activity first
+        </button>
+      `;
+    }
+
+    const resourceButtons =
+      activity.choices
+        .map(choice => {
+          const link =
+            getCurrentLinks()[choice.linkKey];
+
+          if (choice.comingSoon || !link) {
+            return `
+              <button
+                class="button button-light button-small"
+                disabled
+              >
+                ${choice.icon} ${choice.label} — Coming Soon
+              </button>
+            `;
+          }
+
+          return `
+            <button
+              class="button button-primary button-small"
+              onclick="openChoiceResource('${activity.id}', '${choice.linkKey}')"
+            >
+              ${choice.icon} ${choice.label}
+            </button>
+          `;
+        })
+        .join("");
+
+    return `
+      ${resourceButtons}
+
+      <button
+        class="button button-green button-small"
+        onclick="confirmChoiceCompletion('${activity.id}')"
+        ${completed ? "disabled" : ""}
+      >
+        ${
+          completed
+            ? "Learning Method Completed"
+            : "I Completed One Method"
+        }
+      </button>
+    `;
+  }
+
   if (activity.type === "coming-soon") {
     return `
       <button
@@ -1555,12 +2436,79 @@ function createActivityButtons(
 
 
 /* =========================================================
+   CHOOSE WATCH, LISTEN OR READ
+   ========================================================= */
+
+function openChoiceResource(
+  activityId,
+  linkKey
+) {
+  const activity =
+    getCurrentActivities().find(
+      item => item.id === activityId
+    );
+
+  if (!activity) {
+    showToast(
+      "The learning-method activity could not be found."
+    );
+
+    return;
+  }
+
+  const link =
+    getCurrentLinks()[linkKey];
+
+  if (!link) {
+    showToast(
+      "This learning method is coming soon."
+    );
+
+    return;
+  }
+
+  window.open(
+    link,
+    "_blank",
+    "noopener,noreferrer"
+  );
+}
+
+
+function confirmChoiceCompletion(activityId) {
+  const wasAlreadyCompleted =
+    isActivityCompleted(activityId);
+
+  if (wasAlreadyCompleted) {
+    showToast(
+      "This checkpoint is already completed."
+    );
+
+    return;
+  }
+
+  const confirmed =
+    window.confirm(
+      "Have you completed at least one learning method: Read or Listen?"
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  markActivityCompleted(activityId);
+  updateWholeWeek();
+  showCelebration(activityId);
+}
+
+
+/* =========================================================
    17. OPEN EDCAFE OR MICROSOFT FORMS
    ========================================================= */
 
 function openExternalActivity(activityId) {
   const activity =
-    week1Activities.find(
+    getCurrentActivities().find(
       item => item.id === activityId
     );
 
@@ -1573,7 +2521,7 @@ function openExternalActivity(activityId) {
   }
 
   const link =
-    websiteLinks[activity.linkKey];
+    getCurrentLinks()[activity.linkKey];
 
   if (!link) {
     showToast(
@@ -1597,7 +2545,7 @@ function openExternalActivity(activityId) {
 
 function confirmExternalCompletion(activityId) {
   const activity =
-    week1Activities.find(
+    getCurrentActivities().find(
       item => item.id === activityId
     );
 
@@ -1654,7 +2602,7 @@ function markActivityCompleted(activityId) {
 
 function openLesson(lessonId) {
   const lesson =
-    lessons[lessonId];
+    getCurrentLessons()[lessonId];
 
   if (!lesson) {
     showToast(
@@ -1928,7 +2876,7 @@ function containsAcceptedUnit(
 
 function checkPracticeAnswer(questionIndex) {
   const lesson =
-    lessons[currentLessonId];
+    getCurrentLessons()[currentLessonId];
 
   const question =
     lesson.questions[questionIndex];
@@ -2165,14 +3113,14 @@ function showCelebration(activityId) {
   document.getElementById(
     "celebrationTitle"
   ).textContent =
-    completedCount === 5
+    completedCount === getCurrentCheckpointIds().length
       ? "You Reached the Weekly Goal!"
       : "Checkpoint Completed!";
 
   document.getElementById(
     "celebrationText"
   ).textContent =
-    completedCount === 5
+    completedCount === getCurrentCheckpointIds().length
       ? "You transformed into a Process Problem Solver and earned all five learning stars."
       : "You earned one learning star and moved closer to the goal.";
 
@@ -2283,7 +3231,7 @@ function rollBonusGame() {
    ========================================================= */
 
 function getCompletedCheckpointCount() {
-  return checkpointIds.filter(
+  return getCurrentCheckpointIds().filter(
     checkpointId =>
       isActivityCompleted(checkpointId)
   ).length;
@@ -2313,10 +3261,10 @@ function renderAdventureRoute() {
 
   container.innerHTML = "";
 
-  checkpointIds.forEach(
+  getCurrentCheckpointIds().forEach(
     (checkpointId, index) => {
       const activity =
-        week1Activities.find(
+        getCurrentActivities().find(
           item =>
             item.id === checkpointId
         );
@@ -2341,7 +3289,7 @@ function renderAdventureRoute() {
 
       if (
         index === completedCount &&
-        completedCount < 5
+        completedCount < getCurrentCheckpointIds().length
       ) {
         node.classList.add(
           "current"
@@ -2373,7 +3321,7 @@ function renderAdventureRoute() {
 
   if (
     completedCount > 0 &&
-    completedCount < 5
+    completedCount < getCurrentCheckpointIds().length
   ) {
     routePercentage =
       checkpointPositions[
@@ -2381,7 +3329,7 @@ function renderAdventureRoute() {
       ];
   }
 
-  if (completedCount === 5) {
+  if (completedCount === getCurrentCheckpointIds().length) {
     routePercentage = 100;
   }
 
@@ -2426,7 +3374,7 @@ function updateStudentSummary() {
   document.getElementById(
     "checkpointSummary"
   ).textContent =
-    completedCount + " / 5";
+    completedCount + " / " + getCurrentCheckpointIds().length;
 
   document.getElementById(
     "heroCharacter"
@@ -2443,17 +3391,17 @@ function updateStudentSummary() {
   ).textContent =
     level.name;
 
-  if (completedCount === 5) {
+  if (completedCount === getCurrentCheckpointIds().length) {
     document.getElementById(
       "routeStatus"
     ).textContent =
       "🏁 Weekly goal completed!";
   } else {
     const nextCheckpointId =
-      checkpointIds[completedCount];
+      getCurrentCheckpointIds()[completedCount];
 
     const nextActivity =
-      week1Activities.find(
+      getCurrentActivities().find(
         item =>
           item.id === nextCheckpointId
       );
@@ -2508,7 +3456,7 @@ function renderWeeklyRewards() {
 
 function evidenceIsUnlocked() {
   return (
-    getCompletedCheckpointCount() === 5 &&
+    getCompletedCheckpointCount() === getCurrentCheckpointIds().length &&
     isActivityCompleted("official-quiz")
   );
 }
@@ -2613,12 +3561,12 @@ function updateEvidenceDocument() {
   document.getElementById(
     "evidenceCheckpoints"
   ).textContent =
-    completedCount + " / 5";
+    completedCount + " / " + getCurrentCheckpointIds().length;
 
   document.getElementById(
     "evidenceStars"
   ).textContent =
-    completedCount + " / 5";
+    completedCount + " / " + getCurrentCheckpointIds().length;
 
   document.getElementById(
     "evidenceTokens"
