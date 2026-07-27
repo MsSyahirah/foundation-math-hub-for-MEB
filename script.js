@@ -1953,6 +1953,8 @@ let currentLessonId = null;
 let currentQuestionResults = {};
 let currentQuestionAttempts = {};
 let currentQuestionHintUsed = {};
+let currentPracticeQuestionIndex = 0;
+let currentPracticeResponses = {};
 let currentBonusActivity = null;
 
 /* Learning Tools state */
@@ -2937,12 +2939,18 @@ function openLesson(lessonId) {
   currentQuestionResults = {};
   currentQuestionAttempts = {};
   currentQuestionHintUsed = {};
+  currentPracticeQuestionIndex = 0;
+  currentPracticeResponses = {};
 
   lesson.questions.forEach(
     (question, index) => {
       currentQuestionResults[index] = false;
       currentQuestionAttempts[index] = 0;
       currentQuestionHintUsed[index] = false;
+      currentPracticeResponses[index] = {
+        working: "",
+        answer: ""
+      };
     }
   );
 
@@ -2973,6 +2981,7 @@ function openLesson(lessonId) {
     createPracticeSection(lesson);
 
   initialiseLearningTools();
+  renderCurrentPracticeQuestion();
 
   const completeButton =
     document.getElementById(
@@ -3011,81 +3020,6 @@ function openLesson(lessonId) {
    ========================================================= */
 
 function createPracticeSection(lesson) {
-  const questionCards =
-    lesson.questions
-      .map((question, index) => {
-        return `
-          <article
-            class="practice-question"
-            id="practiceQuestion${index}"
-          >
-
-            <h4>
-              Question ${index + 1}
-            </h4>
-
-
-            <p>
-              ${question.question}
-            </p>
-
-
-            <label for="working${index}">
-              Show your working
-            </label>
-
-
-            <textarea
-              id="working${index}"
-              placeholder="Write your formula, substitution and calculation."
-            ></textarea>
-
-
-            <label for="answer${index}">
-              Final answer
-            </label>
-
-
-            <input
-              id="answer${index}"
-              type="text"
-              placeholder="Example: 1.20 g/mL"
-            >
-
-
-            <div class="practice-actions">
-              <button
-                class="button button-primary button-small"
-                onclick="checkPracticeAnswer(${index})"
-              >
-                Check Answer
-              </button>
-
-              <button
-                class="button button-light button-small"
-                onclick="showPracticeHint(${index})"
-              >
-                Show Hint
-              </button>
-            </div>
-
-
-            <p
-              class="hint-message hidden"
-              id="hint${index}"
-            ></p>
-
-
-            <p
-              class="feedback-message"
-              id="feedback${index}"
-            ></p>
-
-          </article>
-        `;
-      })
-      .join("");
-
   return `
     <div class="practice-section">
 
@@ -3095,13 +3029,14 @@ function createPracticeSection(lesson) {
 
 
       <h3>
-        Complete all questions
+        Complete one question at a time
       </h3>
 
 
       <p>
         Show your working and report every final numerical answer to
-        <strong>two decimal places</strong>.
+        <strong>two decimal places</strong> where required.
+        Your working and answers are kept while you move between questions.
       </p>
 
 
@@ -3258,10 +3193,367 @@ function createPracticeSection(lesson) {
       </section>
 
 
-      ${questionCards}
+      <div
+        class="practice-question-flow"
+        id="practiceQuestionFlow"
+        aria-live="polite"
+      ></div>
 
     </div>
   `;
+}
+
+
+function saveCurrentPracticeResponse(questionIndex) {
+  const workingInput =
+    document.getElementById("working" + questionIndex);
+
+  const answerInput =
+    document.getElementById("answer" + questionIndex);
+
+  if (!currentPracticeResponses[questionIndex]) {
+    currentPracticeResponses[questionIndex] = {
+      working: "",
+      answer: ""
+    };
+  }
+
+  if (workingInput) {
+    currentPracticeResponses[questionIndex].working =
+      workingInput.value;
+  }
+
+  if (answerInput) {
+    currentPracticeResponses[questionIndex].answer =
+      answerInput.value;
+  }
+}
+
+
+function getPracticeDotClass(questionIndex) {
+  if (currentQuestionResults[questionIndex]) {
+    return "completed";
+  }
+
+  if (questionIndex === currentPracticeQuestionIndex) {
+    return "current";
+  }
+
+  return "";
+}
+
+
+function renderCurrentPracticeQuestion() {
+  const lesson =
+    getCurrentLessons()[currentLessonId];
+
+  const container =
+    document.getElementById("practiceQuestionFlow");
+
+  if (!lesson || !container) {
+    return;
+  }
+
+  const questionIndex =
+    currentPracticeQuestionIndex;
+
+  const question =
+    lesson.questions[questionIndex];
+
+  const response =
+    currentPracticeResponses[questionIndex] || {
+      working: "",
+      answer: ""
+    };
+
+  const totalQuestions =
+    lesson.questions.length;
+
+  const positionPercent =
+    Math.round(
+      ((questionIndex + 1) / totalQuestions) * 100
+    );
+
+  const correctCount =
+    Object.values(currentQuestionResults)
+      .filter(Boolean)
+      .length;
+
+  const dots =
+    lesson.questions
+      .map((item, index) => {
+        return `
+          <button
+            class="practice-progress-dot ${getPracticeDotClass(index)}"
+            type="button"
+            aria-label="Open question ${index + 1}"
+            title="Question ${index + 1}"
+            onclick="goToPracticeQuestion(${index})"
+          >
+            ${currentQuestionResults[index] ? "✓" : index + 1}
+          </button>
+        `;
+      })
+      .join("");
+
+  const isLastQuestion =
+    questionIndex === totalQuestions - 1;
+
+  container.innerHTML = `
+    <div class="practice-flow-header">
+      <div>
+        <strong>
+          Question ${questionIndex + 1} of ${totalQuestions}
+        </strong>
+        <span>
+          ${correctCount} completed
+        </span>
+      </div>
+
+      <div class="practice-position-bar" aria-hidden="true">
+        <div style="width:${positionPercent}%"></div>
+      </div>
+
+      <div class="practice-progress-dots" aria-label="Question progress">
+        ${dots}
+      </div>
+    </div>
+
+
+    <article
+      class="practice-question ${currentQuestionResults[questionIndex] ? "correct" : ""}"
+      id="practiceQuestion${questionIndex}"
+    >
+
+      <div class="practice-question-heading">
+        <h4>
+          Question ${questionIndex + 1}
+        </h4>
+
+        ${
+          currentQuestionResults[questionIndex]
+            ? `<span class="practice-complete-label">✓ Completed</span>`
+            : ""
+        }
+      </div>
+
+
+      <p class="practice-question-text">
+        ${question.question}
+      </p>
+
+
+      <label for="working${questionIndex}">
+        Show your working
+      </label>
+
+
+      <textarea
+        id="working${questionIndex}"
+        placeholder="Write your formula, substitution and calculation."
+        oninput="saveCurrentPracticeResponse(${questionIndex})"
+      ></textarea>
+
+
+      <label for="answer${questionIndex}">
+        Final answer
+      </label>
+
+
+      <input
+        id="answer${questionIndex}"
+        type="text"
+        placeholder="Example: ${question.displayAnswer}"
+        oninput="saveCurrentPracticeResponse(${questionIndex})"
+      >
+
+
+      <div class="practice-actions">
+        <button
+          class="button button-primary button-small"
+          onclick="checkPracticeAnswer(${questionIndex})"
+        >
+          Check Answer
+        </button>
+
+        <button
+          class="button button-light button-small"
+          onclick="showPracticeHint(${questionIndex})"
+        >
+          Show Hint
+        </button>
+      </div>
+
+
+      <p
+        class="hint-message ${currentQuestionHintUsed[questionIndex] ? "" : "hidden"}"
+        id="hint${questionIndex}"
+      >
+        ${currentQuestionHintUsed[questionIndex] ? "Hint: " + question.hint : ""}
+      </p>
+
+
+      <p
+        class="feedback-message"
+        id="feedback${questionIndex}"
+      ></p>
+
+
+      <div class="practice-navigation-buttons">
+        <button
+          class="button button-light"
+          type="button"
+          onclick="previousPracticeQuestion()"
+          ${questionIndex === 0 ? "disabled" : ""}
+        >
+          ← Previous Question
+        </button>
+
+        <button
+          class="button button-primary"
+          type="button"
+          onclick="${isLastQuestion ? "finishPracticeQuestionSet()" : "nextPracticeQuestion()"}"
+        >
+          ${isLastQuestion ? "Finish Practice" : "Next Question →"}
+        </button>
+      </div>
+
+    </article>
+  `;
+
+  document.getElementById(
+    "working" + questionIndex
+  ).value = response.working;
+
+  document.getElementById(
+    "answer" + questionIndex
+  ).value = response.answer;
+}
+
+
+function goToPracticeQuestion(questionIndex) {
+  const lesson =
+    getCurrentLessons()[currentLessonId];
+
+  if (
+    !lesson ||
+    questionIndex < 0 ||
+    questionIndex >= lesson.questions.length
+  ) {
+    return;
+  }
+
+  saveCurrentPracticeResponse(
+    currentPracticeQuestionIndex
+  );
+
+  currentPracticeQuestionIndex =
+    questionIndex;
+
+  renderCurrentPracticeQuestion();
+
+  document
+    .getElementById("practiceQuestionFlow")
+    ?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+}
+
+
+function previousPracticeQuestion() {
+  if (currentPracticeQuestionIndex > 0) {
+    goToPracticeQuestion(
+      currentPracticeQuestionIndex - 1
+    );
+  }
+}
+
+
+function nextPracticeQuestion() {
+  const lesson =
+    getCurrentLessons()[currentLessonId];
+
+  if (
+    lesson &&
+    currentPracticeQuestionIndex <
+      lesson.questions.length - 1
+  ) {
+    goToPracticeQuestion(
+      currentPracticeQuestionIndex + 1
+    );
+  }
+}
+
+
+function finishPracticeQuestionSet() {
+  saveCurrentPracticeResponse(
+    currentPracticeQuestionIndex
+  );
+
+  const lesson =
+    getCurrentLessons()[currentLessonId];
+
+  const firstIncompleteIndex =
+    lesson.questions.findIndex(
+      (question, index) =>
+        !currentQuestionResults[index]
+    );
+
+  if (firstIncompleteIndex !== -1) {
+    showToast(
+      "You still have an incomplete question. Your existing working has been saved."
+    );
+
+    goToPracticeQuestion(
+      firstIncompleteIndex
+    );
+
+    return;
+  }
+
+  showToast(
+    "All practice questions are complete. You may now complete this checkpoint."
+  );
+
+  document
+    .querySelector(".lesson-completion-area")
+    ?.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+}
+
+
+function updatePracticeQuestionFlow() {
+  saveCurrentPracticeResponse(
+    currentPracticeQuestionIndex
+  );
+
+  const currentFeedback =
+    document.getElementById(
+      "feedback" + currentPracticeQuestionIndex
+    )?.textContent || "";
+
+  const currentFeedbackClass =
+    document.getElementById(
+      "feedback" + currentPracticeQuestionIndex
+    )?.className || "feedback-message";
+
+  renderCurrentPracticeQuestion();
+
+  const feedback =
+    document.getElementById(
+      "feedback" + currentPracticeQuestionIndex
+    );
+
+  if (feedback && currentFeedback) {
+    feedback.textContent =
+      currentFeedback;
+
+    feedback.className =
+      currentFeedbackClass;
+  }
 }
 
 
@@ -4371,6 +4663,8 @@ function getAvailableRewardTokenCount() {
    ========================================================= */
 
 function checkPracticeAnswer(questionIndex) {
+  saveCurrentPracticeResponse(questionIndex);
+
   const lesson =
     getCurrentLessons()[currentLessonId];
 
@@ -4540,6 +4834,7 @@ function checkPracticeAnswer(questionIndex) {
   }
 
   updateLessonCompletionButton();
+  updatePracticeQuestionFlow();
 }
 
 
