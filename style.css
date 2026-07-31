@@ -214,44 +214,6 @@ textarea {
 
 
 /* ======================================================
-   WEEK 3 CLASS-ACTIVITY MCQ OPTIONS
-   ====================================================== */
-
-.practice-choice-list {
-  border: 0;
-  padding: 0;
-  margin: 18px 0;
-}
-
-.practice-choice-list legend {
-  font-weight: 800;
-  margin-bottom: 10px;
-}
-
-.practice-choice {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 13px 14px;
-  margin: 9px 0;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: #f8fafc;
-  cursor: pointer;
-}
-
-.practice-choice:hover {
-  border-color: var(--blue);
-  background: var(--light-blue);
-}
-
-.practice-choice input {
-  margin-top: 3px;
-  accent-color: var(--blue);
-}
-
-
-/* ======================================================
    SMALL LABELS
    ====================================================== */
 

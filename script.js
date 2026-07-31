@@ -42,20 +42,6 @@ const websiteLinks = {
 
     officialQuiz:
       "https://forms.cloud.microsoft/r/fNZjGCHmNt"
-  },
-
-  "week-3": {
-    read:
-      "https://app.edcafe.ai/slidedeck/6a6c5a0e8155bac122d46ba4",
-
-    listen:
-      "https://app.edcafe.ai/ai-speech/6a6c5ae7ad8710c9cbc663c4",
-
-    flashcards:
-      "https://app.edcafe.ai/flashcards/6a6c5b82ad8710c9cbc6663d",
-
-    understandPractice:
-      "https://app.edcafe.ai/quizzes/6a6c5bf5ad8710c9cbc6684b"
   }
 };
 
@@ -121,17 +107,10 @@ const weeks = [
     description:
       "System boundaries, assumptions, overall and component balances.",
 
-    available: true,
-    status: "Available now",
-    releaseNote: "Week 3 is available now.",
-
-    tags: [
-      "🏭 System Boundary",
-      "🟢 Inputs",
-      "🔵 Outputs",
-      "⚖️ Overall Balance",
-      "📏 kg/min"
-    ]
+    available: false,
+    status: "Coming soon",
+    releaseNote: "Week 3 is coming soon.",
+    tags: []
   },
 
   {
@@ -219,14 +198,6 @@ const checkpointIdsByWeek = {
     "flow-rates",
     "integrated-stream",
     "meb-challenge"
-  ],
-
-  "week-3": [
-    "learning-method",
-    "remember-bloom",
-    "understand-bloom",
-    "apply-balance",
-    "edcafe-check"
   ]
 };
 
@@ -615,145 +586,9 @@ const week2Activities = [
 ];
 
 
-/* =========================================================
-   7. WEEK 3 ACTIVITIES
-   ========================================================= */
-
-const week3Activities = [
-  {
-    id: "learning-method",
-    number: "Checkpoint 1",
-    title: "Learn the Process",
-    routeLabel: "Learn the Process",
-
-    icon: "🧭",
-    colour: "#8b5cf6",
-
-    description:
-      "Choose Read or Listen. Both explain system boundaries, inputs, outputs and steady state.",
-
-    type: "choice-page",
-    prerequisites: [],
-
-    choices: [
-      {
-        label: "Read the Slides",
-        icon: "📑",
-        linkKey: "read"
-      },
-
-      {
-        label: "Listen",
-        icon: "🔊",
-        linkKey: "listen"
-      }
-    ]
-  },
-
-  {
-    id: "flashcards",
-    number: "Optional Revision",
-    title: "Week 3 Flashcards",
-
-    icon: "🃏",
-    colour: "#eab308",
-
-    description:
-      "Review key words such as system boundary, input, output and steady state when you need support.",
-
-    type: "external",
-    linkKey: "flashcards",
-    optional: true,
-    prerequisites: []
-  },
-
-  {
-    id: "remember-bloom",
-    number: "Checkpoint 2",
-    title: "Remember Together",
-    routeLabel: "Remember",
-
-    icon: "🧠",
-    colour: "#2563eb",
-
-    description:
-      "10 quick questions to recall system boundaries, inputs, outputs, steady state and units.",
-
-    type: "lesson",
-    prerequisites: ["learning-method"]
-  },
-
-  {
-    id: "understand-bloom",
-    number: "Checkpoint 3",
-    title: "Understand Together",
-    routeLabel: "Understand",
-
-    icon: "🔎",
-    colour: "#f97316",
-
-    description:
-      "10 diagram-reading questions to explain what is happening before any calculation.",
-
-    type: "lesson",
-    prerequisites: ["remember-bloom"]
-  },
-
-  {
-    id: "apply-balance",
-    number: "Checkpoint 4",
-    title: "Apply: Overall Material Balance",
-    routeLabel: "Overall Balance",
-
-    icon: "⚖️",
-    colour: "#14b8a6",
-
-    description:
-      "Find an unknown flowrate using Total Input = Total Output at steady state.",
-
-    type: "lesson",
-    prerequisites: ["understand-bloom"]
-  },
-
-  {
-    id: "edcafe-check",
-    number: "Checkpoint 5 · Independent Check",
-    title: "Edcafe Understanding Check",
-    routeLabel: "Edcafe Check",
-
-    icon: "🎯",
-    colour: "#ec4899",
-
-    description:
-      "Complete this independently after the class activities. Your lecturer can use the results to see what needs reteaching.",
-
-    type: "external",
-    linkKey: "understandPractice",
-    prerequisites: ["apply-balance"]
-  },
-
-  {
-    id: "official-quiz",
-    number: "Evidence Check",
-    title: "Week 3 Official Quiz / Exit Check",
-
-    icon: "✅",
-    colour: "#16a34a",
-
-    description:
-      "A short independent check will be added after the practice activity is tested with the class.",
-
-    type: "coming-soon",
-    optional: true,
-    prerequisites: []
-  }
-];
-
-
 const activitiesByWeek = {
   "week-1": week1Activities,
-  "week-2": week2Activities,
-  "week-3": week3Activities
+  "week-2": week2Activities
 };
 
 
@@ -2040,177 +1875,9 @@ const week2Lessons = {
 };
 
 
-const week3Lessons = {
-  "remember-bloom": {
-    badge: "Checkpoint 2 · Remember",
-    title: "Remember: Key Material-Balance Ideas",
-    icon: "🧠",
-    description: "Recall the key words before you interpret or calculate a process.",
-    content: `
-      <div class="content-block">
-        <span class="small-label">Class activity</span>
-        <h3>Pause, discuss, then choose</h3>
-        <p>For each question, look at the process idea first. Discuss with your group or lecturer, then select one answer. Use the hint if you are unsure—this is practice, not a test.</p>
-      </div>
-      <div class="formula-box">At steady state: Total Input = Total Output<br>Accumulation = 0</div>
-    `,
-    questions: [
-      { question: "A material arrow points into a mixing tank. What is this stream called?", type: "mcq", choices: ["A. Output", "B. Input", "C. System boundary"], correctOption: "B", hint: "Look at the arrow direction.", feedback: "Correct. Material entering the system is an input." },
-      { question: "A material arrow points out of a mixing tank. What is this stream called?", type: "mcq", choices: ["A. Input", "B. Output", "C. Accumulation"], correctOption: "B", hint: "Look at the arrow direction.", feedback: "Correct. Material leaving the system is an output." },
-      { question: "What is the system in a material-balance question?", type: "mcq", choices: ["A. The part we choose to study", "B. Every piece of equipment in the plant", "C. Only the outlet stream"], correctOption: "A", hint: "Ask: What part am I focusing on?", feedback: "Correct. The system can be a tank, a pipe or another selected process unit." },
-      { question: "What is a system boundary?", type: "mcq", choices: ["A. A line around the system being studied", "B. The amount stored in a tank", "C. The name of the outlet"], correctOption: "A", hint: "Think of a box drawn around the equipment.", feedback: "Correct. The boundary helps you identify what crosses into and out of the system." },
-      { question: "At steady state, what happens to the amount of material inside a tank?", type: "mcq", choices: ["A. It stays the same", "B. It always increases", "C. It disappears"], correctOption: "A", hint: "Does the tank build up material?", feedback: "Correct. At steady state, there is no net build-up." },
-      { question: "At steady state, accumulation is:", type: "mcq", choices: ["A. 0", "B. Always 10 kg/min", "C. Always negative"], correctOption: "A", hint: "No build-up means zero accumulation.", feedback: "Correct. Accumulation equals zero at steady state." },
-      { question: "Complete the rule for a steady-state process: Total input ___ total output.", type: "mcq", choices: ["A. is greater than", "B. equals", "C. is unrelated to"], correctOption: "B", hint: "Use the phrase: what goes in equals what goes out.", feedback: "Correct. At steady state, total input equals total output." },
-      { question: "Which item can cross a system boundary?", type: "mcq", choices: ["A. A stream entering or leaving", "B. Only accumulation", "C. Only the system name"], correctOption: "A", hint: "Think about the arrows crossing the dashed box.", feedback: "Correct. Streams cross the system boundary." },
-      { question: "Which unit is a mass flowrate?", type: "mcq", choices: ["A. kg/min", "B. kg", "C. min/kg"], correctOption: "A", hint: "A flowrate needs an amount and per time.", feedback: "Correct. kg/min tells us how much mass moves each minute." },
-      { question: "What is the best first step before solving a material-balance question?", type: "mcq", choices: ["A. Draw or read the flowchart and label the arrows", "B. Guess the answer", "C. Remove all units"], correctOption: "A", hint: "See the process first.", feedback: "Correct. A labelled diagram prevents mixing up inputs and outputs." }
-    ]
-  },
-
-  "understand-bloom": {
-    badge: "Checkpoint 3 · Understand",
-    title: "Understand: What Is Happening in the Process?",
-    icon: "🔎",
-    description: "Interpret the arrows and decide whether material is building up, decreasing or staying the same.",
-    content: `
-      <div class="content-block">
-        <span class="small-label">Class activity</span>
-        <h3>Explain your choice</h3>
-        <p>Do not only look for a number. First decide whether material is entering, leaving, building up or decreasing inside the system.</p>
-      </div>
-      <div class="formula-box">Input − Output = Accumulation</div>
-    `,
-    questions: [
-      { question: "A tank has 12 kg/min entering and 12 kg/min leaving. Is it at steady state?", type: "mcq", choices: ["A. Yes", "B. No"], correctOption: "A", hint: "Compare the total in and total out.", feedback: "Correct. Equal flowrates mean no net build-up." },
-      { question: "A tank has 12 kg/min entering and 9 kg/min leaving. What is happening inside?", type: "mcq", choices: ["A. Material is building up", "B. Material is decreasing", "C. The amount stays the same"], correctOption: "A", hint: "More enters than leaves.", feedback: "Correct. The difference stays in the tank, so accumulation is positive." },
-      { question: "A tank has 8 kg/min entering and 11 kg/min leaving. What is happening inside?", type: "mcq", choices: ["A. Material is building up", "B. The amount is decreasing", "C. Input equals output"], correctOption: "B", hint: "More leaves than enters.", feedback: "Correct. The amount inside must decrease to supply the larger outlet." },
-      { question: "A dashed box is drawn around only the mixing tank. A feed pipe carries 5 kg/min into the tank. Is the feed an input to this system?", type: "mcq", choices: ["A. Yes", "B. No"], correctOption: "A", hint: "Does the arrow cross into the dashed box?", feedback: "Correct. It enters the selected system boundary." },
-      { question: "Two feeds enter a tank: 4 kg/min and 6 kg/min. One product leaves. What total input should be used in the overall balance?", type: "mcq", choices: ["A. 4 kg/min", "B. 6 kg/min", "C. 10 kg/min"], correctOption: "C", hint: "Add all arrows entering the boundary.", feedback: "Correct. Both feeds are inputs, so total input is 10 kg/min." },
-      { question: "One feed enters a tank at 15 kg/min. Two products leave at 5 kg/min and 10 kg/min. Is the tank at steady state?", type: "mcq", choices: ["A. Yes", "B. No"], correctOption: "A", hint: "Add all outputs before comparing.", feedback: "Correct. Total output is 15 kg/min, equal to the input." },
-      { question: "A question says: continuous operation at steady state. Which equation is appropriate for an overall balance?", type: "mcq", choices: ["A. Total Input = Total Output", "B. Total Input = 0", "C. Total Input = Accumulation only"], correctOption: "A", hint: "At steady state, accumulation is zero.", feedback: "Correct. Start with total input equal to total output." },
-      { question: "Why should you write units on a material-balance calculation?", type: "mcq", choices: ["A. To check that quantities are the same type", "B. To make the answer longer", "C. Units are never needed"], correctOption: "A", hint: "Can kg/min be added to kg?", feedback: "Correct. Units help you spot a wrong setup." },
-      { question: "A learner writes: 20 = 20 kg/min. What is missing from the left side?", type: "mcq", choices: ["A. The unit kg/min", "B. A tank picture", "C. A new formula"], correctOption: "A", hint: "Both sides of an equation need matching units.", feedback: "Correct. Write 20 kg/min = 20 kg/min." },
-      { question: "A learner obtains an outlet of −5 kg/min for a simple tank with positive feeds. What should they do next?", type: "mcq", choices: ["A. Check the diagram, equation and subtraction", "B. Submit it without checking", "C. Delete all units"], correctOption: "A", hint: "Ask whether a negative outlet is reasonable here.", feedback: "Correct. A reasonableness check can reveal an input/output mix-up." }
-    ]
-  },
-
-  "apply-balance": {
-    badge: "Checkpoint 3 · Apply",
-    title: "Overall Material Balance",
-    icon: "⚖️",
-
-    description:
-      "Use a system boundary and Total Input = Total Output to find an unknown mass flowrate.",
-
-    content: `
-      <div class="content-block">
-        <span class="small-label">Your test method</span>
-        <h3>Use these four steps every time</h3>
-        <ol>
-          <li><strong>Read the process:</strong> identify the system boundary and label every input and output.</li>
-          <li><strong>State the condition:</strong> steady state, so accumulation = 0.</li>
-          <li><strong>Write the balance:</strong> Total Input = Total Output.</li>
-          <li><strong>Substitute and check:</strong> keep kg/min on both sides, solve the unknown and check that the answer is reasonable.</li>
-        </ol>
-      </div>
-
-      <div class="example-box">
-        <h3>Worked example</h3>
-        <p><strong>Process:</strong> 20 kg/min enters a tank. One outlet is unknown. The tank is at steady state.</p>
-        <div class="formula-box">20.00 kg/min in → [ Tank ] → ? kg/min out</div>
-        <p><strong>1. Condition:</strong> Steady state, so accumulation = 0.</p>
-        <p><strong>2. Balance:</strong> Total Input = Total Output</p>
-        <p><strong>3. Substitute:</strong> 20.00 kg/min = Outlet</p>
-        <p><strong>Answer:</strong> Outlet = 20.00 kg/min</p>
-      </div>
-
-      <div class="warning-box">
-        <h3>Before you press Check Answer</h3>
-        <p>Write the balance in your working box first. Then give your final answer with <strong>two decimal places</strong> and <strong>kg/min</strong>, for example: 20.00 kg/min.</p>
-      </div>
-    `,
-
-    questions: [
-      {
-        question: "A tank receives 20.00 kg/min. It operates at steady state with one outlet. Find the outlet flowrate.",
-        hint: "Write Total Input = Total Output, then substitute 20.00 kg/min.",
-        expectedNumber: 20.00,
-        acceptedUnits: ["kg/min"],
-        displayAnswer: "20.00 kg/min"
-      },
-      {
-        question: "A tank has one outlet of 18.00 kg/min. It operates at steady state with one inlet. Find the inlet flowrate.",
-        hint: "At steady state, total input equals total output.",
-        expectedNumber: 18.00,
-        acceptedUnits: ["kg/min"],
-        displayAnswer: "18.00 kg/min"
-      },
-      {
-        question: "Two feeds enter a tank: 8.00 kg/min and 7.00 kg/min. One product leaves. At steady state, find the product flowrate.",
-        hint: "Add both inputs before you write the total output.",
-        expectedNumber: 15.00,
-        acceptedUnits: ["kg/min"],
-        displayAnswer: "15.00 kg/min"
-      },
-      {
-        question: "A tank receives 25.00 kg/min. It has two outlets: Product A is 10.00 kg/min and Product B is unknown. At steady state, find Product B.",
-        hint: "Write 25.00 = 10.00 + Product B, then rearrange.",
-        expectedNumber: 15.00,
-        acceptedUnits: ["kg/min"],
-        displayAnswer: "15.00 kg/min"
-      },
-      {
-        question: "A tank receives two feeds: Feed A is 12.00 kg/min and Feed B is unknown. The product is 30.00 kg/min. At steady state, find Feed B.",
-        hint: "Write 12.00 + Feed B = 30.00, then rearrange.",
-        expectedNumber: 18.00,
-        acceptedUnits: ["kg/min"],
-        displayAnswer: "18.00 kg/min"
-      },
-      {
-        question: "A blender has three inputs: 4.00 kg/min, 6.00 kg/min and 10.00 kg/min. One blended product leaves at steady state. Find the product flowrate.",
-        hint: "Add every stream entering the system boundary.",
-        expectedNumber: 20.00,
-        acceptedUnits: ["kg/min"],
-        displayAnswer: "20.00 kg/min"
-      },
-      {
-        question: "A separator receives 40.00 kg/min. It produces a top stream of 15.00 kg/min and a bottom stream of unknown flowrate. At steady state, find the bottom-stream flowrate.",
-        hint: "Write 40.00 = 15.00 + bottom stream.",
-        expectedNumber: 25.00,
-        acceptedUnits: ["kg/min"],
-        displayAnswer: "25.00 kg/min"
-      },
-      {
-        question: "A tank receives 9.00 kg/min and 11.00 kg/min. It has two outlets: 5.00 kg/min and an unknown outlet. At steady state, find the unknown outlet.",
-        hint: "First total the inputs. Then subtract the known outlet flowrate.",
-        expectedNumber: 15.00,
-        acceptedUnits: ["kg/min"],
-        displayAnswer: "15.00 kg/min"
-      },
-      {
-        question: "A tank receives 35.00 kg/min and has an outlet of 30.00 kg/min. It is not at steady state. Calculate the accumulation using Input − Output.",
-        hint: "35.00 − 30.00 is the amount building up each minute.",
-        expectedNumber: 5.00,
-        acceptedUnits: ["kg/min"],
-        displayAnswer: "+5.00 kg/min accumulation"
-      },
-      {
-        question: "A mixing tank receives Feed A = 14.00 kg/min and Feed B = 16.00 kg/min. It has Product = 22.00 kg/min and a recycle outlet that is unknown. The tank is at steady state. Find the recycle flowrate.",
-        hint: "Write 14.00 + 16.00 = 22.00 + recycle.",
-        expectedNumber: 8.00,
-        acceptedUnits: ["kg/min"],
-        displayAnswer: "8.00 kg/min"
-      }
-    ]
-  }
-};
-
-
 const lessonsByWeek = {
   "week-1": week1Lessons,
-  "week-2": week2Lessons,
-  "week-3": week3Lessons
+  "week-2": week2Lessons
 };
 
 
@@ -2656,13 +2323,8 @@ function completeOutcomesAndContinue() {
 
 
 function openLearningPathPage() {
-  const hasLearningPath =
-    getCurrentActivities().some(
-      activity => activity.type === "choice-page"
-    );
-
-  if (!hasLearningPath) {
-    showToast("This learning-path page is not available for this week.");
+  if (selectedWeekId !== "week-2") {
+    showToast("This learning-path page is available in Week 2.");
     return;
   }
 
@@ -2812,7 +2474,7 @@ function updateLearningPathStatus() {
 
   if (!studentProgress.learningMethod) {
     status.textContent =
-      "Choose Read or Listen to begin.";
+      "Choose Read or Listen to begin. Watch is coming soon.";
 
     continueButton.disabled = true;
     return;
@@ -2837,7 +2499,9 @@ function completeLearningPath() {
   updateWholeWeek();
   showWeekDashboard();
 
-  showToast("Learning method completed. Your next checkpoint is now unlocked.");
+  showToast(
+    "Learning method completed. Guided Practice is now unlocked."
+  );
 
   document
     .getElementById("activitiesSection")
@@ -3285,8 +2949,7 @@ function openLesson(lessonId) {
       currentQuestionHintUsed[index] = false;
       currentPracticeResponses[index] = {
         working: "",
-        answer: "",
-        choice: ""
+        answer: ""
       };
     }
   );
@@ -3551,8 +3214,7 @@ function saveCurrentPracticeResponse(questionIndex) {
   if (!currentPracticeResponses[questionIndex]) {
     currentPracticeResponses[questionIndex] = {
       working: "",
-      answer: "",
-      choice: ""
+      answer: ""
     };
   }
 
@@ -3564,15 +3226,6 @@ function saveCurrentPracticeResponse(questionIndex) {
   if (answerInput) {
     currentPracticeResponses[questionIndex].answer =
       answerInput.value;
-  }
-
-  const selectedChoice = document.querySelector(
-    `input[name="choice${questionIndex}"]:checked`
-  );
-
-  if (selectedChoice) {
-    currentPracticeResponses[questionIndex].choice =
-      selectedChoice.value;
   }
 }
 
@@ -3610,8 +3263,7 @@ function renderCurrentPracticeQuestion() {
   const response =
     currentPracticeResponses[questionIndex] || {
       working: "",
-      answer: "",
-      choice: ""
+      answer: ""
     };
 
   const totalQuestions =
@@ -3691,51 +3343,29 @@ function renderCurrentPracticeQuestion() {
       </p>
 
 
-      ${
-        question.type === "mcq"
-          ? `
-            <fieldset class="practice-choice-list">
-              <legend>Choose one answer</legend>
-              ${question.choices.map(choice => {
-                const option = choice.charAt(0);
-                return `
-                  <label class="practice-choice">
-                    <input
-                      type="radio"
-                      name="choice${questionIndex}"
-                      value="${option}"
-                      ${response.choice === option ? "checked" : ""}
-                      onchange="saveCurrentPracticeResponse(${questionIndex})"
-                    >
-                    <span>${choice}</span>
-                  </label>
-                `;
-              }).join("")}
-            </fieldset>
-          `
-          : `
-            <label for="working${questionIndex}">
-              Show your working
-            </label>
+      <label for="working${questionIndex}">
+        Show your working
+      </label>
 
-            <textarea
-              id="working${questionIndex}"
-              placeholder="Write your formula, substitution and calculation."
-              oninput="saveCurrentPracticeResponse(${questionIndex})"
-            ></textarea>
 
-            <label for="answer${questionIndex}">
-              Final answer
-            </label>
+      <textarea
+        id="working${questionIndex}"
+        placeholder="Write your formula, substitution and calculation."
+        oninput="saveCurrentPracticeResponse(${questionIndex})"
+      ></textarea>
 
-            <input
-              id="answer${questionIndex}"
-              type="text"
-              placeholder="Example: ${question.displayAnswer}"
-              oninput="saveCurrentPracticeResponse(${questionIndex})"
-            >
-          `
-      }
+
+      <label for="answer${questionIndex}">
+        Final answer
+      </label>
+
+
+      <input
+        id="answer${questionIndex}"
+        type="text"
+        placeholder="Example: ${question.displayAnswer}"
+        oninput="saveCurrentPracticeResponse(${questionIndex})"
+      >
 
 
       <div class="practice-actions">
@@ -3791,16 +3421,13 @@ function renderCurrentPracticeQuestion() {
     </article>
   `;
 
-  const workingField = document.getElementById("working" + questionIndex);
-  const answerField = document.getElementById("answer" + questionIndex);
+  document.getElementById(
+    "working" + questionIndex
+  ).value = response.working;
 
-  if (workingField) {
-    workingField.value = response.working;
-  }
-
-  if (answerField) {
-    answerField.value = response.answer;
-  }
+  document.getElementById(
+    "answer" + questionIndex
+  ).value = response.answer;
 }
 
 
@@ -4994,19 +4621,6 @@ function refreshAutomaticMasteryStars() {
     return;
   }
 
-  if (selectedWeekId === "week-3") {
-    if (isActivityCompleted("understand-bloom")) {
-      awardMasteryStar("practice");
-    }
-
-    if (isActivityCompleted("apply-balance")) {
-      awardMasteryStar("formula");
-      awardMasteryStar("application");
-    }
-
-    return;
-  }
-
   /* Week 1 migration: map completed checkpoints to the five stars. */
   const completedCount = getCompletedCheckpointCount();
 
@@ -5077,46 +4691,6 @@ function checkPracticeAnswer(questionIndex) {
       "practiceQuestion" + questionIndex
     );
 
-  if (question.type === "mcq") {
-    const selectedChoice = document.querySelector(
-      `input[name="choice${questionIndex}"]:checked`
-    );
-
-    if (!selectedChoice) {
-      feedback.textContent =
-        "Choose one answer first. You can use the hint if you need a clue.";
-
-      feedback.className =
-        "feedback-message supportive";
-
-      return;
-    }
-
-    if (selectedChoice.value === question.correctOption) {
-      currentQuestionResults[questionIndex] = true;
-
-      feedback.textContent = question.feedback;
-      feedback.className = "feedback-message correct";
-      questionCard.classList.add("correct");
-    } else {
-      currentQuestionResults[questionIndex] = false;
-      currentQuestionAttempts[questionIndex] =
-        (currentQuestionAttempts[questionIndex] || 0) + 1;
-
-      feedback.textContent =
-        currentQuestionAttempts[questionIndex] === 1
-          ? "Not quite yet. Look at the hint, discuss the process idea, then try again."
-          : "Keep going. Read the key idea above and try again—your progress is saved.";
-
-      feedback.className = "feedback-message supportive";
-      questionCard.classList.remove("correct");
-    }
-
-    updateLessonCompletionButton();
-    updatePracticeQuestionFlow();
-    return;
-  }
-
   const working =
     workingInput.value.trim();
 
@@ -5186,14 +4760,14 @@ function checkPracticeAnswer(questionIndex) {
     questionCard.classList.add("correct");
 
     if (
-      ["week-2", "week-3"].includes(selectedWeekId) &&
+      selectedWeekId === "week-2" &&
       question.acceptedUnits.length > 0
     ) {
       awardMasteryStar("unit");
     }
 
     if (
-      ["week-2", "week-3"].includes(selectedWeekId) &&
+      selectedWeekId === "week-2" &&
       (attempts > 0 || currentQuestionHintUsed[questionIndex])
     ) {
       awardMasteryStar("persistence");
@@ -5361,7 +4935,7 @@ function showCelebration(activityId) {
     "celebrationText"
   ).textContent =
     completedCount === getCurrentCheckpointIds().length
-      ? "Your required checkpoints are complete. Submit the official quiz when it is released."
+      ? "Your five checkpoints are complete. Submit the official quiz to earn the weekly Reward Token."
       : "Good work. Your checkpoint progress and Mastery Stars have been updated.";
 
   document.getElementById(
@@ -5417,20 +4991,13 @@ function renderAdventureRoute() {
   const completedCount =
     getCompletedCheckpointCount();
 
-  const checkpointCount =
-    getCurrentCheckpointIds().length;
-
-  const checkpointPositions =
-    Array.from(
-      { length: checkpointCount },
-      (item, index) => {
-        if (checkpointCount === 1) {
-          return 50;
-        }
-
-        return 15 + (70 * index) / (checkpointCount - 1);
-      }
-    );
+  const checkpointPositions = [
+    15,
+    32.5,
+    50,
+    67.5,
+    85
+  ];
 
   const container =
     document.getElementById(
