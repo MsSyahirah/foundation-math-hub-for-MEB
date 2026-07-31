@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Foundation Math Hub for Higher Nitec in Chemical Process Technology">
   <title>Foundation Math Hub</title>
-  <link rel="stylesheet" href="style.css?v=5">
-  <script src="script.js?v=5" defer></script>
+  <link rel="stylesheet" href="style.css?v=7">
+  <script src="script.js?v=7" defer></script>
 </head>
 <body>
 
@@ -157,7 +157,7 @@
     </section>
 
 
-    <!-- WEEK 2 LEARNING OUTCOMES -->
+    <!-- WEEKLY LEARNING OUTCOMES -->
 
     <section
       class="section-card onboarding-card hidden"
@@ -167,7 +167,7 @@
 
       <h2>What are we learning?</h2>
 
-      <p class="onboarding-intro">
+      <p class="onboarding-intro" id="outcomesIntro">
         In Week 2, you will learn how composition, flow rates and
         molarity are used to describe a chemical process stream.
       </p>
@@ -175,7 +175,7 @@
       <div class="outcomes-box">
         <h3>By the end of this lesson, you should be able to:</h3>
 
-        <ul class="outcome-list">
+        <ul class="outcome-list" id="outcomesList">
           <li>Convert between percentage and fraction.</li>
           <li>Calculate mass fraction and mole fraction.</li>
           <li>Calculate the flow rate of an individual component.</li>
@@ -186,7 +186,7 @@
         </ul>
       </div>
 
-      <p class="onboarding-note">
+      <p class="onboarding-note" id="outcomesNote">
         You will move through the lesson one checkpoint at a time.
         Choose one learning method, complete the guided activities and
         finish with the Week 2 MEB Challenge.
@@ -676,6 +676,17 @@
 
       </div>
 
+      <div class="evidence-buttons">
+        <a
+          class="button button-green"
+          href="https://forms.cloud.microsoft/r/6PWA9mfnuY"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Submit Weekly Progress
+        </a>
+      </div>
+
 
       <div
         class="evidence-form hidden"
@@ -892,20 +903,42 @@
     <p id="celebrationText"></p>
 
 
+    <div class="criterion-game hidden" id="criterionGame">
+
+      <span class="small-label">Performance-Criteria Game Card</span>
+
+      <h3 id="criterionTitle">Quick process challenge</h3>
+
+      <p id="criterionTeaching"></p>
+
+      <p class="criterion-question" id="criterionQuestion"></p>
+
+      <div class="criterion-options" id="criterionOptions"></div>
+
+      <div
+        class="criterion-feedback hidden"
+        id="criterionFeedback"
+        role="status"
+        aria-live="polite"
+      ></div>
+
+    </div>
+
+
     <div class="bonus-game mastery-update-box">
 
       <h3>⭐ Mastery Update</h3>
 
       <p id="bonusResult">
         Visit the Reward Centre to see which Mastery Stars you have earned.
-        A Reward Token is earned only after all checkpoints and the official quiz are completed.
+        A Reward Token is earned only after the final independent check is completed.
       </p>
 
       <button
         class="button button-bonus"
         id="rollBonusButton"
       >
-        View My Rewards
+        Continue Mission
       </button>
 
     </div>

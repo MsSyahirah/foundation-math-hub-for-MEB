@@ -214,6 +214,44 @@ textarea {
 
 
 /* ======================================================
+   WEEK 3 CLASS-ACTIVITY MCQ OPTIONS
+   ====================================================== */
+
+.practice-choice-list {
+  border: 0;
+  padding: 0;
+  margin: 18px 0;
+}
+
+.practice-choice-list legend {
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.practice-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px 14px;
+  margin: 9px 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #f8fafc;
+  cursor: pointer;
+}
+
+.practice-choice:hover {
+  border-color: var(--blue);
+  background: var(--light-blue);
+}
+
+.practice-choice input {
+  margin-top: 3px;
+  accent-color: var(--blue);
+}
+
+
+/* ======================================================
    SMALL LABELS
    ====================================================== */
 
@@ -2842,5 +2880,123 @@ textarea {
 
   .practice-navigation-buttons .button {
     width: 100%;
+  }
+}
+
+
+/* ======================================================
+   WEEK 3 PERFORMANCE-CRITERIA GAME CARDS
+   ====================================================== */
+
+.modal-card {
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+.criterion-game {
+  margin: 20px 0;
+  padding: 20px;
+  border: 2px solid #c4b5fd;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #f5f3ff, #eff6ff);
+  text-align: left;
+  animation: criterion-card-arrive 0.45s ease both;
+}
+
+.criterion-game h3 {
+  margin: 10px 0 8px;
+  color: var(--navy);
+}
+
+.criterion-game > p {
+  line-height: 1.55;
+}
+
+.criterion-question {
+  margin-top: 16px;
+  font-weight: 850;
+  color: var(--navy);
+}
+
+.criterion-options {
+  display: grid;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.criterion-option {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid #cbd5e1;
+  border-radius: 12px;
+  background: var(--white);
+  color: var(--text);
+  font: inherit;
+  font-weight: 750;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.criterion-option:hover:not(:disabled) {
+  border-color: var(--blue);
+  transform: translateY(-1px);
+}
+
+.criterion-option.wrong {
+  border-color: #ef4444;
+  background: #fef2f2;
+  color: #991b1b;
+  animation: criterion-shake 0.25s ease;
+}
+
+.criterion-option.correct {
+  border-color: var(--green);
+  background: #dcfce7;
+  color: var(--dark-green);
+}
+
+.criterion-feedback {
+  margin-top: 13px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+.criterion-feedback.retry {
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.criterion-feedback.success {
+  background: #dcfce7;
+  color: var(--dark-green);
+}
+
+@keyframes criterion-card-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes criterion-shake {
+  0%, 100% { transform: translateX(0); }
+  35% { transform: translateX(-4px); }
+  70% { transform: translateX(4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .student-marker,
+  .route-completed,
+  .criterion-game,
+  .criterion-option {
+    animation: none !important;
+    transition: none !important;
   }
 }
