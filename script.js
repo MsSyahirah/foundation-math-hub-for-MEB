@@ -2428,6 +2428,9 @@ let currentPracticeQuestionIndex = 0;
 let currentPracticeResponses = {};
 let currentBonusActivity = null;
 let journeyInProgress = false;
+let journeySoundEnabled =
+  localStorage.getItem("foundationMathHubJourneySound") !== "off";
+let journeyAudioContext = null;
 
 /* Learning Tools state */
 let learningCalculatorExpression = "";
@@ -5658,6 +5661,125 @@ function waitForJourney(milliseconds) {
 }
 
 
+function getJourneyAudioContext() {
+  if (!journeySoundEnabled) {
+    return null;
+  }
+
+  const AudioContextClass =
+    window.AudioContext || window.webkitAudioContext;
+
+  if (!AudioContextClass) {
+    return null;
+  }
+
+  if (!journeyAudioContext) {
+    journeyAudioContext = new AudioContextClass();
+  }
+
+  if (journeyAudioContext.state === "suspended") {
+    journeyAudioContext.resume().catch(() => {});
+  }
+
+  return journeyAudioContext;
+}
+
+
+function playJourneyTone(
+  frequency,
+  duration = 0.09,
+  volume = 0.045,
+  delay = 0
+) {
+  const audioContext = getJourneyAudioContext();
+
+  if (!audioContext) {
+    return;
+  }
+
+  const startTime = audioContext.currentTime + delay;
+  const oscillator = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+
+  oscillator.type = "sine";
+  oscillator.frequency.setValueAtTime(frequency, startTime);
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.exponentialRampToValueAtTime(
+    volume,
+    startTime + 0.012
+  );
+  gain.gain.exponentialRampToValueAtTime(
+    0.0001,
+    startTime + duration
+  );
+
+  oscillator.connect(gain);
+  gain.connect(audioContext.destination);
+  oscillator.start(startTime);
+  oscillator.stop(startTime + duration + 0.02);
+}
+
+
+function playJourneyStep(tileNumber) {
+  playJourneyTone(
+    tileNumber % 2 === 0 ? 392 : 330,
+    0.08,
+    0.035
+  );
+}
+
+
+function playJourneyEvent() {
+  playJourneyTone(523.25, 0.12, 0.045, 0);
+  playJourneyTone(659.25, 0.14, 0.045, 0.1);
+}
+
+
+function playAchievementChime() {
+  playJourneyTone(523.25, 0.18, 0.04, 0);
+  playJourneyTone(659.25, 0.2, 0.045, 0.12);
+  playJourneyTone(783.99, 0.25, 0.05, 0.24);
+}
+
+
+function updateJourneySoundButton() {
+  const button =
+    document.getElementById("journeySoundToggle");
+
+  if (!button) {
+    return;
+  }
+
+  button.textContent = journeySoundEnabled
+    ? "🔊 Sound On"
+    : "🔇 Sound Off";
+  button.setAttribute(
+    "aria-pressed",
+    String(journeySoundEnabled)
+  );
+  button.setAttribute(
+    "aria-label",
+    journeySoundEnabled
+      ? "Turn plant journey sound off"
+      : "Turn plant journey sound on"
+  );
+}
+
+
+function toggleJourneySound() {
+  journeySoundEnabled = !journeySoundEnabled;
+  localStorage.setItem(
+    "foundationMathHubJourneySound",
+    journeySoundEnabled ? "on" : "off"
+  );
+  updateJourneySoundButton();
+
+  if (journeySoundEnabled) {
+    playJourneyTone(659.25, 0.12, 0.04);
+  }
+}
+
+
 function getPlantTilePosition(tileNumber) {
   const row = Math.floor((tileNumber - 1) / 5) + 1;
   const placeInRow = (tileNumber - 1) % 5;
@@ -5735,11 +5857,14 @@ async function animatePlantJourney(completedCount) {
   progressFill.style.width = `${(startTile / 20) * 100}%`;
   eventBox.className = "journey-event";
   eventBox.textContent = "Plant route cleared. Moving one tile at a time…";
+  updateJourneySoundButton();
+  getJourneyAudioContext();
 
   await waitForJourney(450);
 
   for (let tileNumber = startTile + 1; tileNumber <= arrivalTile; tileNumber += 1) {
     placeJourneyAvatar(tileNumber);
+    playJourneyStep(tileNumber);
     progressFill.style.width = `${(tileNumber / 20) * 100}%`;
     eventBox.textContent = `Moving through the plant: tile ${tileNumber} of 20`;
     await waitForJourney(480);
@@ -5750,6 +5875,7 @@ async function animatePlantJourney(completedCount) {
 
   eventBox.classList.add("event-arrived");
   eventBox.textContent = `${event.icon} ${event.title}: ${event.message}`;
+  playJourneyEvent();
 
   await waitForJourney(1250);
 
@@ -5774,6 +5900,8 @@ function revealPlantAchievement() {
 
   document.getElementById("closeModalButton")
     .classList.remove("hidden");
+
+  playAchievementChime();
 }
 
 
@@ -6704,6 +6832,14 @@ document.getElementById(
 ).addEventListener(
   "click",
   rollBonusGame
+);
+
+
+document.getElementById(
+  "journeySoundToggle"
+).addEventListener(
+  "click",
+  toggleJourneySound
 );
 
 

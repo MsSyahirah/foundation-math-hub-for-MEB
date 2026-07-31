@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Foundation Math Hub for Higher Nitec in Chemical Process Technology">
   <title>Foundation Math Hub</title>
-  <link rel="stylesheet" href="style.css?v=8">
-  <script src="script.js?v=8" defer></script>
+  <link rel="stylesheet" href="style.css?v=9">
+  <script src="script.js?v=9" defer></script>
 </head>
 <body>
 
@@ -891,7 +891,19 @@
 
     <div class="journey-pause hidden" id="journeyPause">
 
-      <span class="small-label">Plant Journey in Progress</span>
+      <div class="journey-pause-toolbar">
+        <span class="small-label">Plant Journey in Progress</span>
+
+        <button
+          class="journey-sound-toggle"
+          id="journeySoundToggle"
+          type="button"
+          aria-pressed="true"
+          aria-label="Turn plant journey sound off"
+        >
+          🔊 Sound On
+        </button>
+      </div>
 
       <h2 id="journeyPauseTitle">Checkpoint achieved — moving to the next station!</h2>
 
