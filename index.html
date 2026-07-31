@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Foundation Math Hub for Higher Nitec in Chemical Process Technology">
   <title>Foundation Math Hub</title>
-  <link rel="stylesheet" href="style.css?v=7">
-  <script src="script.js?v=7" defer></script>
+  <link rel="stylesheet" href="style.css?v=8">
+  <script src="script.js?v=8" defer></script>
 </head>
 <body>
 
@@ -879,7 +879,7 @@
   id="celebrationModal"
 >
 
-  <div class="modal-card">
+  <div class="modal-card" id="celebrationModalCard">
 
     <button
       class="modal-close"
@@ -889,12 +889,37 @@
       ×
     </button>
 
-    <div
-      class="celebration-character"
-      id="celebrationCharacter"
-    >
-      🧑‍🎓
+    <div class="journey-pause hidden" id="journeyPause">
+
+      <span class="small-label">Plant Journey in Progress</span>
+
+      <h2 id="journeyPauseTitle">Checkpoint achieved — moving to the next station!</h2>
+
+      <p id="journeyPauseText">
+        Watch your process trainee travel through the plant before the next station unlocks.
+      </p>
+
+      <div class="plant-board" id="plantBoard" aria-label="20-tile process plant journey"></div>
+
+      <div class="journey-event" id="journeyEvent" role="status" aria-live="polite">
+        Preparing the route…
+      </div>
+
+      <div class="journey-progress" aria-hidden="true">
+        <div class="journey-progress-fill" id="journeyProgressFill"></div>
+      </div>
+
     </div>
+
+
+    <div class="achievement-reveal" id="achievementReveal">
+
+      <div
+        class="celebration-character"
+        id="celebrationCharacter"
+      >
+        🧑‍🎓
+      </div>
 
     <h2 id="celebrationTitle">
       Checkpoint Completed!
@@ -903,29 +928,45 @@
     <p id="celebrationText"></p>
 
 
-    <div class="criterion-game hidden" id="criterionGame">
+      <div class="criterion-game hidden" id="criterionGame">
 
-      <span class="small-label">Performance-Criteria Game Card</span>
+        <span class="small-label">Plant Achievement Card</span>
 
-      <h3 id="criterionTitle">Quick process challenge</h3>
+        <h3 id="criterionTitle">Achievement unlocked</h3>
 
-      <p id="criterionTeaching"></p>
+        <div class="achievement-detail achievement-skill">
+          <strong>🏅 You achieved</strong>
+          <p id="criterionAchievement"></p>
+        </div>
 
-      <p class="criterion-question" id="criterionQuestion"></p>
+        <div class="achievement-detail achievement-plant">
+          <strong>🏭 Plant connection</strong>
+          <p id="criterionPlantConnection"></p>
+        </div>
 
-      <div class="criterion-options" id="criterionOptions"></div>
+        <div class="achievement-detail achievement-matters">
+          <strong>🛡️ Why it matters</strong>
+          <p id="criterionWhyMatters"></p>
+        </div>
 
-      <div
-        class="criterion-feedback hidden"
-        id="criterionFeedback"
-        role="status"
-        aria-live="polite"
-      ></div>
+        <div class="plant-challenge-box">
+          <strong>🔧 Mini plant challenge</strong>
+          <p class="criterion-question" id="criterionQuestion"></p>
+        </div>
 
-    </div>
+        <div class="criterion-options" id="criterionOptions"></div>
+
+        <div
+          class="criterion-feedback hidden"
+          id="criterionFeedback"
+          role="status"
+          aria-live="polite"
+        ></div>
+
+      </div>
 
 
-    <div class="bonus-game mastery-update-box">
+      <div class="bonus-game mastery-update-box">
 
       <h3>⭐ Mastery Update</h3>
 
@@ -940,6 +981,8 @@
       >
         Continue Mission
       </button>
+
+      </div>
 
     </div>
 

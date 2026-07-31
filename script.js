@@ -2244,11 +2244,15 @@ const week3Lessons = {
 
 const week3CriterionCards = {
   "learning-method": {
-    title: "Process Explorer Card",
-    teaching:
-      "A system boundary is the imaginary line around the equipment or process selected for study.",
+    title: "Process Explorer Achievement Unlocked",
+    achievement:
+      "You can identify the equipment being studied and draw its system boundary.",
+    plantConnection:
+      "Before doing a material balance, operators and engineers must agree on which tank, mixer or separator is inside the study boundary.",
+    whyMatters:
+      "A poorly chosen boundary can leave out a stream and make every later calculation incorrect.",
     question:
-      "Which item crosses a system boundary?",
+      "An engineer draws a boundary around one mixing tank. Which item crosses that boundary?",
     choices: [
       "A. The name of the equipment",
       "B. An input or output stream",
@@ -2256,15 +2260,19 @@ const week3CriterionCards = {
     ],
     correctOption: "B",
     explanation:
-      "Correct. Material streams cross into or out of the selected system."
+      "Correct. Material streams cross into or out of the selected system boundary."
   },
 
   "remember-bloom": {
-    title: "Boundary Spotter Card",
-    teaching:
-      "An arrow entering the boundary is an input. An arrow leaving the boundary is an output.",
+    title: "Flow Detective Achievement Unlocked",
+    achievement:
+      "You can classify process streams as inputs or outputs by reading their arrow directions.",
+    plantConnection:
+      "Plant equipment may have several feed, product, recycle and waste pipes. Each stream crossing the boundary must be counted.",
+    whyMatters:
+      "Missing or reversing one stream gives the wrong total flow and can hide an operating problem.",
     question:
-      "An arrow points out of a mixing tank. How should it be labelled?",
+      "A pipe arrow points away from a mixing tank. How should an operator classify it?",
     choices: [
       "A. Input",
       "B. Output",
@@ -2276,9 +2284,13 @@ const week3CriterionCards = {
   },
 
   "understand-bloom": {
-    title: "Flow Detective Card",
-    teaching:
-      "Compare the total input and output before deciding what is happening inside a process.",
+    title: "Steady-State Scout Achievement Unlocked",
+    achievement:
+      "You can decide whether material is building up, decreasing or remaining constant inside a process.",
+    plantConnection:
+      "Operators compare inlet and outlet flowrates with tank-level trends to judge whether a process is operating steadily.",
+    whyMatters:
+      "If more material enters than leaves, the tank level rises. Recognising accumulation early supports stable and safe operation.",
     question:
       "A tank has 12 kg/min entering and 9 kg/min leaving. What is happening?",
     choices: [
@@ -2292,9 +2304,13 @@ const week3CriterionCards = {
   },
 
   "apply-balance": {
-    title: "Balance Builder Card",
-    teaching:
-      "At steady state, accumulation is zero and Total Input = Total Output.",
+    title: "Balance Builder Achievement Unlocked",
+    achievement:
+      "You can use Total Input = Total Output to calculate an unknown mass flowrate at steady state.",
+    plantConnection:
+      "This calculation helps plant staff estimate a missing stream, check flowmeter readings and maintain the required production rate.",
+    whyMatters:
+      "An incorrect balance may lead to the wrong operating decision, production loss or an unexpected tank-level change.",
     question:
       "Two feeds enter at 8 kg/min and 7 kg/min. What is the single outlet at steady state?",
     choices: [
@@ -2308,9 +2324,13 @@ const week3CriterionCards = {
   },
 
   "edcafe-check": {
-    title: "MEB Challenge Card",
-    teaching:
-      "The independent check shows what you can identify, explain and calculate without guided help.",
+    title: "MEB Challenge Achievement Unlocked",
+    achievement:
+      "You can independently interpret a simple non-reacting process and complete an overall material balance.",
+    plantConnection:
+      "This is the same thinking sequence used to read a plant flow diagram, select a balance equation and check whether the result is reasonable.",
+    whyMatters:
+      "Independent checking helps prevent calculation errors from being carried into later process decisions.",
     question:
       "Which equation should you start with for a non-reacting steady-state process?",
     choices: [
@@ -2407,6 +2427,7 @@ let currentQuestionHintUsed = {};
 let currentPracticeQuestionIndex = 0;
 let currentPracticeResponses = {};
 let currentBonusActivity = null;
+let journeyInProgress = false;
 
 /* Learning Tools state */
 let learningCalculatorExpression = "";
@@ -2824,6 +2845,12 @@ function renderLearningChoices() {
   if (!activity || !grid) {
     return;
   }
+
+  const hasWatchChoice = activity.choices.some(
+    choice => choice.linkKey === "watch"
+  );
+
+  grid.classList.toggle("two-choice-layout", !hasWatchChoice);
 
   const descriptions = {
     read: "Go through the visual slides slowly at your own pace.",
@@ -5544,6 +5571,18 @@ function showCelebration(activityId) {
     selectedWeekId === "week-3" &&
     Boolean(week3CriterionCards[activityId]);
 
+  const journeyPause =
+    document.getElementById("journeyPause");
+
+  const achievementReveal =
+    document.getElementById("achievementReveal");
+
+  const modalCard =
+    document.getElementById("celebrationModalCard");
+
+  const closeButton =
+    document.getElementById("closeModalButton");
+
   document.getElementById("criterionGame")
     .classList.toggle("hidden", !hasCriterionCard);
 
@@ -5559,6 +5598,182 @@ function showCelebration(activityId) {
   document
     .getElementById("celebrationModal")
     .classList.remove("hidden");
+
+  if (hasCriterionCard) {
+    journeyInProgress = true;
+    journeyPause.classList.remove("hidden");
+    achievementReveal.classList.add("hidden");
+    achievementReveal.classList.remove("revealing");
+    modalCard.classList.add("journey-active");
+    closeButton.classList.add("hidden");
+
+    animatePlantJourney(completedCount);
+  } else {
+    journeyInProgress = false;
+    journeyPause.classList.add("hidden");
+    achievementReveal.classList.remove("hidden");
+    modalCard.classList.remove("journey-active");
+    closeButton.classList.remove("hidden");
+  }
+}
+
+
+const journeyArrivalEvents = {
+  1: {
+    icon: "🔍",
+    title: "Boundary inspection passed",
+    message: "You identified what belongs inside the system before counting any streams."
+  },
+  2: {
+    icon: "🔀",
+    title: "Pipe-route check passed",
+    message: "You followed the arrows and accounted for the inlet and outlet streams."
+  },
+  3: {
+    icon: "📊",
+    title: "Tank-level signal checked",
+    message: "You used the flow difference to recognise steady state or accumulation."
+  },
+  4: {
+    icon: "🪜",
+    title: "Calculation ladder climbed",
+    message: "Your balance equation moved you up to the calculation station."
+  },
+  5: {
+    icon: "🏭",
+    title: "Weekly MEB goal reached",
+    message: "You completed the independent plant-process check."
+  }
+};
+
+
+function waitForJourney(milliseconds) {
+  const reducedMotion =
+    window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  return new Promise(resolve => {
+    window.setTimeout(resolve, reducedMotion ? 40 : milliseconds);
+  });
+}
+
+
+function getPlantTilePosition(tileNumber) {
+  const row = Math.floor((tileNumber - 1) / 5) + 1;
+  const placeInRow = (tileNumber - 1) % 5;
+  const column = row % 2 === 1
+    ? placeInRow + 1
+    : 5 - placeInRow;
+
+  return { row, column };
+}
+
+
+function renderPlantBoard(startTile, arrivalTile, checkpointNumber) {
+  const event = journeyArrivalEvents[checkpointNumber];
+  const board = document.getElementById("plantBoard");
+
+  board.innerHTML = "";
+
+  for (let tileNumber = 1; tileNumber <= 20; tileNumber += 1) {
+    const tile = document.createElement("div");
+    const position = getPlantTilePosition(tileNumber);
+
+    tile.className = "plant-tile";
+    tile.dataset.tile = String(tileNumber);
+    tile.style.gridRow = String(position.row);
+    tile.style.gridColumn = String(position.column);
+    tile.textContent = String(tileNumber);
+
+    if (tileNumber <= startTile) {
+      tile.classList.add("visited");
+    }
+
+    if (tileNumber === arrivalTile) {
+      tile.classList.add("special");
+      tile.dataset.eventIcon = event.icon;
+    }
+
+    board.appendChild(tile);
+  }
+}
+
+
+function placeJourneyAvatar(tileNumber) {
+  const board = document.getElementById("plantBoard");
+  const tile = board.querySelector(`[data-tile="${tileNumber}"]`);
+
+  if (!tile) {
+    return;
+  }
+
+  board.querySelector(".journey-avatar")?.remove();
+
+  const avatar = document.createElement("span");
+  avatar.className = "journey-avatar";
+  avatar.textContent = "🧑‍🔬";
+  avatar.setAttribute("aria-label", `Process trainee on tile ${tileNumber}`);
+  tile.appendChild(avatar);
+  tile.classList.add("visited");
+
+  void avatar.offsetWidth;
+}
+
+
+async function animatePlantJourney(completedCount) {
+  const checkpointNumber = Math.max(1, Math.min(5, completedCount));
+  const startTile = (checkpointNumber - 1) * 4;
+  const arrivalTile = checkpointNumber * 4;
+  const event = journeyArrivalEvents[checkpointNumber];
+  const eventBox = document.getElementById("journeyEvent");
+  const progressFill = document.getElementById("journeyProgressFill");
+
+  document.getElementById("journeyPauseTitle").textContent =
+    `Checkpoint ${checkpointNumber} achieved — follow your trainee!`;
+
+  renderPlantBoard(startTile, arrivalTile, checkpointNumber);
+  progressFill.style.width = `${(startTile / 20) * 100}%`;
+  eventBox.className = "journey-event";
+  eventBox.textContent = "Plant route cleared. Moving one tile at a time…";
+
+  await waitForJourney(450);
+
+  for (let tileNumber = startTile + 1; tileNumber <= arrivalTile; tileNumber += 1) {
+    placeJourneyAvatar(tileNumber);
+    progressFill.style.width = `${(tileNumber / 20) * 100}%`;
+    eventBox.textContent = `Moving through the plant: tile ${tileNumber} of 20`;
+    await waitForJourney(480);
+  }
+
+  document.querySelector(`[data-tile="${arrivalTile}"]`)
+    ?.classList.add("arrival");
+
+  eventBox.classList.add("event-arrived");
+  eventBox.textContent = `${event.icon} ${event.title}: ${event.message}`;
+
+  await waitForJourney(1250);
+
+  revealPlantAchievement();
+}
+
+
+function revealPlantAchievement() {
+  journeyInProgress = false;
+
+  document.getElementById("journeyPause")
+    .classList.add("hidden");
+
+  const achievementReveal =
+    document.getElementById("achievementReveal");
+
+  achievementReveal.classList.remove("hidden");
+  achievementReveal.classList.add("revealing");
+
+  document.getElementById("celebrationModalCard")
+    .classList.remove("journey-active");
+
+  document.getElementById("closeModalButton")
+    .classList.remove("hidden");
 }
 
 
@@ -5568,8 +5783,14 @@ function renderCriterionCard(activityId) {
   document.getElementById("criterionTitle").textContent =
     card.title;
 
-  document.getElementById("criterionTeaching").textContent =
-    card.teaching;
+  document.getElementById("criterionAchievement").textContent =
+    card.achievement;
+
+  document.getElementById("criterionPlantConnection").textContent =
+    card.plantConnection;
+
+  document.getElementById("criterionWhyMatters").textContent =
+    card.whyMatters;
 
   document.getElementById("criterionQuestion").textContent =
     card.question;
@@ -6499,6 +6720,10 @@ document.getElementById(
 ).addEventListener(
   "click",
   () => {
+    if (journeyInProgress) {
+      return;
+    }
+
     document
       .getElementById("celebrationModal")
       .classList.add("hidden");
@@ -6517,7 +6742,8 @@ document.getElementById(
   event => {
     if (
       event.target.id ===
-      "celebrationModal"
+      "celebrationModal" &&
+      !journeyInProgress
     ) {
       document
         .getElementById("celebrationModal")
