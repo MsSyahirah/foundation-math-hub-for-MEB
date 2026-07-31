@@ -3002,6 +3002,56 @@ textarea {
   background: var(--light-blue);
 }
 
+.week-sound-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: min(590px, 100%);
+  margin-top: 18px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(5px);
+}
+
+.week-sound-control.hidden {
+  display: none;
+}
+
+.week-sound-copy {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.week-sound-copy > span {
+  font-size: 24px;
+}
+
+.week-sound-copy strong,
+.week-sound-copy small {
+  display: block;
+}
+
+.week-sound-copy strong {
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.week-sound-copy small {
+  margin-top: 2px;
+  color: rgba(255, 255, 255, 0.84);
+  line-height: 1.35;
+}
+
+.week-sound-control .journey-sound-toggle {
+  flex: 0 0 auto;
+  box-shadow: 0 5px 14px rgba(15, 23, 42, 0.15);
+}
+
 .journey-pause h2 {
   margin: 12px 0 8px;
   color: var(--navy);
@@ -3259,6 +3309,15 @@ textarea {
 }
 
 @media (max-width: 580px) {
+  .week-sound-control {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .week-sound-control .journey-sound-toggle {
+    width: 100%;
+  }
+
   .modal-card.journey-active {
     padding: 22px 14px;
   }

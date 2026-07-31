@@ -2656,6 +2656,16 @@ function openWeek(weekId) {
       .map(tag => `<span>${tag}</span>`)
       .join("");
 
+  document
+    .getElementById("weekSoundControl")
+    .classList.toggle("hidden", selectedWeekId !== "week-3");
+
+  updateJourneySoundButton();
+
+  if (selectedWeekId === "week-3" && journeySoundEnabled) {
+    getJourneyAudioContext();
+  }
+
   updateWholeWeek();
 
   if (
@@ -5743,26 +5753,27 @@ function playAchievementChime() {
 
 
 function updateJourneySoundButton() {
-  const button =
-    document.getElementById("journeySoundToggle");
+  ["weekSoundToggle", "journeySoundToggle"].forEach(buttonId => {
+    const button = document.getElementById(buttonId);
 
-  if (!button) {
-    return;
-  }
+    if (!button) {
+      return;
+    }
 
-  button.textContent = journeySoundEnabled
-    ? "🔊 Sound On"
-    : "🔇 Sound Off";
-  button.setAttribute(
-    "aria-pressed",
-    String(journeySoundEnabled)
-  );
-  button.setAttribute(
-    "aria-label",
-    journeySoundEnabled
-      ? "Turn plant journey sound off"
-      : "Turn plant journey sound on"
-  );
+    button.textContent = journeySoundEnabled
+      ? "🔊 Sound On"
+      : "🔇 Sound Off";
+    button.setAttribute(
+      "aria-pressed",
+      String(journeySoundEnabled)
+    );
+    button.setAttribute(
+      "aria-label",
+      journeySoundEnabled
+        ? "Turn plant journey sound off"
+        : "Turn plant journey sound on"
+    );
+  });
 }
 
 
@@ -6837,6 +6848,14 @@ document.getElementById(
 
 document.getElementById(
   "journeySoundToggle"
+).addEventListener(
+  "click",
+  toggleJourneySound
+);
+
+
+document.getElementById(
+  "weekSoundToggle"
 ).addEventListener(
   "click",
   toggleJourneySound
