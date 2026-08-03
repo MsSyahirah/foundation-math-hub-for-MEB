@@ -55,7 +55,10 @@ const websiteLinks = {
       "https://app.edcafe.ai/flashcards/6a6c5b82ad8710c9cbc6663d",
 
     understandPractice:
-      "https://app.edcafe.ai/quizzes/6a6c5bf5ad8710c9cbc6684b"
+      "https://app.edcafe.ai/quizzes/6a6c5bf5ad8710c9cbc6684b",
+
+    officialQuiz:
+      "https://forms.cloud.microsoft/r/zX3cb3Raxn"
   }
 };
 
@@ -230,7 +233,7 @@ const outcomesByWeek = {
       "Check whether the final answer and units are reasonable."
     ],
     note:
-      "Choose Read or Listen, then complete Remember, Understand and Apply together. Finish with the Edcafe independent understanding check."
+      "Choose Read or Listen, then complete Remember, Understand and Apply together. Finish the Edcafe understanding check before submitting the official Microsoft Forms quiz."
   }
 };
 
@@ -769,18 +772,19 @@ const week3Activities = [
 
   {
     id: "official-quiz",
-    number: "Evidence Check",
-    title: "Week 3 Official Quiz / Exit Check",
+    number: "Official Submission",
+    title: "Week 3 Official Quiz — 20 Questions",
 
     icon: "✅",
     colour: "#16a34a",
 
     description:
-      "A short independent check will be added after the practice activity is tested with the class.",
+      "Complete the official Microsoft Forms quiz independently. It checks system boundaries, inputs and outputs, material balance and process scaling.",
 
-    type: "coming-soon",
-    optional: true,
-    prerequisites: []
+    type: "external",
+    official: true,
+    linkKey: "officialQuiz",
+    prerequisites: ["edcafe-check"]
   }
 ];
 
@@ -5228,15 +5232,10 @@ function getMasteryStarCount() {
 
 
 function rewardTokenIsEarned() {
-  const finalEvidenceId =
-    selectedWeekId === "week-3"
-      ? "edcafe-check"
-      : "official-quiz";
-
   return (
     getCompletedCheckpointCount() ===
       getCurrentCheckpointIds().length &&
-    isActivityCompleted(finalEvidenceId)
+    isActivityCompleted("official-quiz")
   );
 }
 
@@ -5567,7 +5566,7 @@ function showCelebration(activityId) {
   ).textContent =
     completedCount === getCurrentCheckpointIds().length
       ? selectedWeekId === "week-3"
-        ? "Your five mission stops are complete. Your weekly badge and Reward Token are now ready for lecturer confirmation."
+        ? "Your five mission stops are complete. Submit the official Microsoft Forms quiz to earn your weekly Reward Token."
         : "Your required checkpoints are complete. Submit the official quiz when it is released."
       : "Good work. Your checkpoint progress and Mastery Stars have been updated.";
 
@@ -6363,9 +6362,8 @@ function renderWeeklyRewards() {
     redeemButton.disabled = false;
     redeemButton.textContent = "Use My Token";
   } else {
-    tokenStatus.textContent = selectedWeekId === "week-3"
-      ? "Complete all five checkpoints, including the Edcafe independent check, to earn one token."
-      : "Complete all five checkpoints and submit the official quiz to earn one token.";
+    tokenStatus.textContent =
+      "Complete all five checkpoints and submit the official quiz to earn one token.";
 
     redeemButton.disabled = true;
     redeemButton.textContent = "Token Locked";
@@ -6451,14 +6449,9 @@ function redeemRewardToken() {
    ========================================================= */
 
 function evidenceIsUnlocked() {
-  const finalEvidenceId =
-    selectedWeekId === "week-3"
-      ? "edcafe-check"
-      : "official-quiz";
-
   return (
     getCompletedCheckpointCount() === getCurrentCheckpointIds().length &&
-    isActivityCompleted(finalEvidenceId)
+    isActivityCompleted("official-quiz")
   );
 }
 
@@ -6523,9 +6516,7 @@ function renderEvidenceSection() {
       "🔒";
 
     instructions.textContent =
-      selectedWeekId === "week-3"
-        ? "Complete all five mission stops, including the Edcafe independent check, to unlock your evidence."
-        : "Complete all five checkpoints and submit the official quiz to unlock your evidence.";
+      "Complete all five checkpoints and submit the official quiz to unlock your evidence.";
   }
 }
 
@@ -6590,9 +6581,7 @@ function updateEvidenceDocument() {
   const completionDate =
     studentProgress
       .completionDates[
-        selectedWeekId === "week-3"
-          ? "edcafe-check"
-          : "official-quiz"
+        "official-quiz"
       ];
 
   document.getElementById(
