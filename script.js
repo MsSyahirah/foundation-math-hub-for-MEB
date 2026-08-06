@@ -1,6 +1,6 @@
 /* =========================================================
    FOUNDATION MATH HUB
-   MULTI-WEEK WEBSITE — WEEKS 1 TO 3
+   MULTI-WEEK WEBSITE — WEEKS 1 TO 4
 
    Week 1 remains unchanged.
    Week 3 extends the proven Week 2 structure without changing
@@ -59,6 +59,32 @@ const websiteLinks = {
 
     officialQuiz:
       "https://forms.cloud.microsoft/r/zX3cb3Raxn"
+  },
+
+  "week-4": {
+    preTest:
+      "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=jCy0E8_LPU6dIPVbe17jwfn3D9q2Xd9Ci6lD9o2F-fxUQkVGRU85RUtEUkUzNDNBWVY1UUxQTFdROC4u",
+
+    mission1:
+      "https://app.edcafe.ai/share/quiz/week-4-mission-1-checkpoint-–-read-the-reaction-6a7446b0ca64f4eb0330da02?sig=31a2d2e22d8c466ed154222cb0ba1f5b",
+
+    mission2:
+      "https://app.edcafe.ai/share/quiz/week-4-mission-2-checkpoint-–-convert-like-an-engineer-6a744258ca64f4eb0330c3f6?sig=565cf1b874985f7d8baa9aed62c4ef20",
+
+    mission3:
+      "https://app.edcafe.ai/share/quiz/week-4-mission-3-checkpoint-–-master-the-mole-ratio-6a744337ca64f4eb0330c8fc?sig=8d654719cbd73587eb41626c35136780",
+
+    mission4:
+      "https://app.edcafe.ai/share/quiz/week-4-mission-4-checkpoint-–-find-the-limiting-reactant-6a7443b81a30f33122dbf049?sig=cf8e7644b5c570a303116b51cd038468",
+
+    mission5:
+      "https://app.edcafe.ai/share/quiz/week-4-mission-5-checkpoint-–-percentage-excess-percentage-conversio-6a7443fcca64f4eb0330ce70?sig=bd6e2399d7d29d8172c18c2065a1e547",
+
+    postTest:
+      "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=jCy0E8_LPU6dIPVbe17jwfn3D9q2Xd9Ci6lD9o2F-fxUOEVBRTFaWFRZOTEzUE1YT0FBMUtJMU1NTy4u",
+
+    studentSurvey:
+      "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=jCy0E8_LPU6dIPVbe17jwfn3D9q2Xd9Ci6lD9o2F-fxUMDZFSDdIT1BZTEdWMjBLWUZIWUtUWFFIOC4u"
   }
 };
 
@@ -140,17 +166,23 @@ const weeks = [
   {
     id: "week-4",
     number: "Week 4",
-    title: "Chemical Equations and Stoichiometry",
+    title: "Chemical Reactions and Stoichiometry",
     icon: "⚗️",
     colour: "#f97316",
 
     description:
-      "Balancing equations and applying mole ratios.",
+      "Mole ratios, mass–mole conversion, limiting reactants, percentage excess and conversion.",
 
-    available: false,
-    status: "Coming soon",
-    releaseNote: "Week 4 is coming soon.",
-    tags: []
+    available: true,
+    status: "Available now",
+    releaseNote: "Week 4 is available now.",
+    tags: [
+      "⚗️ Chemical Equations",
+      "🔢 Mole Ratios",
+      "⚖️ Mass ↔ Moles",
+      "🚦 Limiting Reactant",
+      "📊 Conversion"
+    ]
   },
 
   {
@@ -265,6 +297,14 @@ const checkpointIdsByWeek = {
     "understand-bloom",
     "apply-balance",
     "edcafe-check"
+  ],
+
+  "week-4": [
+    "mission-1",
+    "mission-2",
+    "mission-3",
+    "mission-4",
+    "mission-5"
   ]
 };
 
@@ -789,10 +829,181 @@ const week3Activities = [
 ];
 
 
+
+
+/* =========================================================
+   8. WEEK 4 ACTIVITIES
+   Pre-test → guided missions → Edcafe checkpoints → post-test → survey
+   ========================================================= */
+
+const week4Activities = [
+  {
+    id: "pre-test",
+    number: "Step 1 · Before Learning",
+    title: "Week 4 Pre-Test",
+    icon: "📝",
+    colour: "#d71920",
+    description:
+      "Complete this independently before opening Mission 1. Do not use notes or worked examples.",
+    type: "external",
+    linkKey: "preTest",
+    official: true,
+    prerequisites: []
+  },
+  {
+    id: "mission-1",
+    number: "Mission 1",
+    title: "Read the Reaction",
+    routeLabel: "Read Reaction",
+    icon: "🔍",
+    colour: "#22c55e",
+    description:
+      "Identify reactants, products and coefficients, then read a balanced equation in moles.",
+    type: "lesson",
+    prerequisites: ["pre-test"]
+  },
+  {
+    id: "checkpoint-1",
+    number: "Mission 1 Checkpoint",
+    title: "Edcafe: Read the Reaction",
+    icon: "🎯",
+    colour: "#16a34a",
+    description:
+      "Use your Full Name – Class. Submit the three-question checkpoint, then return here.",
+    type: "external",
+    linkKey: "mission1",
+    prerequisites: ["mission-1"]
+  },
+  {
+    id: "mission-2",
+    number: "Mission 2",
+    title: "Convert Like an Engineer",
+    routeLabel: "Mass ↔ Moles",
+    icon: "⚖️",
+    colour: "#2563eb",
+    description:
+      "Calculate molecular weight and convert accurately between mass and moles.",
+    type: "lesson",
+    prerequisites: ["checkpoint-1"]
+  },
+  {
+    id: "checkpoint-2",
+    number: "Mission 2 Checkpoint",
+    title: "Edcafe: Convert Like an Engineer",
+    icon: "🎯",
+    colour: "#2563eb",
+    description:
+      "Complete the independent three-question checkpoint before continuing.",
+    type: "external",
+    linkKey: "mission2",
+    prerequisites: ["mission-2"]
+  },
+  {
+    id: "mission-3",
+    number: "Mission 3",
+    title: "Master the Mole Ratio",
+    routeLabel: "Mole Ratio",
+    icon: "🔗",
+    colour: "#eab308",
+    description:
+      "Select and apply the correct mole ratio from a balanced equation.",
+    type: "lesson",
+    prerequisites: ["checkpoint-2"]
+  },
+  {
+    id: "checkpoint-3",
+    number: "Mission 3 Checkpoint",
+    title: "Edcafe: Master the Mole Ratio",
+    icon: "🎯",
+    colour: "#eab308",
+    description:
+      "Complete the independent three-question checkpoint before continuing.",
+    type: "external",
+    linkKey: "mission3",
+    prerequisites: ["mission-3"]
+  },
+  {
+    id: "mission-4",
+    number: "Mission 4",
+    title: "Find the Limiting Reactant",
+    routeLabel: "Limiting Reactant",
+    icon: "🚦",
+    colour: "#f97316",
+    description:
+      "Compare reactants systematically and calculate the maximum product formed.",
+    type: "lesson",
+    prerequisites: ["checkpoint-3"]
+  },
+  {
+    id: "checkpoint-4",
+    number: "Mission 4 Checkpoint",
+    title: "Edcafe: Find the Limiting Reactant",
+    icon: "🎯",
+    colour: "#f97316",
+    description:
+      "Complete the independent three-question checkpoint before continuing.",
+    type: "external",
+    linkKey: "mission4",
+    prerequisites: ["mission-4"]
+  },
+  {
+    id: "mission-5",
+    number: "Mission 5",
+    title: "Optimise the Reaction",
+    routeLabel: "Reaction Performance",
+    icon: "📊",
+    colour: "#ec4899",
+    description:
+      "Distinguish and calculate percentage excess and percentage conversion.",
+    type: "lesson",
+    prerequisites: ["checkpoint-4"]
+  },
+  {
+    id: "checkpoint-5",
+    number: "Mission 5 Checkpoint",
+    title: "Edcafe: Reaction Performance",
+    icon: "🎯",
+    colour: "#ec4899",
+    description:
+      "Complete the final mission checkpoint before attempting the post-test.",
+    type: "external",
+    linkKey: "mission5",
+    prerequisites: ["mission-5"]
+  },
+  {
+    id: "post-test",
+    number: "Step 3 · Independent Assessment",
+    title: "Week 4 Post-Test",
+    icon: "✅",
+    colour: "#16a34a",
+    description:
+      "Complete this independently without opening hints, notes or worked solutions.",
+    type: "external",
+    linkKey: "postTest",
+    official: true,
+    prerequisites: ["checkpoint-5"]
+  },
+  {
+    id: "student-survey",
+    number: "Final Step",
+    title: "Week 4 Student Feedback",
+    icon: "💬",
+    colour: "#8b5cf6",
+    description:
+      "Tell us whether the learning journey helped and whether the website was clear to use.",
+    type: "external",
+    linkKey: "studentSurvey",
+    official: true,
+    prerequisites: ["post-test"]
+  }
+];
+
+
 const activitiesByWeek = {
   "week-1": week1Activities,
   "week-2": week2Activities,
-  "week-3": week3Activities
+  "week-3": week3Activities,
+  "week-4": week4Activities
 };
 
 
@@ -2349,10 +2560,148 @@ const week3CriterionCards = {
 };
 
 
+
+
+/* =========================================================
+   WEEK 4 GUIDED MISSIONS
+   ========================================================= */
+
+const week4Lessons = {
+  "mission-1": {
+    badge: "Mission 1",
+    title: "Read the Reaction",
+    icon: "🔍",
+    description:
+      "Learn to identify reactants, products and coefficients before beginning any calculation.",
+    content: `
+      <div class="content-block">
+        <span class="small-label">Learn With Your Lecturer</span>
+        <h3>Understand the reaction before touching your calculator</h3>
+        <p>Reactants are shown on the left of the arrow. Products are shown on the right. The large number in front of a formula is the stoichiometric coefficient.</p>
+        <div class="formula-box">2H₂ + O₂ → 2H₂O</div>
+        <p>Read this as: <strong>2 mol H₂ react with 1 mol O₂ to produce 2 mol H₂O.</strong></p>
+      </div>
+      <div class="warning-box">
+        <h3>Common mistake</h3>
+        <p>Do not confuse the coefficient with the subscript. In 2H₂, the coefficient is 2 and the subscript is also 2, but they have different meanings.</p>
+      </div>
+    `,
+    questions: [
+      { question: "For 2H₂ + O₂ → 2H₂O, which substances are the reactants?", type: "mcq", choices: ["A. H₂ and O₂", "B. H₂O only", "C. O₂ and H₂O"], correctOption: "A", hint: "Look at the left-hand side of the arrow.", feedback: "Correct. H₂ and O₂ are the starting substances, so they are reactants." },
+      { question: "For N₂ + 3H₂ → 2NH₃, what is the coefficient of H₂?", type: "mcq", choices: ["A. 1", "B. 2", "C. 3"], correctOption: "C", hint: "Read the large number immediately before H₂.", feedback: "Correct. The coefficient of H₂ is 3." },
+      { question: "Which sentence correctly reads 2H₂ + O₂ → 2H₂O?", type: "mcq", choices: ["A. 2 mol H₂ react with 1 mol O₂ to produce 2 mol H₂O", "B. 1 mol H₂ reacts with 2 mol O₂ to produce 1 mol H₂O", "C. 2 g H₂ react with 1 g O₂ to produce 2 g H₂O"], correctOption: "A", hint: "Use the coefficients as mole amounts.", feedback: "Correct. The coefficients 2, 1 and 2 give the mole relationship." }
+    ]
+  },
+
+  "mission-2": {
+    badge: "Mission 2",
+    title: "Convert Like an Engineer",
+    icon: "⚖️",
+    description:
+      "Calculate molecular weight and convert between mass and moles using compatible units.",
+    content: `
+      <div class="content-block">
+        <span class="small-label">Think Like Your Lecturer</span>
+        <h3>What is given, and what is required?</h3>
+        <div class="formula-grid">
+          <div class="mini-formula">Moles = Mass ÷ Molecular Weight</div>
+          <div class="mini-formula">Mass = Moles × Molecular Weight</div>
+          <div class="mini-formula">g with g/mol<br>kg with kg/kmol</div>
+        </div>
+        <p>Finding moles means divide. Finding mass means multiply.</p>
+      </div>
+      <div class="example-box">
+        <h3>Worked example</h3>
+        <p>88 g CO₂ ÷ 44 g/mol = <strong>2 mol CO₂</strong>.</p>
+      </div>
+    `,
+    questions: [
+      { question: "Calculate the molecular weight of CO₂. Use C = 12 and O = 16.", hint: "Add 12 + 2(16).", expectedNumber: 44, acceptedUnits: ["g/mol"], displayAnswer: "44 g/mol" },
+      { question: "Calculate the number of moles in 88 g of CO₂. MW = 44 g/mol.", hint: "Moles = Mass ÷ MW.", expectedNumber: 2, acceptedUnits: ["mol"], displayAnswer: "2 mol" },
+      { question: "Calculate the mass of 3 mol NH₃. MW = 17 g/mol.", hint: "Mass = Moles × MW.", expectedNumber: 51, acceptedUnits: ["g"], displayAnswer: "51 g" }
+    ]
+  },
+
+  "mission-3": {
+    badge: "Mission 3",
+    title: "Master the Mole Ratio",
+    icon: "🔗",
+    description:
+      "Read, select and apply the correct mole ratio without guessing.",
+    content: `
+      <div class="content-block">
+        <span class="small-label">Chemical Recipe</span>
+        <h3>Read the balanced equation as a recipe</h3>
+        <div class="formula-box">N₂ + 3H₂ → 2NH₃</div>
+        <p>1 mol nitrogen + 3 mol hydrogen → 2 mol ammonia.</p>
+        <p>Use only the coefficients connecting the <strong>given</strong> substance to the <strong>required</strong> substance.</p>
+      </div>
+      <div class="warning-box"><h3>Common mistake</h3><p>For a mole ratio, use coefficients—not subscripts and not molecular weights.</p></div>
+    `,
+    questions: [
+      { question: "For N₂ + 3H₂ → 2NH₃, what is the mole ratio N₂ : H₂?", type: "mcq", choices: ["A. 1 : 2", "B. 1 : 3", "C. 3 : 2"], correctOption: "B", hint: "Read the coefficients of N₂ and H₂.", feedback: "Correct. N₂ has coefficient 1 and H₂ has coefficient 3." },
+      { question: "For N₂ + 3H₂ → 2NH₃, 2 mol N₂ react completely. Calculate the NH₃ produced.", hint: "Use 1 mol N₂ : 2 mol NH₃.", expectedNumber: 4, acceptedUnits: ["mol"], displayAnswer: "4 mol NH3" },
+      { question: "For N₂ + 3H₂ → 2NH₃, calculate H₂ required to produce 8 mol NH₃.", hint: "Use 3 mol H₂ : 2 mol NH₃.", expectedNumber: 12, acceptedUnits: ["mol"], displayAnswer: "12 mol H2" },
+      { question: "For 2H₂ + O₂ → 2H₂O, which ratio converts O₂ to H₂O?", type: "mcq", choices: ["A. 2 : 1", "B. 1 : 2", "C. 2 : 2"], correctOption: "B", hint: "Write the coefficient of O₂ first, then H₂O.", feedback: "Correct. The O₂ : H₂O mole ratio is 1 : 2." }
+    ]
+  },
+
+  "mission-4": {
+    badge: "Mission 4",
+    title: "Find the Limiting Reactant",
+    icon: "🚦",
+    description:
+      "Determine which reactant runs out first and use it to calculate the maximum product.",
+    content: `
+      <div class="content-block">
+        <span class="small-label">Systematic Method</span>
+        <h3>Divide available moles by the coefficient</h3>
+        <div class="formula-box">Available moles ÷ coefficient</div>
+        <p>The smallest result identifies the limiting reactant. Use only the limiting reactant to calculate maximum product.</p>
+      </div>
+      <div class="warning-box"><h3>When mass is given</h3><p>Convert every reactant mass into moles before comparing.</p></div>
+    `,
+    questions: [
+      { question: "For 2H₂ + O₂ → 2H₂O, 4 mol H₂ and 1 mol O₂ are available. Which reactant is limiting?", type: "mcq", choices: ["A. H₂", "B. O₂", "C. H₂O"], correctOption: "B", hint: "Compare 4 ÷ 2 with 1 ÷ 1.", feedback: "Correct. O₂ gives the smaller stoichiometric amount, so it is limiting." },
+      { question: "For N₂ + 3H₂ → 2NH₃, 4 mol N₂ and 9 mol H₂ are available. Which reactant is limiting?", type: "mcq", choices: ["A. N₂", "B. H₂", "C. Neither"], correctOption: "B", hint: "Compare 4 ÷ 1 with 9 ÷ 3.", feedback: "Correct. 9 ÷ 3 = 3 is smaller than 4 ÷ 1 = 4, so H₂ is limiting." },
+      { question: "For N₂ + 3H₂ → 2NH₃, 2 mol N₂ and 3 mol H₂ are supplied. Calculate the maximum NH₃ produced.", hint: "H₂ is limiting. Use 3 mol H₂ : 2 mol NH₃.", expectedNumber: 2, acceptedUnits: ["mol"], displayAnswer: "2 mol NH3" },
+      { question: "Two reactant masses are given in a limiting-reactant question. What should you do first?", type: "mcq", choices: ["A. Compare the masses directly", "B. Convert both masses to moles", "C. Choose the larger mass"], correctOption: "B", hint: "Balanced equations compare mole amounts.", feedback: "Correct. Convert both masses to moles before applying the coefficients." }
+    ]
+  },
+
+  "mission-5": {
+    badge: "Mission 5",
+    title: "Optimise the Reaction",
+    icon: "📊",
+    description:
+      "Distinguish between percentage excess and percentage conversion, then calculate each correctly.",
+    content: `
+      <div class="content-block">
+        <span class="small-label">Choose the Formula First</span>
+        <h3>Percentage of what?</h3>
+        <div class="formula-grid">
+          <div class="mini-formula">% Excess = (Actual − Required) ÷ Required × 100%</div>
+          <div class="mini-formula">% Conversion = Reacted ÷ Fed × 100%</div>
+          <div class="mini-formula">Excess = extra supplied<br>Conversion = actually reacted</div>
+        </div>
+      </div>
+      <div class="warning-box"><h3>Common mistake</h3><p>For percentage excess, divide by the stoichiometric requirement. For conversion, numerator and denominator must refer to the same reactant.</p></div>
+    `,
+    questions: [
+      { question: "A process supplies 120 kg O₂ but only 100 kg is required. Which concept is tested?", type: "mcq", choices: ["A. Percentage conversion", "B. Percentage excess", "C. Mole fraction"], correctOption: "B", hint: "The question compares actual supplied with required.", feedback: "Correct. This comparison measures percentage excess." },
+      { question: "A reactor requires 100 kg O₂ and receives 120 kg. Calculate percentage excess.", hint: "Use (120 − 100) ÷ 100 × 100%.", expectedNumber: 20, acceptedUnits: ["%"], displayAnswer: "20%" },
+      { question: "A reactor is fed 200 kg of A and 150 kg reacts. Calculate percentage conversion.", hint: "Use Reacted ÷ Fed × 100%.", expectedNumber: 75, acceptedUnits: ["%"], displayAnswer: "75%" },
+      { question: "Which statement is correct?", type: "mcq", choices: ["A. Percentage excess compares actual feed with stoichiometric requirement", "B. Percentage conversion measures extra reactant supplied", "C. Percentage excess compares product with reactant"], correctOption: "A", hint: "Match each term to the engineering question it answers.", feedback: "Correct. Percentage excess compares actual feed with the exact stoichiometric amount required." }
+    ]
+  }
+};
+
+
 const lessonsByWeek = {
   "week-1": week1Lessons,
   "week-2": week2Lessons,
-  "week-3": week3Lessons
+  "week-3": week3Lessons,
+  "week-4": week4Lessons
 };
 
 
