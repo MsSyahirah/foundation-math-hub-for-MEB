@@ -1,6 +1,6 @@
 /* =========================================================
    FOUNDATION MATH HUB
-   MULTI-WEEK WEBSITE — WEEKS 1 TO 4
+   MULTI-WEEK WEBSITE — WEEKS 1 TO 5
 
    Week 1 remains unchanged.
    Week 3 extends the proven Week 2 structure without changing
@@ -165,17 +165,17 @@ const weeks = [
 
   {
     id: "week-4",
-    number: "Week 4",
-    title: "Chemical Reactions and Stoichiometry",
+    number: "Weeks 4–5",
+    title: "Material Balance with Chemical Reactions",
     icon: "⚗️",
     colour: "#f97316",
 
     description:
-      "Mole ratios, mass–mole conversion, limiting reactants, percentage excess and conversion.",
+      "Chemical equations, stoichiometry, mass–mole conversion, limiting and excess reactants, percentage excess and conversion.",
 
     available: true,
     status: "Available now",
-    releaseNote: "Week 4 is available now.",
+    releaseNote: "Weeks 4–5 are available now.",
     tags: [
       "⚗️ Chemical Equations",
       "🔢 Mole Ratios",
@@ -183,22 +183,6 @@ const weeks = [
       "🚦 Limiting Reactant",
       "📊 Conversion"
     ]
-  },
-
-  {
-    id: "week-5",
-    number: "Week 5",
-    title: "Material Balance With Reaction",
-    icon: "🔥",
-    colour: "#ec4899",
-
-    description:
-      "Limiting reactant, excess reactant and conversion.",
-
-    available: false,
-    status: "Coming soon",
-    releaseNote: "Week 5 is coming soon.",
-    tags: []
   },
 
   {
@@ -840,7 +824,7 @@ const week4Activities = [
   {
     id: "pre-test",
     number: "Step 1 · Before Learning",
-    title: "Week 4 Pre-Test",
+    title: "Weeks 4–5 Pre-Test",
     icon: "📝",
     colour: "#d71920",
     description:
@@ -973,7 +957,7 @@ const week4Activities = [
   {
     id: "post-test",
     number: "Step 3 · Independent Assessment",
-    title: "Week 4 Post-Test",
+    title: "Weeks 4–5 Post-Test",
     icon: "✅",
     colour: "#16a34a",
     description:
@@ -986,7 +970,7 @@ const week4Activities = [
   {
     id: "student-survey",
     number: "Final Step",
-    title: "Week 4 Student Feedback",
+    title: "Weeks 4–5 Student Feedback",
     icon: "💬",
     colour: "#8b5cf6",
     description:
@@ -2697,6 +2681,67 @@ const week4Lessons = {
 };
 
 
+
+
+const week4CriterionCards = {
+  "mission-1": {
+    title: "Reaction Reader Badge Unlocked",
+    achievement: "You can identify reactants, products and coefficients in a balanced chemical equation.",
+    plantConnection: "Operators must identify which materials enter a reactor and which products leave before completing a balance.",
+    whyMatters: "Reading the reaction incorrectly causes every later mole-ratio calculation to be wrong.",
+    question: "In 2H₂ + O₂ → 2H₂O, which substances are the reactants?",
+    choices: ["A. H₂ and O₂", "B. H₂O only", "C. O₂ and H₂O"],
+    correctOption: "A",
+    explanation: "Correct. H₂ and O₂ are on the left side of the equation, so they are the reactants."
+  },
+  "mission-2": {
+    title: "Mole Converter Badge Unlocked",
+    achievement: "You can convert between mass and moles using molecular weight.",
+    plantConnection: "Plant data may be recorded as mass flow, while reaction equations use mole relationships.",
+    whyMatters: "A correct mass-to-mole conversion is required before stoichiometric calculations can begin.",
+    question: "What operation converts mass into moles?",
+    choices: ["A. Mass ÷ molecular weight", "B. Mass × molecular weight", "C. Molecular weight ÷ mass"],
+    correctOption: "A",
+    explanation: "Correct. Number of moles equals mass divided by molecular weight."
+  },
+  "mission-3": {
+    title: "Mole Ratio Master Badge Unlocked",
+    achievement: "You can select and apply the correct mole ratio from a balanced equation.",
+    plantConnection: "Stoichiometric ratios help engineers determine how much feed is needed and how much product can form.",
+    whyMatters: "Using the wrong coefficient pair gives an incorrect reactant requirement or product amount.",
+    question: "For N₂ + 3H₂ → 2NH₃, what is the mole ratio H₂:NH₃?",
+    choices: ["A. 1:2", "B. 3:2", "C. 2:3"],
+    correctOption: "B",
+    explanation: "Correct. The coefficients of H₂ and NH₃ are 3 and 2, so the ratio is 3:2."
+  },
+  "mission-4": {
+    title: "Limiting Reactant Detective Badge Unlocked",
+    achievement: "You can identify the reactant that controls the maximum product formed.",
+    plantConnection: "The limiting reactant determines when production stops even if another feed remains available.",
+    whyMatters: "Product must be calculated from the limiting reactant, not the excess reactant.",
+    question: "After dividing available moles by each coefficient, which result identifies the limiting reactant?",
+    choices: ["A. The largest result", "B. The smallest result", "C. The average result"],
+    correctOption: "B",
+    explanation: "Correct. The smallest available-moles-to-coefficient result identifies the limiting reactant."
+  },
+  "mission-5": {
+    title: "Reaction Optimiser Badge Unlocked",
+    achievement: "You can distinguish percentage excess from percentage conversion.",
+    plantConnection: "Engineers track extra feed supplied and the fraction of feed that actually reacts to assess reactor performance.",
+    whyMatters: "Confusing these percentages can lead to incorrect conclusions about feed usage and process efficiency.",
+    question: "Which percentage compares the amount reacted with the amount originally fed?",
+    choices: ["A. Percentage excess", "B. Percentage conversion", "C. Mole fraction"],
+    correctOption: "B",
+    explanation: "Correct. Percentage conversion compares reactant reacted with reactant fed."
+  }
+};
+
+function getCurrentCriterionCards() {
+  if (selectedWeekId === "week-3") return week3CriterionCards;
+  if (selectedWeekId === "week-4") return week4CriterionCards;
+  return {};
+}
+
 const lessonsByWeek = {
   "week-1": week1Lessons,
   "week-2": week2Lessons,
@@ -3011,11 +3056,14 @@ function openWeek(weekId) {
 
   document
     .getElementById("weekSoundControl")
-    .classList.toggle("hidden", selectedWeekId !== "week-3");
+    .classList.toggle(
+      "hidden",
+      !["week-3", "week-4"].includes(selectedWeekId)
+    );
 
   updateJourneySoundButton();
 
-  if (selectedWeekId === "week-3" && journeySoundEnabled) {
+  if (["week-3", "week-4"].includes(selectedWeekId) && journeySoundEnabled) {
     getJourneyAudioContext();
   }
 
@@ -5560,6 +5608,15 @@ function refreshAutomaticMasteryStars() {
     return;
   }
 
+  if (selectedWeekId === "week-4") {
+    if (isActivityCompleted("mission-1")) awardMasteryStar("formula");
+    if (isActivityCompleted("mission-2")) awardMasteryStar("unit");
+    if (isActivityCompleted("mission-3")) awardMasteryStar("practice");
+    if (isActivityCompleted("mission-4")) awardMasteryStar("persistence");
+    if (isActivityCompleted("mission-5")) awardMasteryStar("application");
+    return;
+  }
+
   /* Week 1 migration: map completed checkpoints to the five stars. */
   const completedCount = getCompletedCheckpointCount();
 
@@ -5914,8 +5971,8 @@ function showCelebration(activityId) {
     "celebrationText"
   ).textContent =
     completedCount === getCurrentCheckpointIds().length
-      ? selectedWeekId === "week-3"
-        ? "Your five mission stops are complete. Submit the official Microsoft Forms quiz to earn your weekly Reward Token."
+      ? ["week-3", "week-4"].includes(selectedWeekId)
+        ? "Your five mission stops are complete. Continue to the independent assessment and final feedback step."
         : "Your required checkpoints are complete. Submit the official quiz when it is released."
       : "Good work. Your checkpoint progress and Mastery Stars have been updated.";
 
@@ -5928,9 +5985,8 @@ function showCelebration(activityId) {
   const rewardButton =
     document.getElementById("rollBonusButton");
 
-  const hasCriterionCard =
-    selectedWeekId === "week-3" &&
-    Boolean(week3CriterionCards[activityId]);
+  const criterionCards = getCurrentCriterionCards();
+  const hasCriterionCard = Boolean(criterionCards[activityId]);
 
   const journeyPause =
     document.getElementById("journeyPause");
@@ -6006,6 +6062,21 @@ const journeyArrivalEvents = {
     message: "You completed the independent plant-process check."
   }
 };
+
+
+const week4JourneyArrivalEvents = {
+  1: { icon: "🔍", title: "Reaction identified", message: "You read the balanced equation and identified its reactants, products and coefficients." },
+  2: { icon: "⚖️", title: "Mole conversion completed", message: "You converted correctly between mass and moles." },
+  3: { icon: "🔗", title: "Mole ratio unlocked", message: "You selected the correct coefficient ratio for the calculation." },
+  4: { icon: "🚦", title: "Limiting reactant found", message: "You identified the reactant that controls the maximum product." },
+  5: { icon: "📊", title: "Reaction optimised", message: "You distinguished percentage excess from percentage conversion." }
+};
+
+function getJourneyArrivalEvents() {
+  return selectedWeekId === "week-4"
+    ? week4JourneyArrivalEvents
+    : journeyArrivalEvents;
+}
 
 
 function waitForJourney(milliseconds) {
@@ -6151,7 +6222,7 @@ function getPlantTilePosition(tileNumber) {
 
 
 function renderPlantBoard(startTile, arrivalTile, checkpointNumber) {
-  const event = journeyArrivalEvents[checkpointNumber];
+  const event = getJourneyArrivalEvents()[checkpointNumber];
   const board = document.getElementById("plantBoard");
 
   board.innerHTML = "";
@@ -6205,7 +6276,7 @@ async function animatePlantJourney(completedCount) {
   const checkpointNumber = Math.max(1, Math.min(5, completedCount));
   const startTile = (checkpointNumber - 1) * 4;
   const arrivalTile = checkpointNumber * 4;
-  const event = journeyArrivalEvents[checkpointNumber];
+  const event = getJourneyArrivalEvents()[checkpointNumber];
   const eventBox = document.getElementById("journeyEvent");
   const progressFill = document.getElementById("journeyProgressFill");
 
@@ -6265,7 +6336,7 @@ function revealPlantAchievement() {
 
 
 function renderCriterionCard(activityId) {
-  const card = week3CriterionCards[activityId];
+  const card = getCurrentCriterionCards()[activityId];
 
   document.getElementById("criterionTitle").textContent =
     card.title;
@@ -6359,8 +6430,7 @@ function rollBonusGame() {
   updateWholeWeek();
 
   if (
-    selectedWeekId === "week-3" &&
-    week3CriterionCards[currentBonusActivity]
+    getCurrentCriterionCards()[currentBonusActivity]
   ) {
     window.setTimeout(() => {
       const targetId =
