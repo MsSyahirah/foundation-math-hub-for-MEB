@@ -5637,11 +5637,20 @@ function getMasteryStarCount() {
 }
 
 
+function getFinalSubmissionActivityId() {
+  // Weeks 4–5 finish with the student survey after the post-test.
+  // Earlier weeks finish with their official quiz.
+  return selectedWeekId === "week-4"
+    ? "student-survey"
+    : "official-quiz";
+}
+
+
 function rewardTokenIsEarned() {
   return (
     getCompletedCheckpointCount() ===
       getCurrentCheckpointIds().length &&
-    isActivityCompleted("official-quiz")
+    isActivityCompleted(getFinalSubmissionActivityId())
   );
 }
 
@@ -6870,7 +6879,7 @@ function redeemRewardToken() {
 function evidenceIsUnlocked() {
   return (
     getCompletedCheckpointCount() === getCurrentCheckpointIds().length &&
-    isActivityCompleted("official-quiz")
+    isActivityCompleted(getFinalSubmissionActivityId())
   );
 }
 
@@ -7000,7 +7009,7 @@ function updateEvidenceDocument() {
   const completionDate =
     studentProgress
       .completionDates[
-        "official-quiz"
+        getFinalSubmissionActivityId()
       ];
 
   document.getElementById(
