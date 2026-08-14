@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Foundation Math Hub for Higher Nitec in Chemical Process Technology">
   <title>Foundation Math Hub</title>
-  <link rel="stylesheet" href="style.css?v=13">
-  <script src="script.js?v=13" defer></script>
+  <link rel="stylesheet" href="style.css?v=14">
+  <script src="script.js?v=14" defer></script>
 </head>
 <body>
 
@@ -91,35 +91,18 @@
 
     <section class="section-card">
 
-      <div class="section-heading">
+      <div class="section-heading home-week-heading">
         <div>
-          <span class="small-label">
-            Weekly Learning Journey
-          </span>
-
-          <h2>How to use the EcoHub</h2>
-
-          <p>
-            Follow the steps in order for each available week.
-          </p>
+          <span class="small-label">Weekly Learning Journey</span>
+          <h2>Choose a learning week</h2>
+          <p>Select an available week and complete the activities in sequence.</p>
         </div>
+
+        <button class="button button-light how-to-open-button" id="openHowToButton" type="button">
+          ⓘ How to use EcoHub
+        </button>
       </div>
 
-      <ol class="how-to-list">
-        <li><strong>Start with the Pre-Test</strong> to check what you already know.</li>
-        <li><strong>Complete each Mission</strong> and work through the guided practice.</li>
-        <li><strong>Finish the Edcafe Checkpoint</strong> after every mission using your full name and class.</li>
-        <li><strong>Show your completed checkpoint to your lecturer</strong> before moving to the next mission.</li>
-        <li><strong>Complete the Post-Test</strong> after finishing all missions.</li>
-        <li><strong>Submit the Student Feedback Form</strong> at the end.</li>
-      </ol>
-
-      <div class="how-to-note">
-        <strong>Important:</strong>
-        Do not skip activities. Complete the learning journey in sequence so that your progress can be properly recorded.
-      </div>
-
-      <!-- JavaScript creates the weekly cards here -->
       <div class="week-grid" id="weekGrid"></div>
 
     </section>
@@ -868,6 +851,28 @@
 
 </main>
 
+
+
+
+<!-- ECOHUB QUICK INSTRUCTIONS -->
+<div class="how-to-overlay hidden" id="howToModal">
+  <div class="how-to-modal" role="dialog" aria-modal="true" aria-labelledby="howToTitle">
+    <button class="how-to-close" id="closeHowToButton" type="button" aria-label="Close instructions">×</button>
+    <span class="small-label">Quick Guide</span>
+    <h2 id="howToTitle">👋 Welcome to the EcoHub!</h2>
+    <p class="how-to-intro">Complete each available week in this order:</p>
+    <div class="how-to-steps">
+      <div><strong>1. Pre-Test</strong><span>Check what you already know.</span></div>
+      <div><strong>2. Learn &amp; Practise</strong><span>Complete each guided Mission.</span></div>
+      <div><strong>3. Edcafe Checkpoint</strong><span>Use your full name and class.</span></div>
+      <div><strong>4. Lecturer Check</strong><span>Show your completed checkpoint before moving on.</span></div>
+      <div><strong>5. Post-Test</strong><span>Complete it after all Missions.</span></div>
+      <div><strong>6. Feedback</strong><span>Submit the Student Feedback Form.</span></div>
+    </div>
+    <div class="how-to-modal-note"><strong>Important:</strong> Do not skip activities. Complete the learning journey in sequence.</div>
+    <button class="button button-primary how-to-start-button" id="howToStartButton" type="button">Got it — Start Learning</button>
+  </div>
+</div>
 
 <!-- ======================================================
      PILOT TESTING NOTICE

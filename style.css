@@ -3387,3 +3387,20 @@ textarea {
     gap: 4px;
   }
 }
+
+
+/* ECOHUB QUICK GUIDE MODAL */
+.home-week-heading { align-items: center; gap: 18px; }
+.how-to-open-button { white-space: nowrap; }
+.how-to-overlay { position: fixed; inset: 0; z-index: 1200; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(15,23,42,.62); backdrop-filter: blur(4px); }
+.how-to-overlay.hidden { display: none; }
+.how-to-modal { position: relative; width: min(680px,100%); max-height: 90vh; overflow-y: auto; background: #fff; border-radius: 24px; padding: 30px; box-shadow: 0 28px 70px rgba(15,23,42,.28); }
+.how-to-modal h2 { margin: 14px 42px 8px 0; }
+.how-to-intro { margin-top: 0; color: #667085; }
+.how-to-close { position: absolute; top: 16px; right: 18px; width: 38px; height: 38px; border: 0; border-radius: 50%; background: #f1f5f9; color: #0f172a; font-size: 25px; line-height: 1; cursor: pointer; }
+.how-to-steps { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; margin: 20px 0; }
+.how-to-steps > div { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border: 1px solid #e2e8f0; border-radius: 14px; background: #f8fafc; }
+.how-to-steps span { color: #667085; font-size: .94rem; }
+.how-to-modal-note { padding: 14px 16px; border: 1px solid #fed7aa; border-radius: 14px; background: #fff7ed; color: #9a3412; }
+.how-to-start-button { width: 100%; margin-top: 18px; }
+@media (max-width:700px) { .home-week-heading { align-items: flex-start; } .how-to-open-button { width:100%; } .how-to-modal { padding:24px 18px 20px; border-radius:18px; } .how-to-steps { grid-template-columns:1fr; } }
