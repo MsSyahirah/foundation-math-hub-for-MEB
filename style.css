@@ -3347,3 +3347,43 @@ textarea {
     font-size: 25px;
   }
 }
+
+/* ======================================================
+   HOMEPAGE - HOW TO USE THE ECOHUB
+   ====================================================== */
+
+.how-to-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 18px;
+  margin: 22px 0 16px;
+  padding-left: 24px;
+  color: var(--text);
+}
+
+.how-to-list li {
+  padding: 12px 14px 12px 6px;
+  line-height: 1.55;
+}
+
+.how-to-list li::marker {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.how-to-note {
+  margin-top: 8px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #9a3412;
+  line-height: 1.55;
+}
+
+@media (max-width: 720px) {
+  .how-to-list {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

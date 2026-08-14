@@ -199,22 +199,6 @@ const weeks = [
     status: "Coming soon",
     releaseNote: "Week 6 is coming soon.",
     tags: []
-  },
-
-  {
-    id: "week-7",
-    number: "Week 7",
-    title: "Test Readiness and Revision",
-    icon: "🏁",
-    colour: "#22c55e",
-
-    description:
-      "Review, correction and full MEB problem-solving practice.",
-
-    available: false,
-    status: "Coming soon",
-    releaseNote: "Week 7 is coming soon.",
-    tags: []
   }
 ];
 
@@ -2975,7 +2959,7 @@ function renderWeekCards() {
               class="button button-primary button-small"
               onclick="openWeek('${week.id}')"
             >
-              Start ${week.number}
+              Start
             </button>
           `
           : `
@@ -3647,9 +3631,11 @@ function createActivityButtons(
 
   if (activity.type === "external") {
     const confirmationText =
-      activity.official
-        ? "I Submitted It"
-        : "I Finished It";
+      selectedWeekId === "week-4"
+        ? "Verify Completion"
+        : activity.official
+          ? "I Submitted It"
+          : "I Finished It";
 
     return `
       <button
@@ -3778,6 +3764,54 @@ function openExternalActivity(activityId) {
 
 
 /* =========================================================
+   WEEK 4–5 COMPLETION CODES
+
+   Students see these codes only after submitting the external
+   activity. The next activity stays locked until the correct
+   code is entered back in the EcoHub.
+   ========================================================= */
+
+const week45CompletionCodes = {
+  "pre-test": "PRE45",
+  "checkpoint-1": "REACTION1",
+  "checkpoint-2": "MOLES2",
+  "checkpoint-3": "RATIO3",
+  "checkpoint-4": "LIMIT4",
+  "checkpoint-5": "CONVERT5",
+  "post-test": "POST45",
+  "student-survey": "FEEDBACK45"
+};
+
+
+function verifyWeek45ExternalCompletion(activityId) {
+  const requiredCode = week45CompletionCodes[activityId];
+
+  if (!requiredCode) {
+    return true;
+  }
+
+  const enteredCode = window.prompt(
+    "Enter the completion code shown after you submitted this activity:"
+  );
+
+  if (enteredCode === null) {
+    return false;
+  }
+
+  const normalisedCode = enteredCode.trim().toUpperCase();
+
+  if (normalisedCode !== requiredCode) {
+    showToast(
+      "Code not recognised. Complete and submit the activity first, then enter the code shown on the completion screen."
+    );
+    return false;
+  }
+
+  return true;
+}
+
+
+/* =========================================================
    18. CONFIRM AN EXTERNAL ACTIVITY IS FINISHED
    ========================================================= */
 
@@ -3791,16 +3825,27 @@ function confirmExternalCompletion(activityId) {
     return;
   }
 
-  const wording =
-    activity.official
-      ? "Have you submitted the official Microsoft Forms quiz?"
-      : "Have you completed this activity?";
+  if (
+    selectedWeekId === "week-4" &&
+    week45CompletionCodes[activityId]
+  ) {
+    const verified = verifyWeek45ExternalCompletion(activityId);
 
-  const confirmed =
-    window.confirm(wording);
+    if (!verified) {
+      return;
+    }
+  } else {
+    const wording =
+      activity.official
+        ? "Have you submitted the official Microsoft Forms quiz?"
+        : "Have you completed this activity?";
 
-  if (!confirmed) {
-    return;
+    const confirmed =
+      window.confirm(wording);
+
+    if (!confirmed) {
+      return;
+    }
   }
 
   const wasAlreadyCompleted =
@@ -3818,9 +3863,11 @@ function confirmExternalCompletion(activityId) {
     showCelebration(activityId);
   } else {
     showToast(
-      activity.official
-        ? "Official quiz marked as submitted. Keep your Microsoft Forms result screen."
-        : "Activity marked as completed."
+      selectedWeekId === "week-4"
+        ? "Completion verified. The next activity is now unlocked."
+        : activity.official
+          ? "Official quiz marked as submitted. Keep your Microsoft Forms result screen."
+          : "Activity marked as completed."
     );
   }
 }
