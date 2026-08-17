@@ -66,19 +66,19 @@ const websiteLinks = {
       "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=jCy0E8_LPU6dIPVbe17jwfn3D9q2Xd9Ci6lD9o2F-fxUQkVGRU85RUtEUkUzNDNBWVY1UUxQTFdROC4u",
 
     mission1:
-      "https://app.edcafe.ai/share/quiz/week-4-mission-1-checkpoint-–-read-the-reaction-6a7446b0ca64f4eb0330da02?sig=31a2d2e22d8c466ed154222cb0ba1f5b",
+      "https://app.edcafe.ai/quizzes/6a7446b0ca64f4eb0330da02",
 
     mission2:
-      "https://app.edcafe.ai/share/quiz/week-4-mission-2-checkpoint-–-convert-like-an-engineer-6a744258ca64f4eb0330c3f6?sig=565cf1b874985f7d8baa9aed62c4ef20",
+      "https://app.edcafe.ai/quizzes/6a744258ca64f4eb0330c3f6",
 
     mission3:
-      "https://app.edcafe.ai/share/quiz/week-4-mission-3-checkpoint-–-master-the-mole-ratio-6a744337ca64f4eb0330c8fc?sig=8d654719cbd73587eb41626c35136780",
+      "https://app.edcafe.ai/quizzes/6a744337ca64f4eb0330c8fc",
 
     mission4:
-      "https://app.edcafe.ai/share/quiz/week-4-mission-4-checkpoint-–-find-the-limiting-reactant-6a7443b81a30f33122dbf049?sig=cf8e7644b5c570a303116b51cd038468",
+      "https://app.edcafe.ai/quizzes/6a7443b81a30f33122dbf049",
 
     mission5:
-      "https://app.edcafe.ai/share/quiz/week-4-mission-5-checkpoint-–-percentage-excess-percentage-conversio-6a7443fcca64f4eb0330ce70?sig=bd6e2399d7d29d8172c18c2065a1e547",
+      "https://app.edcafe.ai/quizzes/6a7443fcca64f4eb0330ce70",
 
     postTest:
       "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=jCy0E8_LPU6dIPVbe17jwfn3D9q2Xd9Ci6lD9o2F-fxUOEVBRTFaWFRZOTEzUE1YT0FBMUtJMU1NTy4u",
@@ -3298,9 +3298,22 @@ function openOutcomesPage() {
 
 
 function completeOutcomesAndContinue() {
+  // Record that the student has viewed the learning outcomes.
+  // Week 2 continues to the Learn Your Way choice page, while
+  // weeks such as Week 6 continue directly to the activity dashboard.
   markActivityCompleted("learning-outcomes");
   updateWholeWeek();
-  openLearningPathPage();
+
+  const hasLearningPath = getCurrentActivities().some(
+    activity => activity.type === "choice-page"
+  );
+
+  if (hasLearningPath) {
+    openLearningPathPage();
+  } else {
+    showWeekDashboard();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 }
 
 
@@ -3729,14 +3742,15 @@ function createActivityButtons(
   }
 
   if (activity.type === "external") {
-    const confirmationText =
-      selectedWeekId === "week-4"
-        ? "Verify Completion"
-        : selectedWeekId === "week-6" && activity.id.startsWith("checkpoint-")
-          ? "Lecturer Checked ✓"
-          : activity.official
-            ? "I Submitted It"
-            : "I Finished It";
+    const requiresCompletionCode =
+      (selectedWeekId === "week-4" && Boolean(week45CompletionCodes[activity.id])) ||
+      (selectedWeekId === "week-6" && Boolean(week6CompletionCodes[activity.id]));
+
+    const confirmationText = requiresCompletionCode
+      ? "Verify Completion"
+      : activity.official
+        ? "I Submitted It"
+        : "I Finished It";
 
     return `
       <button
@@ -3867,9 +3881,10 @@ function openExternalActivity(activityId) {
 /* =========================================================
    WEEK 4–5 COMPLETION CODES
 
-   Students see these codes only after submitting the external
-   activity. The next activity stays locked until the correct
-   code is entered back in the EcoHub.
+   Students enter the completion code after submitting each
+   Week 4–5 external activity. Week 6 uses the same password /
+   completion-code system for its Pre-Test, five Edcafe
+   checkpoints, Post-Test and Student Feedback.
    ========================================================= */
 
 const week45CompletionCodes = {
@@ -3884,8 +3899,23 @@ const week45CompletionCodes = {
 };
 
 
-function verifyWeek45ExternalCompletion(activityId) {
-  const requiredCode = week45CompletionCodes[activityId];
+const week6CompletionCodes = {
+  "pre-test": "PRE6",
+  "checkpoint-1": "ENERGY1",
+  "checkpoint-2": "SENSIBLE2",
+  "checkpoint-3": "LATENT3",
+  "checkpoint-4": "COMBINE4",
+  "checkpoint-5": "APPLY5",
+  "post-test": "POST6",
+  "student-survey": "FEEDBACK6"
+};
+
+
+function verifyExternalCompletionCode(activityId) {
+  const codeMap = selectedWeekId === "week-6"
+    ? week6CompletionCodes
+    : week45CompletionCodes;
+  const requiredCode = codeMap[activityId];
 
   if (!requiredCode) {
     return true;
@@ -3927,19 +3957,11 @@ function confirmExternalCompletion(activityId) {
   }
 
   if (
-    selectedWeekId === "week-4" &&
-    week45CompletionCodes[activityId]
+    (selectedWeekId === "week-4" && week45CompletionCodes[activityId]) ||
+    (selectedWeekId === "week-6" && week6CompletionCodes[activityId])
   ) {
-    const verified = verifyWeek45ExternalCompletion(activityId);
+    const verified = verifyExternalCompletionCode(activityId);
     if (!verified) return;
-  } else if (selectedWeekId === "week-6" && activityId.startsWith("checkpoint-")) {
-    const lecturerChecked = window.confirm(
-      "Have you completed this Edcafe checkpoint using your Full Name and Class AND shown the completed screen to your lecturer?"
-    );
-    if (!lecturerChecked) {
-      showToast("Show your completed checkpoint to your lecturer before continuing.");
-      return;
-    }
   } else {
     const wording = activity.official
       ? "Have you submitted this Microsoft Forms activity?"
@@ -3963,11 +3985,9 @@ function confirmExternalCompletion(activityId) {
     showCelebration(activityId);
   } else {
     showToast(
-      selectedWeekId === "week-4"
+      selectedWeekId === "week-4" || selectedWeekId === "week-6"
         ? "Completion verified. The next activity is now unlocked."
-        : selectedWeekId === "week-6" && activityId.startsWith("checkpoint-")
-          ? "Lecturer check confirmed. The next Mission is now unlocked."
-          : activity.official
+        : activity.official
             ? "Submission marked as completed. Keep your result screen."
             : "Activity marked as completed."
     );
