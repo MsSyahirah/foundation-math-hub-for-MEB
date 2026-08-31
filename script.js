@@ -2786,41 +2786,244 @@ function getCurrentCriterionCards() {
 
 /* WEEK 6 LESSON CONTENT — ENERGY BALANCE */
 const week6Lessons = {
-  "mission-1": { badge: "Mission 1", title: "Understand Energy Balance", icon: "⚡", description: "Build the basic language of Energy Balance before starting calculations.", content: `
-    <div class="content-block"><h3>1. System, surroundings and boundary</h3><p><strong>System</strong> = the matter or region selected for study. <strong>Surroundings</strong> = everything outside it. The <strong>boundary</strong> separates the two.</p></div>
-    <div class="content-block"><h3>2. Open or closed?</h3><p><strong>Open system:</strong> mass can enter and/or leave. <strong>Closed system:</strong> no mass crosses the boundary, although heat and work may be exchanged.</p></div>
-    <div class="content-block"><h3>3. Steady state and energy direction</h3><p>At steady state, accumulation is zero and important process properties do not change with time.</p><div class="formula-box">Energy In = Energy Out → Balanced</div><div class="formula-box">Energy In &gt; Energy Out → Energy stored</div><div class="formula-box">Energy In &lt; Energy Out → Energy deficit</div></div>
-    <div class="practice-question" data-question-id="w6m1q1"><h3>Guided Practice 1</h3><p>A continuously operating heater has water entering and leaving. Is it open or closed?</p><div class="practice-options"><button data-answer="correct">Open system</button><button data-answer="wrong">Closed system</button></div><div class="question-feedback"></div></div>
-    <div class="practice-question" data-question-id="w6m1q2"><h3>Guided Practice 2</h3><p>Energy enters at 500 kJ/min and leaves at 500 kJ/min. What is happening?</p><div class="practice-options"><button data-answer="correct">Balanced</button><button data-answer="wrong">Energy storage</button><button data-answer="wrong">Energy deficit</button></div><div class="question-feedback"></div></div>
-    <div class="practice-question" data-question-id="w6m1q3"><h3>Independent Try</h3><p>A tank's inlet and outlet conditions remain constant with time and there is no accumulation. What state is this?</p><div class="practice-options"><button data-answer="correct">Steady state</button><button data-answer="wrong">Unsteady state</button></div><div class="question-feedback"></div></div>` },
+  "mission-1": {
+    badge: "Mission 1",
+    title: "Understand Energy Balance",
+    icon: "⚡",
+    description: "Build the basic language of Energy Balance before starting calculations.",
+    content: `
+      <div class="content-block">
+        <h3>1. System, surroundings and boundary</h3>
+        <p><strong>System</strong> = the matter or region selected for study. <strong>Surroundings</strong> = everything outside it. The <strong>boundary</strong> separates the two.</p>
+      </div>
+      <div class="content-block">
+        <h3>2. Open or closed?</h3>
+        <p><strong>Open system:</strong> mass can enter and/or leave. <strong>Closed system:</strong> no mass crosses the boundary, although heat and work may be exchanged.</p>
+      </div>
+      <div class="content-block">
+        <h3>3. Steady state and energy direction</h3>
+        <p>At steady state, accumulation is zero and important process properties do not change with time.</p>
+        <div class="formula-box">Energy In = Energy Out → Balanced</div>
+        <div class="formula-box">Energy In &gt; Energy Out → Energy stored</div>
+        <div class="formula-box">Energy In &lt; Energy Out → Energy deficit</div>
+      </div>
+    `,
+    questions: [
+      {
+        question: "A continuously operating heater has water entering and leaving. Is it open or closed?",
+        type: "mcq",
+        choices: ["A. Open system", "B. Closed system"],
+        correctOption: "A",
+        hint: "Ask whether mass crosses the system boundary.",
+        feedback: "Correct. It is an open system because mass enters and leaves."
+      },
+      {
+        question: "Energy enters at 500 kJ/min and leaves at 500 kJ/min. What is happening?",
+        type: "mcq",
+        choices: ["A. Balanced", "B. Energy storage", "C. Energy deficit"],
+        correctOption: "A",
+        hint: "Compare Energy In with Energy Out.",
+        feedback: "Correct. Energy In equals Energy Out, so the energy is balanced."
+      },
+      {
+        question: "A tank's inlet and outlet conditions remain constant with time and there is no accumulation. What state is this?",
+        type: "mcq",
+        choices: ["A. Steady state", "B. Unsteady state"],
+        correctOption: "A",
+        hint: "No accumulation and no change with time are the key clues.",
+        feedback: "Correct. These are steady-state conditions."
+      }
+    ]
+  },
 
-  "mission-2": { badge: "Mission 2", title: "Master Sensible Heat", icon: "🌡️", description: "Calculate heat when temperature changes without a phase change.", content: `
-    <div class="content-block"><h3>1. Sensible heat</h3><p>Sensible heat changes <strong>temperature</strong> without changing phase.</p><div class="formula-box">Q = mCpΔT</div><div class="formula-box">ΔT = T<sub>final</sub> − T<sub>initial</sub></div></div>
-    <div class="content-block"><h3>2. Worked Example</h3><p>450 g water, 15°C → 85°C, Cp = 4.18 J/g°C.</p><p>ΔT = 70°C</p><div class="formula-box">Q = (450)(4.18)(70) = 131,670 J = 131.67 kJ</div></div>
-    <div class="practice-question" data-question-id="w6m2q1"><h3>Guided Practice 1</h3><p>200 g water is heated 20°C → 50°C. What is ΔT?</p><div class="practice-options"><button data-answer="correct">30°C</button><button data-answer="wrong">70°C</button><button data-answer="wrong">10°C</button></div><div class="question-feedback"></div></div>
-    <div class="practice-question" data-question-id="w6m2q2"><h3>Guided Practice 2</h3><p>500 g water, 25°C → 65°C, Cp = 4.18 J/g°C. Find Q.</p><div class="practice-options"><button data-answer="correct">83.6 kJ</button><button data-answer="wrong">41.8 kJ</button><button data-answer="wrong">836 kJ</button></div><div class="question-feedback"></div></div>
-    <div class="practice-question" data-question-id="w6m2q3"><h3>Independent Try</h3><p>750 g water, 30°C → 80°C, Cp = 4.18 J/g°C. Find Q.</p><div class="practice-options"><button data-answer="correct">156.75 kJ</button><button data-answer="wrong">78.38 kJ</button><button data-answer="wrong">313.5 kJ</button></div><div class="question-feedback"></div></div>` },
+  "mission-2": {
+    badge: "Mission 2",
+    title: "Master Sensible Heat",
+    icon: "🌡️",
+    description: "Calculate heat when temperature changes without a phase change.",
+    content: `
+      <div class="content-block">
+        <h3>1. Sensible heat</h3>
+        <p>Sensible heat changes <strong>temperature</strong> without changing phase.</p>
+        <div class="formula-box">Q = mCpΔT</div>
+        <div class="formula-box">ΔT = T<sub>final</sub> − T<sub>initial</sub></div>
+      </div>
+      <div class="content-block">
+        <h3>2. Worked Example</h3>
+        <p>450 g water, 15°C → 85°C, Cp = 4.18 J/g°C.</p>
+        <p>ΔT = 70°C</p>
+        <div class="formula-box">Q = (450)(4.18)(70) = 131,670 J = 131.67 kJ</div>
+      </div>
+    `,
+    questions: [
+      {
+        question: "200 g water is heated from 20°C to 50°C. What is ΔT?",
+        type: "mcq",
+        choices: ["A. 30°C", "B. 70°C", "C. 10°C"],
+        correctOption: "A",
+        hint: "Use ΔT = Tfinal − Tinitial.",
+        feedback: "Correct. ΔT = 50 − 20 = 30°C."
+      },
+      {
+        question: "500 g water is heated from 25°C to 65°C. Cp = 4.18 J/g°C. Find Q.",
+        type: "mcq",
+        choices: ["A. 83.6 kJ", "B. 41.8 kJ", "C. 836 kJ"],
+        correctOption: "A",
+        hint: "Use Q = mCpΔT and convert J to kJ.",
+        feedback: "Correct. Q = (500)(4.18)(40) = 83,600 J = 83.6 kJ."
+      },
+      {
+        question: "750 g water is heated from 30°C to 80°C. Cp = 4.18 J/g°C. Find Q.",
+        type: "mcq",
+        choices: ["A. 156.75 kJ", "B. 78.38 kJ", "C. 313.5 kJ"],
+        correctOption: "A",
+        hint: "First find ΔT, then apply Q = mCpΔT.",
+        feedback: "Correct. Q = (750)(4.18)(50) = 156.75 kJ."
+      }
+    ]
+  },
 
-  "mission-3": { badge: "Mission 3", title: "Master Latent Heat", icon: "🧊", description: "Calculate heat during a phase change when temperature stays constant.", content: `
-    <div class="content-block"><h3>1. Latent heat</h3><p>Latent heat is gained or lost during a <strong>phase change</strong> without a temperature change.</p><div class="formula-box">Melting / Freezing: Q = mΔH<sub>fusion</sub></div><div class="formula-box">Vaporisation / Condensation: Q = mλ</div></div>
-    <div class="content-block"><h3>2. Worked Example</h3><p>48.2 g ice melts. Heat of fusion = 333 J/g.</p><div class="formula-box">Q = (48.2)(333) ≈ 16.1 kJ</div></div>
-    <div class="practice-question" data-question-id="w6m3q1"><h3>Guided Practice 1</h3><p>100 g ice melts. Heat of fusion = 333 J/g. Find Q.</p><div class="practice-options"><button data-answer="correct">33.3 kJ</button><button data-answer="wrong">3.33 kJ</button><button data-answer="wrong">333 kJ</button></div><div class="question-feedback"></div></div>
-    <div class="practice-question" data-question-id="w6m3q2"><h3>Guided Practice 2</h3><p>0.50 kg water is vaporised. λ = 2257 kJ/kg. Find Q.</p><div class="practice-options"><button data-answer="correct">1128.5 kJ</button><button data-answer="wrong">4514 kJ</button><button data-answer="wrong">225.7 kJ</button></div><div class="question-feedback"></div></div>
-    <div class="practice-question" data-question-id="w6m3q3"><h3>Independent Try</h3><p>0.25 kg water is vaporised. λ = 2257 kJ/kg. Find Q.</p><div class="practice-options"><button data-answer="correct">564.25 kJ</button><button data-answer="wrong">902.8 kJ</button><button data-answer="wrong">56.43 kJ</button></div><div class="question-feedback"></div></div>` },
+  "mission-3": {
+    badge: "Mission 3",
+    title: "Master Latent Heat",
+    icon: "🧊",
+    description: "Calculate heat during a phase change when temperature stays constant.",
+    content: `
+      <div class="content-block">
+        <h3>1. Latent heat</h3>
+        <p>Latent heat is gained or lost during a <strong>phase change</strong> without a temperature change.</p>
+        <div class="formula-box">Melting / Freezing: Q = mΔH<sub>fusion</sub></div>
+        <div class="formula-box">Vaporisation / Condensation: Q = mλ</div>
+      </div>
+      <div class="content-block">
+        <h3>2. Worked Example</h3>
+        <p>48.2 g ice melts. Heat of fusion = 333 J/g.</p>
+        <div class="formula-box">Q = (48.2)(333) ≈ 16.1 kJ</div>
+      </div>
+    `,
+    questions: [
+      {
+        question: "100 g ice melts. Heat of fusion = 333 J/g. Find Q.",
+        type: "mcq",
+        choices: ["A. 33.3 kJ", "B. 3.33 kJ", "C. 333 kJ"],
+        correctOption: "A",
+        hint: "Use Q = mΔHfusion and convert J to kJ.",
+        feedback: "Correct. Q = (100)(333) = 33,300 J = 33.3 kJ."
+      },
+      {
+        question: "0.50 kg water is vaporised. λ = 2257 kJ/kg. Find Q.",
+        type: "mcq",
+        choices: ["A. 1128.5 kJ", "B. 4514 kJ", "C. 225.7 kJ"],
+        correctOption: "A",
+        hint: "Use Q = mλ.",
+        feedback: "Correct. Q = (0.50)(2257) = 1128.5 kJ."
+      },
+      {
+        question: "0.25 kg water is vaporised. λ = 2257 kJ/kg. Find Q.",
+        type: "mcq",
+        choices: ["A. 564.25 kJ", "B. 902.8 kJ", "C. 56.43 kJ"],
+        correctOption: "A",
+        hint: "Multiply the mass by the latent heat.",
+        feedback: "Correct. Q = (0.25)(2257) = 564.25 kJ."
+      }
+    ]
+  },
 
-  "mission-4": { badge: "Mission 4", title: "Combine the Energy", icon: "➕", description: "Solve multi-stage problems that require both sensible and latent heat.", content: `
-    <div class="content-block"><h3>1. Think in stages</h3><div class="formula-box">Temperature change → Q<sub>sensible</sub> = mCpΔT</div><div class="formula-box">Phase change → Q<sub>latent</sub> = mλ</div><div class="formula-box">Q<sub>total</sub> = Q<sub>sensible</sub> + Q<sub>latent</sub></div></div>
-    <div class="content-block"><h3>2. Worked Example</h3><p>1.00 kg water, 25°C → 100°C, then completely vaporised. Cp = 4.18 kJ/kg°C, λ = 2257 kJ/kg.</p><p>Q₁ = 313.5 kJ; Q₂ = 2257 kJ</p><div class="formula-box">Qtotal = 2570.5 kJ</div></div>
-    <div class="practice-question" data-question-id="w6m4q1"><h3>Guided Practice 1</h3><p>0.50 kg water, 20°C → 100°C, then vaporised. Find total Q.</p><div class="practice-options"><button data-answer="correct">1295.7 kJ</button><button data-answer="wrong">1128.5 kJ</button><button data-answer="wrong">167.2 kJ</button></div><div class="question-feedback"></div></div>
-    <div class="practice-question" data-question-id="w6m4q2"><h3>Guided Practice 2</h3><p>Water is heated to boiling and then vaporised. Which sequence is correct?</p><div class="practice-options"><button data-answer="correct">Sensible heat → Latent heat</button><button data-answer="wrong">Latent heat → Sensible heat</button><button data-answer="wrong">Latent heat only</button></div><div class="question-feedback"></div></div>
-    <div class="practice-question" data-question-id="w6m4q3"><h3>Independent Try</h3><p>0.25 kg water, 40°C → 100°C, then vaporised. Find total Q.</p><div class="practice-options"><button data-answer="correct">626.95 kJ</button><button data-answer="wrong">564.25 kJ</button><button data-answer="wrong">62.7 kJ</button></div><div class="question-feedback"></div></div>` },
+  "mission-4": {
+    badge: "Mission 4",
+    title: "Combine the Energy",
+    icon: "➕",
+    description: "Solve multi-stage problems that require both sensible and latent heat.",
+    content: `
+      <div class="content-block">
+        <h3>1. Think in stages</h3>
+        <div class="formula-box">Temperature change → Q<sub>sensible</sub> = mCpΔT</div>
+        <div class="formula-box">Phase change → Q<sub>latent</sub> = mλ</div>
+        <div class="formula-box">Q<sub>total</sub> = Q<sub>sensible</sub> + Q<sub>latent</sub></div>
+      </div>
+      <div class="content-block">
+        <h3>2. Worked Example</h3>
+        <p>1.00 kg water, 25°C → 100°C, then completely vaporised. Cp = 4.18 kJ/kg°C, λ = 2257 kJ/kg.</p>
+        <p>Q₁ = 313.5 kJ; Q₂ = 2257 kJ</p>
+        <div class="formula-box">Qtotal = 2570.5 kJ</div>
+      </div>
+    `,
+    questions: [
+      {
+        question: "0.50 kg water is heated from 20°C to 100°C and then vaporised. Find total Q.",
+        type: "mcq",
+        choices: ["A. 1295.7 kJ", "B. 1128.5 kJ", "C. 167.2 kJ"],
+        correctOption: "A",
+        hint: "Calculate sensible heat first, then latent heat, then add them.",
+        feedback: "Correct. Qtotal = 167.2 + 1128.5 = 1295.7 kJ."
+      },
+      {
+        question: "Water is heated to boiling and then vaporised. Which sequence is correct?",
+        type: "mcq",
+        choices: ["A. Sensible heat → Latent heat", "B. Latent heat → Sensible heat", "C. Latent heat only"],
+        correctOption: "A",
+        hint: "Temperature changes first; phase change happens after boiling temperature is reached.",
+        feedback: "Correct. Heating to boiling is sensible heat, followed by latent heat for vaporisation."
+      },
+      {
+        question: "0.25 kg water is heated from 40°C to 100°C and then vaporised. Find total Q.",
+        type: "mcq",
+        choices: ["A. 626.95 kJ", "B. 564.25 kJ", "C. 62.7 kJ"],
+        correctOption: "A",
+        hint: "Find sensible heat and latent heat separately, then add.",
+        feedback: "Correct. Qtotal = 62.7 + 564.25 = 626.95 kJ."
+      }
+    ]
+  },
 
-  "mission-5": { badge: "Mission 5", title: "Apply Energy Balance", icon: "🔥", description: "Connect the process energy requirement to fuel moles and fuel mass.", content: `
-    <div class="content-block"><h3>1. Calculation journey</h3><div class="formula-box">ENERGY NEEDED → MOLES OF FUEL → MASS OF FUEL</div></div>
-    <div class="content-block"><h3>2. Worked Example — Butane</h3><p>1 L water starts at 25°C and is heated to 100°C then vaporised.</p><p>Given: 1 L water = 1 kg, Cp = 4.18 kJ/kg°C, λ = 2257 kJ/kg, heat from butane = 2658 kJ/mol, molar mass = 58 g/mol.</p><p>Q₁ = 313.5 kJ; Q₂ = 2257 kJ; Qtotal = 2570.5 kJ</p><p>n = 2570.5 ÷ 2658 ≈ 0.967 mol</p><div class="formula-box">Mass ≈ (0.967)(58) = 56.1 g butane</div></div>
-    <div class="practice-question" data-question-id="w6m5q1"><h3>Guided Practice</h3><p>A process needs 1800 kJ. Fuel releases 900 kJ/mol and has MW = 40 g/mol. Find mass.</p><div class="practice-options"><button data-answer="correct">80 g</button><button data-answer="wrong">45 g</button><button data-answer="wrong">2 g</button></div><div class="question-feedback"></div></div>
-    <div class="practice-question" data-question-id="w6m5q2"><h3>Independent Try</h3><p>A process needs 3000 kJ. Fuel releases 1500 kJ/mol and has MW = 44 g/mol. Find mass.</p><div class="practice-options"><button data-answer="correct">88 g</button><button data-answer="wrong">68.2 g</button><button data-answer="wrong">2 g</button></div><div class="question-feedback"></div></div>
-    <div class="content-block"><h3>Final checklist</h3><ul><li>Temperature change? Sensible heat.</li><li>Phase change? Latent heat.</li><li>Both? Add the energy stages.</li><li>Energy per mole given? Calculate moles.</li><li>Molar mass given? Convert moles to mass.</li></ul></div>` }
+  "mission-5": {
+    badge: "Mission 5",
+    title: "Apply Energy Balance",
+    icon: "🔥",
+    description: "Connect the process energy requirement to fuel moles and fuel mass.",
+    content: `
+      <div class="content-block">
+        <h3>1. Calculation journey</h3>
+        <div class="formula-box">ENERGY NEEDED → MOLES OF FUEL → MASS OF FUEL</div>
+      </div>
+      <div class="content-block">
+        <h3>2. Worked Example — Butane</h3>
+        <p>1 L water starts at 25°C and is heated to 100°C then vaporised.</p>
+        <p>Given: 1 L water = 1 kg, Cp = 4.18 kJ/kg°C, λ = 2257 kJ/kg, heat from butane = 2658 kJ/mol, molar mass = 58 g/mol.</p>
+        <p>Q₁ = 313.5 kJ; Q₂ = 2257 kJ; Qtotal = 2570.5 kJ</p>
+        <p>n = 2570.5 ÷ 2658 ≈ 0.967 mol</p>
+        <div class="formula-box">Mass ≈ (0.967)(58) = 56.1 g butane</div>
+      </div>
+      <div class="content-block">
+        <h3>Final checklist</h3>
+        <ul>
+          <li>Temperature change? Sensible heat.</li>
+          <li>Phase change? Latent heat.</li>
+          <li>Both? Add the energy stages.</li>
+          <li>Energy per mole given? Calculate moles.</li>
+          <li>Molar mass given? Convert moles to mass.</li>
+        </ul>
+      </div>
+    `,
+    questions: [
+      {
+        question: "A process needs 1800 kJ. Fuel releases 900 kJ/mol and has MW = 40 g/mol. Find the fuel mass.",
+        type: "mcq",
+        choices: ["A. 80 g", "B. 45 g", "C. 2 g"],
+        correctOption: "A",
+        hint: "First find moles of fuel, then multiply by molar mass.",
+        feedback: "Correct. n = 1800 ÷ 900 = 2 mol, so mass = 2 × 40 = 80 g."
+      },
+      {
+        question: "A process needs 3000 kJ. Fuel releases 1500 kJ/mol and has MW = 44 g/mol. Find the fuel mass.",
+        type: "mcq",
+        choices: ["A. 88 g", "B. 68.2 g", "C. 2 g"],
+        correctOption: "A",
+        hint: "Convert required energy to moles first, then moles to mass.",
+        feedback: "Correct. n = 3000 ÷ 1500 = 2 mol, so mass = 2 × 44 = 88 g."
+      }
+    ]
+  }
 };
 
 const lessonsByWeek = {
