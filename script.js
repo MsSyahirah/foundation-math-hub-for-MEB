@@ -2974,10 +2974,50 @@ const week6CriterionCards = {
   }
 };
 
+const consolidationCriterionCards = {
+  "skill-1": {
+    title: "Algebra Star Unlocked",
+    achievement: "You can identify the unknown, choose a formula, rearrange when needed and substitute values correctly.",
+    plantConnection: "In process calculations, engineers rearrange equations for density, flow, moles and energy.",
+    whyMatters: "Algebra lets you turn a process formula into the exact unknown quantity you need."
+  },
+  "skill-2": {
+    title: "Unit Star Unlocked",
+    achievement: "You can convert measurements and make units consistent before calculating.",
+    plantConnection: "Plant data may be recorded in g, kg, J, kJ, mL, L and other units.",
+    whyMatters: "A correct formula can still give a wrong answer if the units do not match."
+  },
+  "skill-3": {
+    title: "Ratio Star Unlocked",
+    achievement: "You can use ratio, proportion and percentage to compare and scale process quantities.",
+    plantConnection: "Stream composition and reaction relationships often depend on ratios and percentages.",
+    whyMatters: "These skills help you scale a known relationship to the actual process quantity."
+  },
+  "skill-4": {
+    title: "Fraction Star Unlocked",
+    achievement: "You can connect fractions, decimals, percentages and mass fractions.",
+    plantConnection: "Composition is often written as a fraction of the whole stream.",
+    whyMatters: "Understanding equivalent forms makes it easier to move between mass fraction, decimal and percentage."
+  },
+  "skill-5": {
+    title: "Arithmetic Star Unlocked",
+    achievement: "You can choose the correct operation and complete multi-step calculations in the correct order.",
+    plantConnection: "Material and energy balances repeatedly use addition, subtraction, multiplication and division.",
+    whyMatters: "Strong arithmetic prevents simple calculation errors from affecting the final process result."
+  },
+  "skill-6": {
+    title: "Decimal Star Unlocked",
+    achievement: "You can round the final answer to the required number of decimal places.",
+    plantConnection: "Engineering results must be reported clearly and consistently for communication and checking.",
+    whyMatters: "Rounding too early can change the result, while correct final rounding improves accuracy."
+  }
+};
+
 function getCurrentCriterionCards() {
   if (selectedWeekId === "week-3") return week3CriterionCards;
   if (selectedWeekId === "week-4") return week4CriterionCards;
   if (selectedWeekId === "week-6") return week6CriterionCards;
+  if (selectedWeekId === "consolidation") return consolidationCriterionCards;
   return {};
 }
 
@@ -4631,6 +4671,12 @@ function confirmExternalCompletion(activityId) {
   updateWholeWeek();
 
   if (
+    selectedWeekId === "consolidation" &&
+    activityId === "student-survey" &&
+    !wasAlreadyCompleted
+  ) {
+    showFinalConsolidationAchievement();
+  } else if (
     selectedWeekId === "week-3" &&
     activityId === "edcafe-check" &&
     !wasAlreadyCompleted
@@ -7109,8 +7155,34 @@ function completeCurrentLesson() {
    26. COMPLETION POPUP
    ========================================================= */
 
+function showFinalConsolidationAchievement() {
+  if (selectedWeekId !== "consolidation") return;
+
+  journeyInProgress = false;
+
+  document.getElementById("journeyPause")?.classList.add("hidden");
+  document.getElementById("achievementReveal")?.classList.add("hidden");
+  document.getElementById("finalConsolidationAchievement")?.classList.remove("hidden");
+  document.getElementById("celebrationModalCard")?.classList.add("final-achievement-active");
+  document.getElementById("closeModalButton")?.classList.add("hidden");
+  document.getElementById("celebrationModal")?.classList.remove("hidden");
+
+  playAchievementChime();
+}
+
+function closeFinalConsolidationAchievement() {
+  document.getElementById("finalConsolidationAchievement")?.classList.add("hidden");
+  document.getElementById("achievementReveal")?.classList.remove("hidden");
+  document.getElementById("celebrationModalCard")?.classList.remove("final-achievement-active");
+  document.getElementById("closeModalButton")?.classList.remove("hidden");
+  document.getElementById("celebrationModal")?.classList.add("hidden");
+
+  showToast("Journey complete — all six Foundation Mathematics skills achieved!");
+}
+
 function showCelebration(activityId) {
   currentBonusActivity = activityId;
+  document.getElementById("finalConsolidationAchievement")?.classList.add("hidden");
 
   const completedCount =
     getCompletedCheckpointCount();
@@ -7132,24 +7204,34 @@ function showCelebration(activityId) {
   document.getElementById(
     "celebrationTitle"
   ).textContent =
-    completedCount === getCurrentCheckpointIds().length
-      ? "You Reached the Weekly Goal!"
-      : "Checkpoint Completed!";
+    selectedWeekId === "consolidation"
+      ? (completedCount === getCurrentCheckpointIds().length
+          ? "All Six Mathematics Skills Completed!"
+          : "Skill Completed!")
+      : (completedCount === getCurrentCheckpointIds().length
+          ? "You Reached the Weekly Goal!"
+          : "Checkpoint Completed!");
 
   document.getElementById(
     "celebrationText"
   ).textContent =
-    completedCount === getCurrentCheckpointIds().length
-      ? ["week-3", "week-4", "week-6"].includes(selectedWeekId)
-        ? "Your five mission stops are complete. Continue to the independent assessment and final feedback step."
-        : "Your required checkpoints are complete. Submit the official quiz when it is released."
-      : "Good work. Your checkpoint progress and Mastery Stars have been updated.";
+    selectedWeekId === "consolidation"
+      ? (completedCount === getCurrentCheckpointIds().length
+          ? "You have completed all six Foundation Mathematics skill stations. Continue to the Post-Test, then finish with Student Feedback."
+          : "Great work. One Foundation Mathematics skill is complete and your journey has moved forward.")
+      : (completedCount === getCurrentCheckpointIds().length
+          ? ["week-3", "week-4", "week-6"].includes(selectedWeekId)
+            ? "Your five mission stops are complete. Continue to the independent assessment and final feedback step."
+            : "Your required checkpoints are complete. Submit the official quiz when it is released."
+          : "Good work. Your checkpoint progress and Mastery Stars have been updated.");
 
   document.getElementById(
     "bonusResult"
   ).textContent =
-    "You now have " + getMasteryStarCount() +
-    " of 5 Mastery Stars. Reward Tokens are not awarded by chance.";
+    selectedWeekId === "consolidation"
+      ? "Skill progress updated. Keep going until all six Foundation Mathematics stars are complete."
+      : "You now have " + getMasteryStarCount() +
+        " of 5 Mastery Stars. Reward Tokens are not awarded by chance.";
 
   const rewardButton =
     document.getElementById("rollBonusButton");
@@ -7250,9 +7332,19 @@ const week6JourneyArrivalEvents = {
   5: { icon: "🔥", title: "Energy Balance applied", message: "You connected process energy to fuel moles and mass." }
 };
 
+const consolidationJourneyArrivalEvents = {
+  1: { icon: "🔣", title: "Algebra station cleared", message: "You identified and rearranged formulas to solve for the unknown." },
+  2: { icon: "📏", title: "Unit station cleared", message: "You converted values and matched units before calculating." },
+  3: { icon: "📊", title: "Ratio station cleared", message: "You used ratio, proportion and percentage to scale process quantities." },
+  4: { icon: "➗", title: "Fraction station cleared", message: "You connected fractions, decimals, percentages and mass fractions." },
+  5: { icon: "🧮", title: "Arithmetic station cleared", message: "You chose the correct operation and completed multi-step calculations." },
+  6: { icon: "🔢", title: "Decimal station cleared", message: "You reported final answers using the required decimal places." }
+};
+
 function getJourneyArrivalEvents() {
   if (selectedWeekId === "week-4") return week4JourneyArrivalEvents;
   if (selectedWeekId === "week-6") return week6JourneyArrivalEvents;
+  if (selectedWeekId === "consolidation") return consolidationJourneyArrivalEvents;
   return journeyArrivalEvents;
 }
 
