@@ -3561,6 +3561,7 @@ function createEmptyProgress() {
     studentName: "",
     studentClass: "",
     learningMethod: "",
+    consolidationLearningMode: "",
 
     masteryStars: {
       formula: false,
@@ -4246,7 +4247,83 @@ function isActivityUnlocked(activity) {
    15. CREATE THE ACTIVITY CARDS
    ========================================================= */
 
+
+function getConsolidationLearningMode() {
+  return studentProgress.consolidationLearningMode || "";
+}
+
+
+function setConsolidationLearningMode(mode) {
+  if (!["classroom", "self-paced"].includes(mode)) {
+    return;
+  }
+
+  studentProgress.consolidationLearningMode = mode;
+  saveProgress();
+  renderConsolidationModeSelector();
+  renderActivityCards();
+
+  showToast(
+    mode === "classroom"
+      ? "Classroom mode selected. Your lecturer controls checkpoint verification."
+      : "Self-paced mode selected. You can self-confirm EdCafe checkpoints after completing them."
+  );
+}
+
+
+function renderConsolidationModeSelector() {
+  const selector =
+    document.getElementById("consolidationModeSelector");
+
+  if (!selector) return;
+
+  const isConsolidation =
+    selectedWeekId === "consolidation";
+
+  selector.classList.toggle("hidden", !isConsolidation);
+
+  if (!isConsolidation) return;
+
+  const mode = getConsolidationLearningMode();
+  const classroomButton =
+    document.getElementById("classroomModeButton");
+  const selfPacedButton =
+    document.getElementById("selfPacedModeButton");
+  const status =
+    document.getElementById("consolidationModeStatus");
+
+  classroomButton?.classList.toggle(
+    "selected",
+    mode === "classroom"
+  );
+
+  selfPacedButton?.classList.toggle(
+    "selected",
+    mode === "self-paced"
+  );
+
+  if (status) {
+    status.textContent =
+      mode === "classroom"
+        ? "🏫 Classroom mode active · Lecturer verification codes are required for EdCafe checkpoints."
+        : mode === "self-paced"
+          ? "🏠 Self-paced mode active · Complete each EdCafe checkpoint, then confirm completion yourself."
+          : "Choose a mode before starting the consolidation pathway.";
+  }
+}
+
+
+function isConsolidationEdCafeCheckpoint(activityId) {
+  return (
+    selectedWeekId === "consolidation" &&
+    /^checkpoint-[1-6]$/.test(activityId)
+  );
+}
+
+
 function renderActivityCards() {
+  renderConsolidationModeSelector();
+
   const grid =
     document.getElementById("activityGrid");
 
@@ -4338,6 +4415,21 @@ function renderActivityCards() {
       </div>
     `;
 
+    if (
+      selectedWeekId === "consolidation" &&
+      isConsolidationEdCafeCheckpoint(activity.id)
+    ) {
+      const description =
+        card.querySelector(".activity-description");
+
+      if (description) {
+        description.textContent =
+          getConsolidationLearningMode() === "self-paced"
+            ? "Complete the EdCafe checkpoint. Return here and self-confirm completion to unlock the next step."
+            : "Complete the EdCafe checkpoint. Return here and enter the verification code provided by your lecturer.";
+      }
+    }
+
     grid.appendChild(card);
   });
 }
@@ -4407,6 +4499,20 @@ function createActivityButtons(
     `;
   }
 
+  if (
+    selectedWeekId === "consolidation" &&
+    !getConsolidationLearningMode()
+  ) {
+    return `
+      <button
+        class="button button-light button-small"
+        disabled
+      >
+        Choose Classroom or Self-Paced mode first
+      </button>
+    `;
+  }
+
   if (!unlocked) {
     return `
       <button
@@ -4434,16 +4540,30 @@ function createActivityButtons(
   }
 
   if (activity.type === "external") {
+    const consolidationMode =
+      getConsolidationLearningMode();
+
+    const isSelfPacedEdCafe =
+      isConsolidationEdCafeCheckpoint(activity.id) &&
+      consolidationMode === "self-paced";
+
     const requiresCompletionCode =
       (selectedWeekId === "week-4" && Boolean(week45CompletionCodes[activity.id])) ||
       (selectedWeekId === "week-6" && Boolean(week6CompletionCodes[activity.id])) ||
-      (selectedWeekId === "consolidation" && Boolean(consolidationCompletionCodes[activity.id]));
+      (
+        selectedWeekId === "consolidation" &&
+        Boolean(consolidationCompletionCodes[activity.id]) &&
+        !isSelfPacedEdCafe
+      );
 
-    const confirmationText = requiresCompletionCode
-      ? "Verify Completion"
-      : activity.official
-        ? "I Submitted It"
-        : "I Finished It";
+    const confirmationText =
+      isSelfPacedEdCafe
+        ? "I Completed This Checkpoint"
+        : requiresCompletionCode
+          ? "Verify Completion"
+          : activity.official
+            ? "I Submitted It"
+            : "I Finished It";
 
     return `
       <button
@@ -4664,17 +4784,28 @@ function confirmExternalCompletion(activityId) {
     return;
   }
 
+  const selfPacedEdCafe =
+    isConsolidationEdCafeCheckpoint(activityId) &&
+    getConsolidationLearningMode() === "self-paced";
+
   if (
     (selectedWeekId === "week-4" && week45CompletionCodes[activityId]) ||
     (selectedWeekId === "week-6" && week6CompletionCodes[activityId]) ||
-    (selectedWeekId === "consolidation" && consolidationCompletionCodes[activityId])
+    (
+      selectedWeekId === "consolidation" &&
+      consolidationCompletionCodes[activityId] &&
+      !selfPacedEdCafe
+    )
   ) {
     const verified = verifyExternalCompletionCode(activityId);
     if (!verified) return;
   } else {
-    const wording = activity.official
-      ? "Have you submitted this Microsoft Forms activity?"
-      : "Have you completed this activity?";
+    const wording =
+      selfPacedEdCafe
+        ? "Have you completed this EdCafe checkpoint? Only confirm after you have finished the activity."
+        : activity.official
+          ? "Have you submitted this Microsoft Forms activity?"
+          : "Have you completed this activity?";
     const confirmed = window.confirm(wording);
     if (!confirmed) return;
   }

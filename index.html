@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Foundation Math Hub for Higher Nitec in Chemical Process Technology">
   <title>Foundation Math Hub</title>
-  <link rel="stylesheet" href="style.css?v=29">
-  <script src="script.js?v=29" defer></script>
+  <link rel="stylesheet" href="style.css?v=30">
+  <script src="script.js?v=30" defer></script>
 </head>
 <body>
 
@@ -431,6 +431,53 @@
             may be used whenever you need help.
           </p>
         </div>
+      </div>
+
+      <div
+        class="consolidation-mode-selector hidden"
+        id="consolidationModeSelector"
+        aria-labelledby="consolidationModeHeading"
+      >
+        <div class="mode-selector-heading">
+          <span class="small-label">Choose How You Are Learning</span>
+          <h3 id="consolidationModeHeading">Classroom or Self-Paced?</h3>
+          <p>
+            Choose the mode that matches how you are completing this lesson.
+            You can change it later.
+          </p>
+        </div>
+
+        <div class="mode-selector-grid">
+          <button
+            class="mode-choice-card"
+            id="classroomModeButton"
+            type="button"
+            onclick="setConsolidationLearningMode('classroom')"
+          >
+            <span class="mode-choice-icon" aria-hidden="true">🏫</span>
+            <span>
+              <strong>Learning in Class</strong>
+              <small>Lecturer provides checkpoint verification codes.</small>
+            </span>
+          </button>
+
+          <button
+            class="mode-choice-card"
+            id="selfPacedModeButton"
+            type="button"
+            onclick="setConsolidationLearningMode('self-paced')"
+          >
+            <span class="mode-choice-icon" aria-hidden="true">🏠</span>
+            <span>
+              <strong>Learning Independently</strong>
+              <small>Complete EdCafe, then self-confirm to continue.</small>
+            </span>
+          </button>
+        </div>
+
+        <p class="mode-selector-status" id="consolidationModeStatus">
+          No mode selected yet.
+        </p>
       </div>
 
       <!-- JavaScript creates the activities here -->
