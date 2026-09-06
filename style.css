@@ -3735,3 +3735,158 @@ textarea {
     border-radius: 18px;
   }
 }
+
+
+/* ======================================================
+   V24 — CLEARER LEARNING TOOLS ENTRY POINT
+   The launcher now sits inside the question header so
+   students can see it immediately.
+   ====================================================== */
+
+.consolidation-mode .floating-learning-tools-button {
+  display: none !important;
+}
+
+.consolidation-mode .practice-question-heading {
+  align-items: flex-start;
+}
+
+.practice-question-heading-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.consolidation-mode .question-learning-tools-button {
+  min-width: 290px;
+  min-height: 64px;
+  padding: 10px 16px;
+
+  border: 2px solid #93c5fd;
+  border-radius: 16px;
+
+  background: linear-gradient(135deg, #eff6ff, #ffffff);
+  color: var(--navy);
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.08);
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.consolidation-mode .question-learning-tools-button:hover,
+.consolidation-mode .question-learning-tools-button.active {
+  border-color: var(--blue);
+  background: #eef2ff;
+  transform: translateY(-1px);
+  box-shadow: 0 9px 20px rgba(37, 99, 235, 0.13);
+}
+
+.consolidation-mode .question-tools-icon {
+  flex: 0 0 auto;
+  font-size: 28px;
+}
+
+.consolidation-mode .question-tools-copy {
+  min-width: 0;
+}
+
+.consolidation-mode .question-tools-copy strong,
+.consolidation-mode .question-tools-copy small {
+  display: block;
+}
+
+.consolidation-mode .question-tools-copy strong {
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.consolidation-mode .question-tools-copy small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* Gentle one-time-looking visual cue without being distracting. */
+@keyframes learning-tools-nudge {
+  0%, 100% { box-shadow: 0 6px 16px rgba(37, 99, 235, 0.08); }
+  50% { box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.10), 0 8px 20px rgba(37, 99, 235, 0.12); }
+}
+
+.consolidation-mode .question-learning-tools-button {
+  animation: learning-tools-nudge 2.2s ease 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .consolidation-mode .question-learning-tools-button {
+    animation: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .consolidation-mode .practice-question-heading {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .practice-question-heading-actions {
+    width: 100%;
+    margin-left: 0;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .consolidation-mode .question-learning-tools-button {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+
+/* ======================================================
+   V25 — LEARNING TOOLS BUTTON INSIDE ACTION ROW
+   ====================================================== */
+
+.consolidation-mode .practice-actions {
+  grid-template-columns: repeat(3, minmax(190px, 1fr));
+}
+
+.consolidation-mode .learning-tools-inline-button {
+  border-color: #93c5fd;
+  background: linear-gradient(135deg, #eff6ff, #ffffff);
+  color: var(--navy);
+  font-weight: 900;
+}
+
+.consolidation-mode .learning-tools-inline-button:hover,
+.consolidation-mode .learning-tools-inline-button.active {
+  border-color: var(--blue);
+  background: #eef2ff;
+}
+
+/* Retire the old top-right header styles */
+.consolidation-mode .question-learning-tools-button,
+.consolidation-mode .question-tools-icon,
+.consolidation-mode .question-tools-copy {
+  display: none !important;
+}
+
+@media (max-width: 900px) {
+  .consolidation-mode .practice-actions {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1087,7 +1087,7 @@ const consolidationActivities = [
     icon: "📝",
     colour: "#d71920",
     description:
-      "Complete the Pre-Test independently before beginning the six Foundation Mathematics skills.",
+      "Complete the Pre-Test independently. After submitting, return here and enter the verification code to unlock Skill 1.",
     type: "external",
     linkKey: "preTest",
     official: true,
@@ -1251,7 +1251,7 @@ const consolidationActivities = [
     icon: "✅",
     colour: "#16a34a",
     description:
-      "Complete the Post-Test independently after all six skills and checkpoints.",
+      "Complete the Post-Test independently. After submitting, return here and enter the verification code to unlock the Student Feedback Form.",
     type: "external",
     linkKey: "postTest",
     official: true,
@@ -4549,12 +4549,14 @@ const week6CompletionCodes = {
 
 
 const consolidationCompletionCodes = {
+  "pre-test": "PREMATH",
   "checkpoint-1": "ALGEBRA1",
   "checkpoint-2": "UNIT2",
   "checkpoint-3": "RATIO3",
   "checkpoint-4": "FRACTION4",
   "checkpoint-5": "ARITH5",
-  "checkpoint-6": "DECIMAL6"
+  "checkpoint-6": "DECIMAL6",
+  "post-test": "POSTMATH"
 };
 
 
@@ -4788,24 +4790,6 @@ function createPracticeSection(lesson) {
         Your working and answers are kept while you move between questions.
       </p>
 
-
-      ${
-        selectedWeekId === "consolidation"
-          ? `
-            <button
-              class="floating-learning-tools-button"
-              id="floatingLearningToolsButton"
-              type="button"
-              onclick="toggleLearningToolsDrawer()"
-              aria-controls="learningToolsDrawer"
-              aria-expanded="false"
-            >
-              <span aria-hidden="true">🧰</span>
-              <span>Learning Tools</span>
-            </button>
-          `
-          : ""
-      }
 
       <section
         class="learning-tools ${selectedWeekId === "consolidation" ? "learning-tools-drawer hidden" : ""}"
@@ -5286,11 +5270,13 @@ function renderCurrentPracticeQuestion() {
           }
         </div>
 
-        ${
-          currentQuestionResults[questionIndex]
-            ? `<span class="practice-complete-label">✓ Completed</span>`
-            : ""
-        }
+        <div class="practice-question-heading-actions">
+          ${
+            currentQuestionResults[questionIndex]
+              ? `<span class="practice-complete-label">✓ Completed</span>`
+              : ""
+          }
+        </div>
       </div>
 
 
@@ -5370,6 +5356,28 @@ function renderCurrentPracticeQuestion() {
               >
                 🔊 Listen to Question
               </button>
+
+              ${
+                selectedWeekId === "consolidation"
+                  ? `
+                    <button
+                      class="button button-light button-small learning-tools-inline-button"
+                      id="questionLearningToolsButton"
+                      type="button"
+                      onclick="toggleLearningToolsDrawer()"
+                      aria-controls="learningToolsDrawer"
+                      aria-expanded="${
+                        document.getElementById("learningToolsDrawer") &&
+                        !document.getElementById("learningToolsDrawer").classList.contains("hidden")
+                          ? "true"
+                          : "false"
+                      }"
+                    >
+                      🧰 Learning Tools
+                    </button>
+                  `
+                  : ""
+              }
 
               <button
                 class="button button-light button-small progressive-help-button"
@@ -5679,7 +5687,9 @@ function initialiseLearningTools() {
 
 function toggleLearningToolsDrawer(forceOpen = null) {
   const drawer = document.getElementById("learningToolsDrawer");
-  const launcher = document.getElementById("floatingLearningToolsButton");
+  const launcher =
+    document.getElementById("questionLearningToolsButton") ||
+    document.getElementById("floatingLearningToolsButton");
 
   if (!drawer) return;
 
