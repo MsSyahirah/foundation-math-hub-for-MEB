@@ -124,7 +124,10 @@ const websiteLinks = {
       "https://forms.cloud.microsoft/r/ju2GzbC7VK",
 
     studentSurvey:
-      "https://forms.cloud.microsoft/r/t4ZE6kZT2T"
+      "https://forms.cloud.microsoft/r/t4ZE6kZT2T",
+
+    lessonSlides:
+      "The-Maths-Behind-MEB.pptx"
   }
 
 };
@@ -916,7 +919,7 @@ const week4Activities = [
     description:
       "Identify reactants, products and coefficients, then read a balanced equation in moles.",
     type: "lesson",
-    prerequisites: ["pre-test"]
+    prerequisites: ["lesson-slides"]
   },
   {
     id: "checkpoint-1",
@@ -1087,11 +1090,24 @@ const consolidationActivities = [
     icon: "📝",
     colour: "#d71920",
     description:
-      "Complete the Pre-Test independently. After submitting, return here and enter the verification code to unlock Skill 1.",
+      "Complete the Pre-Test independently. After submitting, return here and enter the verification code to unlock the lesson slides.",
     type: "external",
     linkKey: "preTest",
     official: true,
     prerequisites: []
+  },
+
+  {
+    id: "lesson-slides",
+    number: "Step 2 · Consolidation Teaching",
+    title: "The Maths Behind MEB",
+    icon: "📚",
+    colour: "#0f766e",
+    description:
+      "Review the 10-slide consolidation lesson covering the six Foundation Mathematics skills used across MEB before starting the guided missions.",
+    type: "external",
+    linkKey: "lessonSlides",
+    prerequisites: ["pre-test"]
   },
 
   {
@@ -1113,7 +1129,7 @@ const consolidationActivities = [
     icon: "🎯",
     colour: "#2563eb",
     description:
-      "Complete the EdCafe checkpoint. Enter the verification code shown after completion to unlock Skill 2.",
+      "Complete the EdCafe checkpoint, then return here. Your lecturer will provide the verification code to unlock Skill 2.",
     type: "external",
     linkKey: "checkpoint1",
     prerequisites: ["skill-1"]
@@ -1138,7 +1154,7 @@ const consolidationActivities = [
     icon: "🎯",
     colour: "#8b5cf6",
     description:
-      "Complete the EdCafe checkpoint and enter the verification code to unlock Skill 3.",
+      "Complete the EdCafe checkpoint, then return here. Your lecturer will provide the verification code to unlock Skill 3.",
     type: "external",
     linkKey: "checkpoint2",
     prerequisites: ["skill-2"]
@@ -1163,7 +1179,7 @@ const consolidationActivities = [
     icon: "🎯",
     colour: "#f97316",
     description:
-      "Complete the EdCafe checkpoint and enter the verification code to unlock Skill 4.",
+      "Complete the EdCafe checkpoint, then return here. Your lecturer will provide the verification code to unlock Skill 4.",
     type: "external",
     linkKey: "checkpoint3",
     prerequisites: ["skill-3"]
@@ -1188,7 +1204,7 @@ const consolidationActivities = [
     icon: "🎯",
     colour: "#14b8a6",
     description:
-      "Complete the EdCafe checkpoint and enter the verification code to unlock Skill 5.",
+      "Complete the EdCafe checkpoint, then return here. Your lecturer will provide the verification code to unlock Skill 5.",
     type: "external",
     linkKey: "checkpoint4",
     prerequisites: ["skill-4"]
@@ -1213,7 +1229,7 @@ const consolidationActivities = [
     icon: "🎯",
     colour: "#eab308",
     description:
-      "Complete the EdCafe checkpoint and enter the verification code to unlock Skill 6.",
+      "Complete the EdCafe checkpoint, then return here. Your lecturer will provide the verification code to unlock Skill 6.",
     type: "external",
     linkKey: "checkpoint5",
     prerequisites: ["skill-5"]
@@ -1238,7 +1254,7 @@ const consolidationActivities = [
     icon: "🎯",
     colour: "#ec4899",
     description:
-      "Complete the final EdCafe checkpoint and enter the verification code before the Post-Test.",
+      "Complete the final EdCafe checkpoint, then return here. Your lecturer will provide the verification code before the Post-Test.",
     type: "external",
     linkKey: "checkpoint6",
     prerequisites: ["skill-6"]
