@@ -97,6 +97,36 @@ const websiteLinks = {
     postTest: "https://forms.cloud.microsoft/r/0sfzJWBfM4",
     studentSurvey: "https://forms.cloud.microsoft/r/1EafgX0485"
   }
+,
+  "consolidation": {
+    preTest:
+      "https://forms.cloud.microsoft/r/aRieeB8DD5",
+
+    checkpoint1:
+      "https://app.edcafe.ai/join/Ze9MO-d7dLxW-WVdK6W9iY0ZA7lPpVtH86RwQGCp5aA",
+
+    checkpoint2:
+      "https://app.edcafe.ai/join/oI-FuTFFDZQqGwJh0dH6vOKTKod58uuQcupjwhDlQ3s",
+
+    checkpoint3:
+      "https://app.edcafe.ai/join/eaEls36Z3mVTrlLQFsCr4CdnVNMlPXL-xJfjce4Lo78",
+
+    checkpoint4:
+      "https://app.edcafe.ai/join/KdnQab-Yv_zYfua443E_CCOzEotgEhHM0zZXOMxYIkw",
+
+    checkpoint5:
+      "https://app.edcafe.ai/join/p-3n3fJeiHpDmIr467IVZ5H91OqTpzAUPw-DyqJPw7k",
+
+    checkpoint6:
+      "https://app.edcafe.ai/join/ihkeV3Sb4el0uMkLvd9NfhcoO69TAmbOz8urPiA8NNU",
+
+    postTest:
+      "https://forms.cloud.microsoft/r/ju2GzbC7VK",
+
+    studentSurvey:
+      "https://forms.cloud.microsoft/r/t4ZE6kZT2T"
+  }
+
 };
 
 
@@ -207,6 +237,27 @@ const weeks = [
     status: "Available now",
     releaseNote: "Week 6 is available now.",
     tags: ["⚡ Energy Balance", "🌡️ Sensible Heat", "🧊 Latent Heat", "➕ Combined Energy", "🔥 Process Application"]
+  },
+
+  {
+    id: "consolidation",
+    number: "Consolidation Lesson",
+    title: "The Maths Behind MEB",
+    icon: "🧠",
+    colour: "#0f766e",
+    description:
+      "Bring together the six Foundation Mathematics skills used across Material & Energy Balance.",
+    available: true,
+    status: "Available now",
+    releaseNote: "The consolidation lesson is available now.",
+    tags: [
+      "🔣 Algebra",
+      "📏 Unit Conversion",
+      "📊 Ratio & Percentage",
+      "➗ Fractions",
+      "🧮 Arithmetic",
+      "🔢 Decimal Places"
+    ]
   }
 ];
 
@@ -301,6 +352,15 @@ const checkpointIdsByWeek = {
     "mission-3",
     "mission-4",
     "mission-5"
+  ],
+
+  "consolidation": [
+    "skill-1",
+    "skill-2",
+    "skill-3",
+    "skill-4",
+    "skill-5",
+    "skill-6"
   ]
 };
 
@@ -1013,12 +1073,214 @@ const week6Activities = [
 ];
 
 
+/* =========================================================
+   FINAL CONSOLIDATION ACTIVITIES — THE MATHS BEHIND MEB
+   Pre-Test → six guided skills → EdCafe checkpoints →
+   Post-Test → Student Feedback
+   ========================================================= */
+
+const consolidationActivities = [
+  {
+    id: "pre-test",
+    number: "Step 1 · Before Learning",
+    title: "Foundation Mathematics Pre-Test",
+    icon: "📝",
+    colour: "#d71920",
+    description:
+      "Complete the Pre-Test independently before beginning the six Foundation Mathematics skills.",
+    type: "external",
+    linkKey: "preTest",
+    official: true,
+    prerequisites: []
+  },
+
+  {
+    id: "skill-1",
+    number: "Skill 1",
+    title: "Algebra & Formulae",
+    routeLabel: "Algebra",
+    icon: "🔣",
+    colour: "#2563eb",
+    description:
+      "Identify the unknown, select and rearrange a formula, substitute values and calculate.",
+    type: "lesson",
+    prerequisites: ["pre-test"]
+  },
+  {
+    id: "checkpoint-1",
+    number: "Skill 1 Checkpoint",
+    title: "EdCafe: Algebra & Formulae",
+    icon: "🎯",
+    colour: "#2563eb",
+    description:
+      "Complete the EdCafe checkpoint. Enter the verification code shown after completion to unlock Skill 2.",
+    type: "external",
+    linkKey: "checkpoint1",
+    prerequisites: ["skill-1"]
+  },
+
+  {
+    id: "skill-2",
+    number: "Skill 2",
+    title: "Measurement & Unit Conversion",
+    routeLabel: "Units",
+    icon: "📏",
+    colour: "#8b5cf6",
+    description:
+      "Check units, convert values and make units consistent before calculating.",
+    type: "lesson",
+    prerequisites: ["checkpoint-1"]
+  },
+  {
+    id: "checkpoint-2",
+    number: "Skill 2 Checkpoint",
+    title: "EdCafe: Measurement & Unit Conversion",
+    icon: "🎯",
+    colour: "#8b5cf6",
+    description:
+      "Complete the EdCafe checkpoint and enter the verification code to unlock Skill 3.",
+    type: "external",
+    linkKey: "checkpoint2",
+    prerequisites: ["skill-2"]
+  },
+
+  {
+    id: "skill-3",
+    number: "Skill 3",
+    title: "Ratio, Proportion & Percentage",
+    routeLabel: "Ratio & %",
+    icon: "📊",
+    colour: "#f97316",
+    description:
+      "Compare quantities, scale relationships and calculate stream percentages.",
+    type: "lesson",
+    prerequisites: ["checkpoint-2"]
+  },
+  {
+    id: "checkpoint-3",
+    number: "Skill 3 Checkpoint",
+    title: "EdCafe: Ratio, Proportion & Percentage",
+    icon: "🎯",
+    colour: "#f97316",
+    description:
+      "Complete the EdCafe checkpoint and enter the verification code to unlock Skill 4.",
+    type: "external",
+    linkKey: "checkpoint3",
+    prerequisites: ["skill-3"]
+  },
+
+  {
+    id: "skill-4",
+    number: "Skill 4",
+    title: "Fractions",
+    routeLabel: "Fractions",
+    icon: "➗",
+    colour: "#14b8a6",
+    description:
+      "Connect fractions, decimals, percentages and mass fractions.",
+    type: "lesson",
+    prerequisites: ["checkpoint-3"]
+  },
+  {
+    id: "checkpoint-4",
+    number: "Skill 4 Checkpoint",
+    title: "EdCafe: Fractions",
+    icon: "🎯",
+    colour: "#14b8a6",
+    description:
+      "Complete the EdCafe checkpoint and enter the verification code to unlock Skill 5.",
+    type: "external",
+    linkKey: "checkpoint4",
+    prerequisites: ["skill-4"]
+  },
+
+  {
+    id: "skill-5",
+    number: "Skill 5",
+    title: "Basic Arithmetic Calculations",
+    routeLabel: "Arithmetic",
+    icon: "🧮",
+    colour: "#eab308",
+    description:
+      "Choose the correct operation and complete MEB calculations in the correct order.",
+    type: "lesson",
+    prerequisites: ["checkpoint-4"]
+  },
+  {
+    id: "checkpoint-5",
+    number: "Skill 5 Checkpoint",
+    title: "EdCafe: Basic Arithmetic Calculations",
+    icon: "🎯",
+    colour: "#eab308",
+    description:
+      "Complete the EdCafe checkpoint and enter the verification code to unlock Skill 6.",
+    type: "external",
+    linkKey: "checkpoint5",
+    prerequisites: ["skill-5"]
+  },
+
+  {
+    id: "skill-6",
+    number: "Skill 6",
+    title: "Decimal Places",
+    routeLabel: "Decimals",
+    icon: "🔢",
+    colour: "#ec4899",
+    description:
+      "Calculate first, then round the final answer to the required number of decimal places.",
+    type: "lesson",
+    prerequisites: ["checkpoint-5"]
+  },
+  {
+    id: "checkpoint-6",
+    number: "Skill 6 Checkpoint",
+    title: "EdCafe: Decimal Places",
+    icon: "🎯",
+    colour: "#ec4899",
+    description:
+      "Complete the final EdCafe checkpoint and enter the verification code before the Post-Test.",
+    type: "external",
+    linkKey: "checkpoint6",
+    prerequisites: ["skill-6"]
+  },
+
+  {
+    id: "post-test",
+    number: "Step 3 · Independent Assessment",
+    title: "Foundation Mathematics Post-Test",
+    icon: "✅",
+    colour: "#16a34a",
+    description:
+      "Complete the Post-Test independently after all six skills and checkpoints.",
+    type: "external",
+    linkKey: "postTest",
+    official: true,
+    prerequisites: ["checkpoint-6"]
+  },
+
+  {
+    id: "student-survey",
+    number: "Final Step",
+    title: "MEB Lesson and EcoHub Feedback Survey",
+    icon: "💬",
+    colour: "#8b5cf6",
+    description:
+      "Tell us whether the lesson and EcoHub helped you understand and apply the mathematics used in MEB.",
+    type: "external",
+    linkKey: "studentSurvey",
+    official: true,
+    prerequisites: ["post-test"]
+  }
+];
+
+
 const activitiesByWeek = {
   "week-1": week1Activities,
   "week-2": week2Activities,
   "week-3": week3Activities,
   "week-4": week4Activities,
-  "week-6": week6Activities
+  "week-6": week6Activities,
+  "consolidation": consolidationActivities
 };
 
 
@@ -2474,103 +2736,34 @@ const week3Lessons = {
 
 const week3CriterionCards = {
   "learning-method": {
-    title: "Process Explorer Achievement Unlocked",
-    achievement:
-      "You can identify the equipment being studied and draw its system boundary.",
-    plantConnection:
-      "Before doing a material balance, operators and engineers must agree on which tank, mixer or separator is inside the study boundary.",
-    whyMatters:
-      "A poorly chosen boundary can leave out a stream and make every later calculation incorrect.",
-    question:
-      "An engineer draws a boundary around one mixing tank. Which item crosses that boundary?",
-    choices: [
-      "A. The name of the equipment",
-      "B. An input or output stream",
-      "C. The title of the question"
-    ],
-    correctOption: "B",
-    explanation:
-      "Correct. Material streams cross into or out of the selected system boundary."
+    title: "Material Balance Mathematics: Reading the System",
+    achievement: "You can identify the process boundary and decide which quantities belong in the balance.",
+    plantConnection: "Operators and engineers define the equipment or process section being studied before checking its incoming and outgoing streams.",
+    whyMatters: "Good mathematics starts with the correct information. A missing stream produces an incorrect balance even if the arithmetic is perfect."
   },
-
   "remember-bloom": {
-    title: "Flow Detective Achievement Unlocked",
-    achievement:
-      "You can classify process streams as inputs or outputs by reading their arrow directions.",
-    plantConnection:
-      "Plant equipment may have several feed, product, recycle and waste pipes. Each stream crossing the boundary must be counted.",
-    whyMatters:
-      "Missing or reversing one stream gives the wrong total flow and can hide an operating problem.",
-    question:
-      "A pipe arrow points away from a mixing tank. How should an operator classify it?",
-    choices: [
-      "A. Input",
-      "B. Output",
-      "C. Accumulation"
-    ],
-    correctOption: "B",
-    explanation:
-      "Correct. The arrow leaves the selected system, so it is an output."
+    title: "Material Balance Mathematics: Classifying Flow",
+    achievement: "You can classify streams as inputs or outputs by reading their direction.",
+    plantConnection: "Process equipment can have multiple feeds, products, recycle streams and waste streams that must be included correctly.",
+    whyMatters: "This supports accurate addition and subtraction when setting up Total Input and Total Output."
   },
-
   "understand-bloom": {
-    title: "Steady-State Scout Achievement Unlocked",
-    achievement:
-      "You can decide whether material is building up, decreasing or remaining constant inside a process.",
-    plantConnection:
-      "Operators compare inlet and outlet flowrates with tank-level trends to judge whether a process is operating steadily.",
-    whyMatters:
-      "If more material enters than leaves, the tank level rises. Recognising accumulation early supports stable and safe operation.",
-    question:
-      "A tank has 12 kg/min entering and 9 kg/min leaving. What is happening?",
-    choices: [
-      "A. Material is building up",
-      "B. Material is decreasing",
-      "C. The tank is at steady state"
-    ],
-    correctOption: "A",
-    explanation:
-      "Correct. More enters than leaves, so 3 kg/min accumulates in the tank."
+    title: "Material Balance Mathematics: Comparing Flowrates",
+    achievement: "You can compare inlet and outlet flowrates to determine whether material is accumulating, decreasing or remaining constant.",
+    plantConnection: "Comparing flowrates with tank behaviour helps plant staff understand whether a process is operating steadily.",
+    whyMatters: "This is comparison and subtraction applied to a real process. Input − Output tells you the direction and amount of accumulation."
   },
-
   "apply-balance": {
-    title: "Balance Builder Achievement Unlocked",
-    achievement:
-      "You can use Total Input = Total Output to calculate an unknown mass flowrate at steady state.",
-    plantConnection:
-      "This calculation helps plant staff estimate a missing stream, check flowmeter readings and maintain the required production rate.",
-    whyMatters:
-      "An incorrect balance may lead to the wrong operating decision, production loss or an unexpected tank-level change.",
-    question:
-      "Two feeds enter at 8 kg/min and 7 kg/min. What is the single outlet at steady state?",
-    choices: [
-      "A. 1 kg/min",
-      "B. 8 kg/min",
-      "C. 15 kg/min"
-    ],
-    correctOption: "C",
-    explanation:
-      "Correct. Total input is 8 + 7 = 15 kg/min, so the outlet is 15 kg/min."
+    title: "Material Balance Mathematics: Solving the Unknown",
+    achievement: "You can use Total Input = Total Output and rearrange the equation to calculate an unknown flowrate.",
+    plantConnection: "Material balances can be used to estimate a missing stream, check a flowmeter reading or confirm a production rate.",
+    whyMatters: "This directly applies algebra, addition, subtraction and unit consistency."
   },
-
   "edcafe-check": {
-    title: "MEB Challenge Achievement Unlocked",
-    achievement:
-      "You can independently interpret a simple non-reacting process and complete an overall material balance.",
-    plantConnection:
-      "This is the same thinking sequence used to read a plant flow diagram, select a balance equation and check whether the result is reasonable.",
-    whyMatters:
-      "Independent checking helps prevent calculation errors from being carried into later process decisions.",
-    question:
-      "Which equation should you start with for a non-reacting steady-state process?",
-    choices: [
-      "A. Total Input = Total Output",
-      "B. Total Input = 0",
-      "C. Total Output = Accumulation"
-    ],
-    correctOption: "A",
-    explanation:
-      "Correct. At steady state, accumulation is zero, so total input equals total output."
+    title: "Material Balance Mathematics: Independent Application",
+    achievement: "You can independently interpret a process and complete an overall material balance.",
+    plantConnection: "The same sequence—define the system, identify streams, write the balance and check the result—is used in process calculations.",
+    whyMatters: "The goal is not only to get a number, but to use mathematics in a way that makes physical sense for the process."
   }
 };
 
@@ -2716,64 +2909,69 @@ const week4Lessons = {
 
 const week4CriterionCards = {
   "mission-1": {
-    title: "Reaction Reader Badge Unlocked",
-    achievement: "You can identify reactants, products and coefficients in a balanced chemical equation.",
-    plantConnection: "Operators must identify which materials enter a reactor and which products leave before completing a balance.",
-    whyMatters: "Reading the reaction incorrectly causes every later mole-ratio calculation to be wrong.",
-    question: "In 2H₂ + O₂ → 2H₂O, which substances are the reactants?",
-    choices: ["A. H₂ and O₂", "B. H₂O only", "C. O₂ and H₂O"],
-    correctOption: "A",
-    explanation: "Correct. H₂ and O₂ are on the left side of the equation, so they are the reactants."
+    title: "Reaction Mathematics: Reading Ratios",
+    achievement: "You can read coefficients in a balanced chemical equation as numerical mole ratios.",
+    plantConnection: "In reactor operations and process calculations, these ratios are used to estimate how much reactant is required and how much product can be formed.",
+    whyMatters: "This connects directly to ratio and proportion. If the coefficients are read incorrectly, every later stoichiometric calculation will also be incorrect."
   },
   "mission-2": {
-    title: "Mole Converter Badge Unlocked",
-    achievement: "You can convert between mass and moles using molecular weight.",
-    plantConnection: "Plant data may be recorded as mass flow, while reaction equations use mole relationships.",
-    whyMatters: "A correct mass-to-mole conversion is required before stoichiometric calculations can begin.",
-    question: "What operation converts mass into moles?",
-    choices: ["A. Mass ÷ molecular weight", "B. Mass × molecular weight", "C. Molecular weight ÷ mass"],
-    correctOption: "A",
-    explanation: "Correct. Number of moles equals mass divided by molecular weight."
+    title: "Reaction Mathematics: Mass–Mole Conversion",
+    achievement: "You can use division and multiplication to convert between mass and moles using molecular weight.",
+    plantConnection: "Plant measurements are often recorded as mass or mass flow, while chemical reaction equations are interpreted in moles. Engineers must move accurately between both forms.",
+    whyMatters: "This uses formula substitution, unit consistency and basic arithmetic—the same Foundation Mathematics skills used throughout MEB."
   },
   "mission-3": {
-    title: "Mole Ratio Master Badge Unlocked",
-    achievement: "You can select and apply the correct mole ratio from a balanced equation.",
-    plantConnection: "Stoichiometric ratios help engineers determine how much feed is needed and how much product can form.",
-    whyMatters: "Using the wrong coefficient pair gives an incorrect reactant requirement or product amount.",
-    question: "For N₂ + 3H₂ → 2NH₃, what is the mole ratio H₂:NH₃?",
-    choices: ["A. 1:2", "B. 3:2", "C. 2:3"],
-    correctOption: "B",
-    explanation: "Correct. The coefficients of H₂ and NH₃ are 3 and 2, so the ratio is 3:2."
+    title: "Reaction Mathematics: Mole Ratios",
+    achievement: "You can use ratio and proportion to scale quantities from a balanced chemical equation.",
+    plantConnection: "Stoichiometric ratios are used when estimating feed requirements, product quantities and the relationship between reacting streams.",
+    whyMatters: "This is a direct application of ratio and proportion. The equation provides the ratio; your mathematics scales it to the actual process quantity."
   },
   "mission-4": {
-    title: "Limiting Reactant Detective Badge Unlocked",
-    achievement: "You can identify the reactant that controls the maximum product formed.",
-    plantConnection: "The limiting reactant determines when production stops even if another feed remains available.",
-    whyMatters: "Product must be calculated from the limiting reactant, not the excess reactant.",
-    question: "After dividing available moles by each coefficient, which result identifies the limiting reactant?",
-    choices: ["A. The largest result", "B. The smallest result", "C. The average result"],
-    correctOption: "B",
-    explanation: "Correct. The smallest available-moles-to-coefficient result identifies the limiting reactant."
+    title: "Reaction Mathematics: Comparing Reactants",
+    achievement: "You can compare calculated quantities to determine which reactant limits the reaction.",
+    plantConnection: "In a real reactor, one reactant may run out before another. Identifying the limiting reactant helps estimate the maximum possible production.",
+    whyMatters: "This combines division, comparison and ratio reasoning. The mathematics helps you decide which process quantity controls the result."
   },
   "mission-5": {
-    title: "Reaction Optimiser Badge Unlocked",
-    achievement: "You can distinguish percentage excess from percentage conversion.",
-    plantConnection: "Engineers track extra feed supplied and the fraction of feed that actually reacts to assess reactor performance.",
-    whyMatters: "Confusing these percentages can lead to incorrect conclusions about feed usage and process efficiency.",
-    question: "Which percentage compares the amount reacted with the amount originally fed?",
-    choices: ["A. Percentage excess", "B. Percentage conversion", "C. Mole fraction"],
-    correctOption: "B",
-    explanation: "Correct. Percentage conversion compares reactant reacted with reactant fed."
+    title: "Reaction Mathematics: Percentages",
+    achievement: "You can calculate and distinguish percentage excess and percentage conversion.",
+    plantConnection: "Process staff use percentages to describe extra reactant supplied and how much of a reactant actually reacts.",
+    whyMatters: "This is percentage mathematics applied to process performance. Correctly choosing the numerator and denominator is essential."
   }
 };
 
 
 const week6CriterionCards = {
-  "mission-1": { title: "Energy Explorer Badge Unlocked", achievement: "You can identify the system and interpret Energy In versus Energy Out.", plantConnection: "Energy balances begin by defining what is inside the process boundary.", whyMatters: "A clear boundary prevents missing important inputs and outputs.", question: "At steady state, what is the accumulation?", choices: ["A. Zero", "B. Positive", "C. Negative"], correctOption: "A", explanation: "Correct. At steady state, accumulation is zero." },
-  "mission-2": { title: "Sensible Heat Specialist Badge Unlocked", achievement: "You can calculate heat for a temperature change without phase change.", plantConnection: "Heating and cooling process streams commonly require sensible-heat calculations.", whyMatters: "Correct ΔT and units are essential for heat-duty calculations.", question: "Which equation is used for sensible heat?", choices: ["A. Q = mCpΔT", "B. Q = mλ", "C. n = m/MW"], correctOption: "A", explanation: "Correct. Sensible heat uses Q = mCpΔT." },
-  "mission-3": { title: "Latent Heat Specialist Badge Unlocked", achievement: "You can calculate heat during a phase change.", plantConnection: "Evaporation, condensation, melting and freezing require latent heat.", whyMatters: "Phase-change energy must not be omitted.", question: "During the phase-change step, what happens to temperature?", choices: ["A. It stays constant", "B. It always rises", "C. It always falls"], correctOption: "A", explanation: "Correct. The phase-change step occurs without a temperature change." },
-  "mission-4": { title: "Energy Integrator Badge Unlocked", achievement: "You can combine sensible and latent heat.", plantConnection: "Real heating duties often include more than one energy stage.", whyMatters: "Total heat must include every required stage.", question: "If water is heated to boiling and then vaporised, what is Qtotal?", choices: ["A. Sensible + latent heat", "B. Sensible only", "C. Latent only"], correctOption: "A", explanation: "Correct. Add all required energy stages." },
-  "mission-5": { title: "Energy Balance Solver Badge Unlocked", achievement: "You can connect process heat requirements to fuel moles and mass.", plantConnection: "Engineers relate process heat duty to fuel or utility requirements.", whyMatters: "This links Energy Balance to the material quantity required by the process.", question: "After calculating moles of fuel, how do you find mass?", choices: ["A. m = n × MW", "B. m = n ÷ MW", "C. m = Q × Cp"], correctOption: "A", explanation: "Correct. Mass equals moles multiplied by molar mass." }
+  "mission-1": {
+    title: "Energy Mathematics: Reading the Balance",
+    achievement: "You can compare Energy In and Energy Out and recognise what steady state means mathematically.",
+    plantConnection: "Energy balances are used around heaters, coolers, tanks and other process equipment to understand how energy moves through the system.",
+    whyMatters: "This develops comparison and equation thinking before any calculation begins."
+  },
+  "mission-2": {
+    title: "Energy Mathematics: Formula Substitution",
+    achievement: "You can use Q = mCpΔT by identifying the correct values, calculating ΔT and substituting consistently.",
+    plantConnection: "Heating and cooling duties are common in process plants, and sensible-heat calculations help estimate the required energy.",
+    whyMatters: "This applies algebra, subtraction, multiplication and unit checking in one engineering formula."
+  },
+  "mission-3": {
+    title: "Energy Mathematics: Multiplication with Units",
+    achievement: "You can calculate latent heat using mass multiplied by latent heat per unit mass.",
+    plantConnection: "Evaporation, condensation, melting and freezing occur in many industrial processes and require additional energy calculations.",
+    whyMatters: "The mathematics is simple multiplication, but the units must match before the result is meaningful."
+  },
+  "mission-4": {
+    title: "Energy Mathematics: Multi-Step Calculation",
+    achievement: "You can calculate separate energy stages and add them to obtain a total energy requirement.",
+    plantConnection: "Real process heating can involve both temperature change and phase change, so engineers combine several energy contributions.",
+    whyMatters: "This builds multi-step arithmetic: calculate each part correctly, keep the units consistent, then add only compatible quantities."
+  },
+  "mission-5": {
+    title: "Energy Mathematics: From Energy to Fuel",
+    achievement: "You can connect energy required, moles of fuel and mass of fuel through a sequence of calculations.",
+    plantConnection: "Process energy demand can be translated into the amount of fuel or utility required to operate equipment.",
+    whyMatters: "This combines division, multiplication, formula selection and unit conversion—the same core mathematics used across MEB."
+  }
 };
 
 function getCurrentCriterionCards() {
@@ -3026,12 +3224,241 @@ const week6Lessons = {
   }
 };
 
+
+/* =========================================================
+   FINAL CONSOLIDATION LESSON CONTENT
+   Each skill uses 2 Remember + 2 Understand + 2 Apply.
+   ========================================================= */
+
+const consolidationLessons = {
+  "skill-1": {
+    badge: "Skill 1 · Algebra & Formulae",
+    title: "Algebra & Formulae",
+    icon: "🔣",
+    description: "Use Identify → Rearrange → Substitute → Calculate.",
+    notesTemplate: `Unknown:
+
+Formula:
+
+Rearranged formula:
+
+Values:
+
+Answer:`,
+    content: `
+      <div class="content-block">
+        <span class="small-label">Foundation Mathematics Skill 1</span>
+        <h3>Identify → Rearrange → Substitute → Calculate</h3>
+        <p>First ask what the question wants. Then choose the formula, rearrange only if needed, substitute the values and calculate.</p>
+        <div class="formula-grid">
+          <div class="mini-formula">ρ = m ÷ V</div>
+          <div class="mini-formula">n = m ÷ M<sub>r</sub></div>
+          <div class="mini-formula">Q = mC<sub>p</sub>ΔT</div>
+        </div>
+      </div>
+      <div class="success-box"><strong>Key idea:</strong> Do not substitute numbers until you know what you are finding and which formula you need.</div>
+    `,
+    questions: [
+      { bloom: "Remember", question: "Density is 800 kg/m³ and volume is 2 m³. Which symbol represents the mass you are asked to find?", type: "mcq", choices: ["A. m", "B. V", "C. ρ", "D. Q"], correctOption: "A", hint: "Look for the symbol normally used for mass.", hint2: "In the density formula, mass is represented by m.", firstStep: "Write the unknown as: m = ?", feedback: "Correct. The unknown mass is represented by m." },
+      { bloom: "Remember", question: "Which formula relates density, mass and volume?", type: "mcq", choices: ["A. ρ = m ÷ V", "B. ρ = V ÷ m", "C. m = ρ ÷ V", "D. V = ρm"], correctOption: "A", hint: "Density means mass per unit volume.", hint2: "The word 'per' tells you to divide mass by volume.", firstStep: "Write: Density = Mass ÷ Volume.", feedback: "Correct. ρ = m ÷ V." },
+      { bloom: "Understand", question: "You know mass and volume and need to find density. What should you do?", type: "mcq", choices: ["A. Use ρ = m ÷ V directly", "B. Rearrange for mass", "C. Rearrange for volume", "D. Add mass and volume"], correctOption: "A", hint: "The required quantity is already alone on the left side.", hint2: "If ρ is the unknown, no rearrangement is needed.", firstStep: "Circle ρ as the unknown, then write ρ = m ÷ V.", feedback: "Correct. Use the density formula directly." },
+      { bloom: "Understand", question: "Rearrange ρ = m ÷ V to make V the subject.", type: "mcq", choices: ["A. V = m ÷ ρ", "B. V = ρ ÷ m", "C. V = mρ", "D. V = m + ρ"], correctOption: "A", hint: "Think: mass equals density multiplied by volume.", hint2: "From m = ρV, divide both sides by ρ.", firstStep: "Start by multiplying both sides by V: ρV = m.", feedback: "Correct. V = m ÷ ρ." },
+      { bloom: "Apply", question: "A liquid has density 850 kg/m³ and volume 2 m³. Calculate its mass.", hint: "Use m = ρV.", hint2: "Multiply 850 kg/m³ by 2 m³.", firstStep: "Write m = 850 × 2.", expectedNumber: 1700, acceptedUnits: ["kg"], displayAnswer: "1700 kg" },
+      { bloom: "Apply", question: "A 2 kg material has Cp = 4 kJ/(kg°C) and is heated from 20°C to 30°C. Calculate Q.", hint: "Use Q = mCpΔT.", hint2: "First find ΔT = 30 − 20 = 10°C.", firstStep: "Write Q = 2 × 4 × 10.", expectedNumber: 80, acceptedUnits: ["kj"], displayAnswer: "80 kJ" }
+    ]
+  },
+
+  "skill-2": {
+    badge: "Skill 2 · Measurement & Unit Conversion",
+    title: "Measurement & Unit Conversion",
+    icon: "📏",
+    description: "Convert first. Calculate second. Combine only when the units match.",
+    notesTemplate: `Given unit:
+
+Required unit:
+
+Conversion needed:
+
+Converted value:
+
+Calculation:
+
+Final answer:`,
+    content: `
+      <div class="content-block">
+        <span class="small-label">Foundation Mathematics Skill 2</span>
+        <h3>Check the units before you calculate</h3>
+        <div class="formula-grid">
+          <div class="mini-formula">1 kg = 1000 g</div>
+          <div class="mini-formula">1 L = 1000 mL</div>
+          <div class="mini-formula">1 kJ = 1000 J</div>
+          <div class="mini-formula">1 kmol = 1000 mol</div>
+        </div>
+      </div>
+      <div class="success-box"><strong>Key idea:</strong> Convert first. Calculate second. Combine only when the units match.</div>
+    `,
+    questions: [
+      { bloom: "Remember", question: "Which conversion is correct?", type: "mcq", choices: ["A. 1 kg = 1000 g", "B. 1 kg = 100 g", "C. 1 kg = 10 g", "D. 1 kg = 0.001 g"], correctOption: "A", hint: "Think of the prefix kilo.", hint2: "Kilo means one thousand.", firstStep: "Write 1 kg = ____ g.", feedback: "Correct. 1 kg = 1000 g." },
+      { bloom: "Remember", question: "A formula uses Cp in kJ/(kg°C), but the mass is given as 500 g. What should you do first?", type: "mcq", choices: ["A. Convert 500 g to kg", "B. Use 500 directly", "C. Convert Cp to mL", "D. Add 1000"], correctOption: "A", hint: "Look at the mass unit required by Cp.", hint2: "Cp is per kilogram, so mass must be in kilograms.", firstStep: "Convert 500 g ÷ 1000.", feedback: "Correct. Convert the mass to kilograms first." },
+      { bloom: "Understand", question: "Convert 2500 g to kg.", hint: "Grams to kilograms means divide by 1000.", hint2: "2500 ÷ 1000 = 2.5.", firstStep: "Write 2500 g × (1 kg / 1000 g).", expectedNumber: 2.5, acceptedUnits: ["kg"], displayAnswer: "2.5 kg" },
+      { bloom: "Understand", question: "Convert 750 mL to L.", hint: "Millilitres to litres means divide by 1000.", hint2: "750 ÷ 1000 = 0.75.", firstStep: "Write 750 mL × (1 L / 1000 mL).", expectedNumber: 0.75, acceptedUnits: ["l"], displayAnswer: "0.75 L" },
+      { bloom: "Apply", question: "Use Q = mCpΔT. Mass = 500 g, Cp = 4 kJ/(kg°C), ΔT = 10°C. Calculate Q.", hint: "Convert the mass to kilograms before substituting.", hint2: "500 g = 0.5 kg, then use Q = 0.5 × 4 × 10.", firstStep: "First write: 500 g = 0.5 kg.", expectedNumber: 20, acceptedUnits: ["kj"], displayAnswer: "20 kJ" },
+      { bloom: "Apply", question: "Sensible heat is 12 kJ and latent heat is 3500 J. Calculate the total heat in kJ.", hint: "The two energy values must use the same unit before adding.", hint2: "3500 J = 3.5 kJ.", firstStep: "Convert 3500 J ÷ 1000 = 3.5 kJ.", expectedNumber: 15.5, acceptedUnits: ["kj"], displayAnswer: "15.5 kJ" }
+    ]
+  },
+
+  "skill-3": {
+    badge: "Skill 3 · Ratio, Proportion & Percentage",
+    title: "Ratio, Proportion & Percentage",
+    icon: "📊",
+    description: "Ratio compares. Proportion scales. Percentage shows a part of the total.",
+    notesTemplate: `Total amount:
+
+Ratio or percentage:
+
+Total parts:
+
+Part required:
+
+Calculation:
+
+Final answer:`,
+    content: `
+      <div class="content-block">
+        <span class="small-label">Foundation Mathematics Skill 3</span>
+        <h3>Three connected ideas</h3>
+        <p><strong>Ratio compares.</strong> <strong>Proportion scales.</strong> <strong>Percentage shows a part of the total.</strong></p>
+        <div class="formula-box">20% = 0.20 = 20 out of every 100</div>
+      </div>
+    `,
+    questions: [
+      { bloom: "Remember", question: "A:B = 1:3 means:", type: "mcq", choices: ["A. 1 part A for every 3 parts B", "B. 3 parts A for every 1 part B", "C. A and B are equal", "D. A is 3% of B"], correctOption: "A", hint: "Read the ratio in the same order as the letters.", hint2: "A comes first, so the first number belongs to A.", firstStep: "Match A with 1 and B with 3.", feedback: "Correct. A:B = 1:3 means 1 part A for every 3 parts B." },
+      { bloom: "Remember", question: "For 2H₂ + O₂ → 2H₂O, what is the ratio O₂:H₂?", type: "mcq", choices: ["A. 1:2", "B. 2:1", "C. 2:2", "D. 1:1"], correctOption: "A", hint: "Use the coefficients and keep the requested order.", hint2: "O₂ has coefficient 1; H₂ has coefficient 2.", firstStep: "Write O₂ first: 1, then H₂: 2.", feedback: "Correct. O₂:H₂ = 1:2." },
+      { bloom: "Understand", question: "A 100 kg mixture contains 20 kg of A. At the same composition, how much A is in 500 kg?", hint: "The total stream becomes 5 times larger.", hint2: "Scale 20 kg by the same factor of 5.", firstStep: "500 ÷ 100 = 5.", expectedNumber: 100, acceptedUnits: ["kg"], displayAnswer: "100 kg" },
+      { bloom: "Understand", question: "A 400 kg stream contains 25% component A. Calculate the mass of A.", hint: "Convert 25% to 0.25.", hint2: "Multiply 0.25 by the total mass.", firstStep: "Write 0.25 × 400.", expectedNumber: 100, acceptedUnits: ["kg"], displayAnswer: "100 kg" },
+      { bloom: "Apply", question: "A 600 kg mixture has A:B = 2:3. Calculate the mass of A.", hint: "First find the total number of ratio parts.", hint2: "2 + 3 = 5 parts, and A is 2/5 of the total.", firstStep: "Write A = (2 ÷ 5) × 600.", expectedNumber: 240, acceptedUnits: ["kg"], displayAnswer: "240 kg" },
+      { bloom: "Apply", question: "An 800 kg stream contains only A and B. A is 35% of the stream. Calculate the mass of B.", hint: "If A is 35%, the remainder is B.", hint2: "B = 100% − 35% = 65%.", firstStep: "Write B = 0.65 × 800.", expectedNumber: 520, acceptedUnits: ["kg"], displayAnswer: "520 kg" }
+    ]
+  },
+
+  "skill-4": {
+    badge: "Skill 4 · Fractions",
+    title: "Fractions",
+    icon: "➗",
+    description: "Fractions, decimals and percentages can describe the same proportion.",
+    notesTemplate: `Fraction / mass fraction:
+
+Total amount:
+
+Part required:
+
+Conversion needed:
+
+Calculation:
+
+Final answer:`,
+    content: `
+      <div class="content-block">
+        <span class="small-label">Foundation Mathematics Skill 4</span>
+        <h3>Different forms, same proportion</h3>
+        <div class="formula-box">¼ = 0.25 = 25%</div>
+        <p>In MEB, mass fraction tells you what fraction of the total stream belongs to a component.</p>
+      </div>
+      <div class="success-box"><strong>Key idea:</strong> Fraction, decimal and percentage can describe the same proportion.</div>
+    `,
+    questions: [
+      { bloom: "Remember", question: "A mass fraction of 1/4 means:", type: "mcq", choices: ["A. 1 out of 4 equal parts", "B. 4 out of 1 parts", "C. 1%", "D. 4%"], correctOption: "A", hint: "The denominator tells you the total number of equal parts.", hint2: "The numerator tells you how many of those parts belong to the component.", firstStep: "Read 1/4 as 'one out of four'.", feedback: "Correct. 1/4 means one out of four equal parts." },
+      { bloom: "Remember", question: "Which statement is correct?", type: "mcq", choices: ["A. 1/4 = 0.25 = 25%", "B. 1/4 = 0.40 = 40%", "C. 1/4 = 0.75 = 75%", "D. 1/4 = 1.25 = 125%"], correctOption: "A", hint: "Divide 1 by 4.", hint2: "1 ÷ 4 = 0.25.", firstStep: "Convert 0.25 to percentage by multiplying by 100.", feedback: "Correct. 1/4 = 0.25 = 25%." },
+      { bloom: "Understand", question: "Which fraction is equivalent to 1/2?", type: "mcq", choices: ["A. 2/4", "B. 1/4", "C. 3/4", "D. 2/3"], correctOption: "A", hint: "Multiply the numerator and denominator by the same number.", hint2: "1 × 2 = 2 and 2 × 2 = 4.", firstStep: "Start with 1/2 × 2/2.", feedback: "Correct. 2/4 is equivalent to 1/2." },
+      { bloom: "Understand", question: "Calculate 1/4 of a 240 kg stream.", hint: "Finding one quarter means divide the total by 4.", hint2: "240 ÷ 4 = 60.", firstStep: "Write (1 ÷ 4) × 240.", expectedNumber: 60, acceptedUnits: ["kg"], displayAnswer: "60 kg" },
+      { bloom: "Apply", question: "A 500 kg stream has a mass fraction of A equal to 0.30. Calculate the mass of A.", hint: "Mass fraction is the part of the total belonging to A.", hint2: "Multiply 0.30 by 500 kg.", firstStep: "Write mA = 0.30 × 500.", expectedNumber: 150, acceptedUnits: ["kg"], displayAnswer: "150 kg" },
+      { bloom: "Apply", question: "A stream contains only A and B. The mass fraction of A is 0.35. Find the mass fraction of B.", hint: "For two components, the fractions add to 1.", hint2: "xB = 1 − xA.", firstStep: "Write xB = 1 − 0.35.", expectedNumber: 0.65, acceptedUnits: [], displayAnswer: "0.65" }
+    ]
+  },
+
+  "skill-5": {
+    badge: "Skill 5 · Basic Arithmetic Calculations",
+    title: "Basic Arithmetic Calculations",
+    icon: "🧮",
+    description: "Choose the operation first. Then calculate.",
+    notesTemplate: `What am I finding?
+
+Operation needed:
+
+Values:
+
+First calculation:
+
+Final calculation:
+
+Answer:`,
+    content: `
+      <div class="content-block">
+        <span class="small-label">Foundation Mathematics Skill 5</span>
+        <h3>Choose the operation before using the calculator</h3>
+        <div class="formula-grid">
+          <div class="mini-formula">+ Add</div>
+          <div class="mini-formula">− Subtract</div>
+          <div class="mini-formula">× Multiply</div>
+          <div class="mini-formula">÷ Divide</div>
+        </div>
+        <p>Remember the order of operations: brackets first, then multiplication/division, then addition/subtraction.</p>
+      </div>
+      <div class="success-box"><strong>Key idea:</strong> Choose the operation first. Then calculate.</div>
+    `,
+    questions: [
+      { bloom: "Remember", question: "Two streams of 250 kg and 350 kg are combined. Which operation should you use to find the total?", type: "mcq", choices: ["A. Addition", "B. Subtraction", "C. Multiplication", "D. Division"], correctOption: "A", hint: "The two streams are being combined.", hint2: "Combined totals are found by adding the parts.", firstStep: "Write 250 + 350.", feedback: "Correct. Use addition to combine the streams." },
+      { bloom: "Remember", question: "A total stream is 600 kg and component A is 150 kg. Which operation should you use to find component B?", type: "mcq", choices: ["A. Subtraction", "B. Addition", "C. Multiplication", "D. Division"], correctOption: "A", hint: "You know the total and one part.", hint2: "The missing part equals total minus known part.", firstStep: "Write 600 − 150.", feedback: "Correct. Use subtraction to find the remaining component." },
+      { bloom: "Understand", question: "Using m = ρV, density is 800 kg/m³ and volume is 3 m³. Which calculation is correct?", type: "mcq", choices: ["A. 800 × 3 = 2400 kg", "B. 800 ÷ 3", "C. 800 + 3", "D. 800 − 3"], correctOption: "A", hint: "The formula shows density multiplied by volume.", hint2: "m = ρ × V.", firstStep: "Substitute: m = 800 × 3.", feedback: "Correct. The mass is 2400 kg." },
+      { bloom: "Understand", question: "Calculate 200 + 5 × 20.", hint: "Use the order of operations.", hint2: "Multiplication comes before addition.", firstStep: "First calculate 5 × 20 = 100.", expectedNumber: 300, acceptedUnits: [], displayAnswer: "300" },
+      { bloom: "Apply", question: "A total stream is 850 kg. Component A is 275 kg and component B is 325 kg. Calculate component C.", hint: "First add the known component masses.", hint2: "275 + 325 = 600 kg, then subtract from 850 kg.", firstStep: "Write C = 850 − (275 + 325).", expectedNumber: 250, acceptedUnits: ["kg"], displayAnswer: "250 kg" },
+      { bloom: "Apply", question: "Use Q = mCpΔT. m = 3 kg, Cp = 4 kJ/(kg°C), temperature rises from 20°C to 45°C. Calculate Q.", hint: "Find ΔT before multiplying.", hint2: "ΔT = 45 − 20 = 25°C.", firstStep: "Write Q = 3 × 4 × 25.", expectedNumber: 300, acceptedUnits: ["kj"], displayAnswer: "300 kJ" }
+    ]
+  },
+
+  "skill-6": {
+    badge: "Skill 6 · Decimal Places",
+    title: "Decimal Places",
+    icon: "🔢",
+    description: "Calculate first. Round only the final answer.",
+    notesTemplate: `Original value:
+
+Required d.p.:
+
+Digit to keep:
+
+Next digit:
+
+Round up or keep:
+
+Final answer:`,
+    content: `
+      <div class="content-block">
+        <span class="small-label">Foundation Mathematics Skill 6</span>
+        <h3>Round only after the calculation is complete</h3>
+        <p>Look at the digit immediately after the required decimal place. If it is 5 or more, round up. If it is 4 or less, keep the digit.</p>
+        <div class="formula-box">3.78 → 3.8 to 1 d.p.</div>
+      </div>
+      <div class="success-box"><strong>Key idea:</strong> Calculate first. Round only the final answer.</div>
+    `,
+    questions: [
+      { bloom: "Remember", question: "How many decimal places are in 4.26?", type: "mcq", choices: ["A. 2", "B. 1", "C. 3", "D. 4"], correctOption: "A", hint: "Count the digits after the decimal point.", hint2: "The digits after the decimal point are 2 and 6.", firstStep: "Underline the digits after the decimal point.", feedback: "Correct. 4.26 has two decimal places." },
+      { bloom: "Remember", question: "When rounding to a required decimal place, which digit tells you whether to round up or keep?", type: "mcq", choices: ["A. The digit immediately after the required place", "B. The first digit of the number", "C. The decimal point", "D. The last digit only"], correctOption: "A", hint: "Look one place to the right of the digit you want to keep.", hint2: "That next digit controls the rounding decision.", firstStep: "Mark the required digit, then circle the digit immediately after it.", feedback: "Correct. The next digit controls the rounding." },
+      { bloom: "Understand", question: "Round 4.26 to 1 decimal place.", hint: "Keep the tenths digit and inspect the hundredths digit.", hint2: "The tenths digit is 2 and the next digit is 6, so round up.", firstStep: "4.26 → keep 2, look at 6.", expectedNumber: 4.3, acceptedUnits: [], displayAnswer: "4.3" },
+      { bloom: "Understand", question: "Round 7.842 to 2 decimal places.", hint: "Keep 7.84 and inspect the next digit.", hint2: "The next digit is 2, so the hundredths digit stays the same.", firstStep: "7.842 → keep 7.84, look at 2.", expectedNumber: 7.84, acceptedUnits: [], displayAnswer: "7.84" },
+      { bloom: "Apply", question: "Calculate 2.46 + 1.32, then report the final answer to 1 decimal place.", hint: "Calculate before rounding.", hint2: "2.46 + 1.32 = 3.78.", firstStep: "First write 2.46 + 1.32 = 3.78.", expectedNumber: 3.8, acceptedUnits: [], displayAnswer: "3.8" },
+      { bloom: "Apply", question: "A calculated mass is 18.376 kg. Report the final answer to 2 decimal places.", hint: "Keep the hundredths digit and inspect the thousandths digit.", hint2: "The next digit is 6, so 18.37 rounds up.", firstStep: "Mark 18.37 and look at the next digit, 6.", expectedNumber: 18.38, acceptedUnits: ["kg"], displayAnswer: "18.38 kg" }
+    ]
+  }
+};
+
 const lessonsByWeek = {
   "week-1": week1Lessons,
   "week-2": week2Lessons,
   "week-3": week3Lessons,
   "week-4": week4Lessons,
-  "week-6": week6Lessons
+  "week-6": week6Lessons,
+  "consolidation": consolidationLessons
 };
 
 
@@ -3108,6 +3535,7 @@ let currentQuestionResults = {};
 let currentQuestionAttempts = {};
 let currentQuestionHintUsed = {};
 let currentPracticeQuestionIndex = 0;
+let currentQuestionSupportLevel = {};
 let currentPracticeResponses = {};
 let currentBonusActivity = null;
 let journeyInProgress = false;
@@ -3297,6 +3725,11 @@ function openWeek(weekId) {
 
   selectedWeekId = weekId;
   selectedWeek = week;
+
+  document.body.classList.toggle(
+    "consolidation-mode",
+    selectedWeekId === "consolidation"
+  );
 
   studentProgress =
     loadProgress();
@@ -3947,7 +4380,8 @@ function createActivityButtons(
   if (activity.type === "external") {
     const requiresCompletionCode =
       (selectedWeekId === "week-4" && Boolean(week45CompletionCodes[activity.id])) ||
-      (selectedWeekId === "week-6" && Boolean(week6CompletionCodes[activity.id]));
+      (selectedWeekId === "week-6" && Boolean(week6CompletionCodes[activity.id])) ||
+      (selectedWeekId === "consolidation" && Boolean(consolidationCompletionCodes[activity.id]));
 
     const confirmationText = requiresCompletionCode
       ? "Verify Completion"
@@ -4114,10 +4548,23 @@ const week6CompletionCodes = {
 };
 
 
+const consolidationCompletionCodes = {
+  "checkpoint-1": "ALGEBRA1",
+  "checkpoint-2": "UNIT2",
+  "checkpoint-3": "RATIO3",
+  "checkpoint-4": "FRACTION4",
+  "checkpoint-5": "ARITH5",
+  "checkpoint-6": "DECIMAL6"
+};
+
+
 function verifyExternalCompletionCode(activityId) {
-  const codeMap = selectedWeekId === "week-6"
-    ? week6CompletionCodes
-    : week45CompletionCodes;
+  const codeMap =
+    selectedWeekId === "week-6"
+      ? week6CompletionCodes
+      : selectedWeekId === "consolidation"
+        ? consolidationCompletionCodes
+        : week45CompletionCodes;
   const requiredCode = codeMap[activityId];
 
   if (!requiredCode) {
@@ -4161,7 +4608,8 @@ function confirmExternalCompletion(activityId) {
 
   if (
     (selectedWeekId === "week-4" && week45CompletionCodes[activityId]) ||
-    (selectedWeekId === "week-6" && week6CompletionCodes[activityId])
+    (selectedWeekId === "week-6" && week6CompletionCodes[activityId]) ||
+    (selectedWeekId === "consolidation" && consolidationCompletionCodes[activityId])
   ) {
     const verified = verifyExternalCompletionCode(activityId);
     if (!verified) return;
@@ -4188,7 +4636,7 @@ function confirmExternalCompletion(activityId) {
     showCelebration(activityId);
   } else {
     showToast(
-      selectedWeekId === "week-4" || selectedWeekId === "week-6"
+      ["week-4", "week-6", "consolidation"].includes(selectedWeekId)
         ? "Completion verified. The next activity is now unlocked."
         : activity.official
             ? "Submission marked as completed. Keep your result screen."
@@ -4237,6 +4685,7 @@ function openLesson(lessonId) {
   currentQuestionResults = {};
   currentQuestionAttempts = {};
   currentQuestionHintUsed = {};
+  currentQuestionSupportLevel = {};
   currentPracticeQuestionIndex = 0;
   currentPracticeResponses = {};
 
@@ -4245,6 +4694,7 @@ function openLesson(lessonId) {
       currentQuestionResults[index] = false;
       currentQuestionAttempts[index] = 0;
       currentQuestionHintUsed[index] = false;
+      currentQuestionSupportLevel[index] = 0;
       currentPracticeResponses[index] = {
         working: "",
         answer: "",
@@ -4552,6 +5002,108 @@ function getPracticeDotClass(questionIndex) {
 }
 
 
+
+function getPracticeSupportText(questionIndex) {
+  const lesson = getCurrentLessons()[currentLessonId];
+  const question = lesson?.questions?.[questionIndex];
+
+  if (!question) return "";
+
+  const level = currentQuestionSupportLevel[questionIndex] || 0;
+
+  if (level >= 3 && question.firstStep) {
+    return "👣 First step: " + question.firstStep;
+  }
+
+  if (level >= 2 && question.hint2) {
+    return "🧭 More help: " + question.hint2;
+  }
+
+  if (level >= 1 && question.hint) {
+    return "💡 Hint: " + question.hint;
+  }
+
+  return "";
+}
+
+
+function showPracticeSupport(questionIndex, level) {
+  const lesson = getCurrentLessons()[currentLessonId];
+  const question = lesson?.questions?.[questionIndex];
+
+  if (!question) return;
+
+  currentQuestionSupportLevel[questionIndex] = Math.max(
+    currentQuestionSupportLevel[questionIndex] || 0,
+    level
+  );
+
+  currentQuestionHintUsed[questionIndex] = true;
+
+  const hintBox = document.getElementById("hint" + questionIndex);
+  if (hintBox) {
+    hintBox.textContent = getPracticeSupportText(questionIndex);
+    hintBox.classList.remove("hidden");
+  }
+}
+
+
+function speakPracticeQuestion(questionIndex) {
+  if (!("speechSynthesis" in window)) {
+    showToast("Read-aloud is not supported by this browser.");
+    return;
+  }
+
+  const lesson = getCurrentLessons()[currentLessonId];
+  const question = lesson?.questions?.[questionIndex];
+
+  if (!question) return;
+
+  window.speechSynthesis.cancel();
+
+  const optionText = question.type === "mcq" && Array.isArray(question.choices)
+    ? " " + question.choices.join(". ")
+    : "";
+
+  const spokenText = (question.audioText || question.question) + optionText;
+  const utterance = new SpeechSynthesisUtterance(spokenText);
+
+  const voices = window.speechSynthesis.getVoices();
+  const preferredNames = [
+    "Google UK English Female",
+    "Sonia",
+    "Libby",
+    "Serena",
+    "Kate"
+  ];
+
+  let voice = voices.find(v =>
+    v.lang?.toLowerCase().startsWith("en-gb") &&
+    preferredNames.some(name =>
+      v.name?.toLowerCase().includes(name.toLowerCase())
+    )
+  );
+
+  if (!voice) {
+    voice = voices.find(v =>
+      v.lang?.toLowerCase().startsWith("en-gb")
+    );
+  }
+
+  if (!voice) {
+    voice = voices.find(v =>
+      v.lang?.toLowerCase().startsWith("en")
+    );
+  }
+
+  if (voice) utterance.voice = voice;
+  utterance.lang = voice?.lang || "en-GB";
+  utterance.rate = 0.68;
+  utterance.pitch = 1;
+
+  window.speechSynthesis.speak(utterance);
+}
+
 function renderCurrentPracticeQuestion() {
   const lesson =
     getCurrentLessons()[currentLessonId];
@@ -4636,9 +5188,16 @@ function renderCurrentPracticeQuestion() {
     >
 
       <div class="practice-question-heading">
-        <h4>
-          Question ${questionIndex + 1}
-        </h4>
+        <div>
+          <h4>
+            Question ${questionIndex + 1}
+          </h4>
+          ${
+            question.bloom
+              ? `<span class="small-label practice-bloom-label">${question.bloom}</span>`
+              : ""
+          }
+        </div>
 
         ${
           currentQuestionResults[questionIndex]
@@ -4708,20 +5267,64 @@ function renderCurrentPracticeQuestion() {
           Check Answer
         </button>
 
-        <button
-          class="button button-light button-small"
-          onclick="showPracticeHint(${questionIndex})"
-        >
-          Show Hint
-        </button>
+        ${
+          question.hint2 || question.firstStep
+            ? `
+              <button
+                class="button button-light button-small"
+                type="button"
+                onclick="speakPracticeQuestion(${questionIndex})"
+              >
+                🔊 Listen to Question
+              </button>
+
+              <button
+                class="button button-light button-small"
+                type="button"
+                onclick="showPracticeSupport(${questionIndex}, 1)"
+              >
+                💡 Give me a hint
+              </button>
+
+              <button
+                class="button button-light button-small"
+                type="button"
+                onclick="showPracticeSupport(${questionIndex}, 2)"
+              >
+                🧭 I still need help
+              </button>
+
+              <button
+                class="button button-light button-small"
+                type="button"
+                onclick="showPracticeSupport(${questionIndex}, 3)"
+              >
+                👣 Show me the first step
+              </button>
+            `
+            : `
+              <button
+                class="button button-light button-small"
+                onclick="showPracticeHint(${questionIndex})"
+              >
+                Show Hint
+              </button>
+            `
+        }
       </div>
 
 
       <p
-        class="hint-message ${currentQuestionHintUsed[questionIndex] ? "" : "hidden"}"
+        class="hint-message ${(currentQuestionSupportLevel[questionIndex] || currentQuestionHintUsed[questionIndex]) ? "" : "hidden"}"
         id="hint${questionIndex}"
       >
-        ${currentQuestionHintUsed[questionIndex] ? "Hint: " + question.hint : ""}
+        ${
+          currentQuestionSupportLevel[questionIndex]
+            ? getPracticeSupportText(questionIndex)
+            : currentQuestionHintUsed[questionIndex]
+              ? "Hint: " + question.hint
+              : ""
+        }
       </p>
 
 
@@ -4937,9 +5540,13 @@ function initialiseLearningTools() {
     document.getElementById("learningNotesInput");
 
   if (notesInput) {
+    const lessonTemplate =
+      getCurrentLessons()[currentLessonId]?.notesTemplate ||
+      learningNotesTemplate;
+
     notesInput.value =
       localStorage.getItem(getLearningNotesKey()) ||
-      learningNotesTemplate;
+      lessonTemplate;
   }
 
   whiteboardLoadedWeek = null;
@@ -5388,7 +5995,9 @@ function clearLearningNotes() {
     document.getElementById("learningNotesInput");
 
   if (notesInput) {
-    notesInput.value = learningNotesTemplate;
+    notesInput.value =
+    getCurrentLessons()[currentLessonId]?.notesTemplate ||
+    learningNotesTemplate;
   }
 
   saveLearningNotes();
