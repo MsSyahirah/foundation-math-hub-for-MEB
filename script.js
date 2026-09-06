@@ -5325,7 +5325,11 @@ function renderCurrentPracticeQuestion() {
             <input
               id="answer${questionIndex}"
               type="text"
-              placeholder="Example: ${question.displayAnswer}"
+              placeholder="${
+                selectedWeekId === "consolidation"
+                  ? "Enter your final answer"
+                  : "Example: " + question.displayAnswer
+              }"
               oninput="saveCurrentPracticeResponse(${questionIndex})"
             >
           `
