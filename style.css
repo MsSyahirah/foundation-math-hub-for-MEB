@@ -3505,3 +3505,233 @@ textarea {
 .criterion-feedback {
   display: none !important;
 }
+
+
+/* ======================================================
+   V21 — PROGRESSIVE HELP + UK VOICE SUPPORT
+   ====================================================== */
+
+.consolidation-mode .practice-actions {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.8fr) minmax(190px, 1fr) minmax(190px, 1fr);
+  gap: 10px;
+}
+
+.consolidation-mode .practice-actions .button {
+  width: 100%;
+  min-height: 48px;
+}
+
+.consolidation-mode .progressive-help-button {
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.consolidation-mode .progressive-help-button:not(:disabled) {
+  border-color: #c7d2fe;
+}
+
+.consolidation-mode .progressive-help-button:disabled {
+  opacity: 0.72;
+  background: #ecfdf5;
+  border-color: #bbf7d0;
+  color: var(--dark-green);
+}
+
+@media (max-width: 760px) {
+  .consolidation-mode .practice-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ======================================================
+   V22 — CHECK & CONTINUE FLOW
+   ====================================================== */
+
+.consolidation-mode .practice-actions {
+  grid-template-columns: repeat(2, minmax(190px, 1fr));
+}
+
+.consolidation-mode .practice-navigation-buttons .button-primary {
+  min-width: 210px;
+}
+
+.consolidation-mode .feedback-message.supportive {
+  font-weight: 800;
+}
+
+@media (max-width: 760px) {
+  .consolidation-mode .practice-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .consolidation-mode .practice-navigation-buttons .button-primary {
+    min-width: 0;
+  }
+}
+
+
+/* ======================================================
+   V23 — FLOATING LEARNING TOOLS DRAWER
+   Consolidation lesson only
+   ====================================================== */
+
+.consolidation-mode .floating-learning-tools-button {
+  position: fixed;
+  right: 0;
+  top: 42%;
+  z-index: 180;
+
+  min-height: 58px;
+  padding: 12px 14px;
+
+  border: 1px solid #c7d2fe;
+  border-right: 0;
+  border-radius: 16px 0 0 16px;
+
+  background: var(--navy);
+  color: var(--white);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+
+  font: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+}
+
+.consolidation-mode .floating-learning-tools-button > span:first-child {
+  font-size: 23px;
+}
+
+.consolidation-mode .floating-learning-tools-button:hover,
+.consolidation-mode .floating-learning-tools-button.active {
+  background: var(--blue);
+}
+
+.consolidation-mode .learning-tools-drawer {
+  position: fixed;
+  top: 118px;
+  right: 18px;
+  bottom: 22px;
+  z-index: 190;
+
+  width: min(520px, calc(100vw - 36px));
+  margin: 0;
+  padding: 20px;
+
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  border: 2px solid #c7d2fe;
+  border-radius: 22px;
+  background: var(--white);
+
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.24);
+}
+
+.consolidation-mode .learning-tools-drawer.hidden {
+  display: none !important;
+}
+
+.consolidation-mode .learning-tools-drawer .learning-tools-heading {
+  position: sticky;
+  top: -20px;
+  z-index: 4;
+
+  margin: -20px -20px 16px;
+  padding: 20px;
+
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.consolidation-mode .learning-tools-drawer-close {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: #f8fafc;
+
+  color: var(--text);
+  font-size: 27px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.consolidation-mode .learning-tools-drawer .learning-tools-bar {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+}
+
+.consolidation-mode .learning-tools-drawer .learning-tool-button {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.consolidation-mode .learning-tools-drawer .learning-tool-panel {
+  margin-top: 14px;
+  padding: 15px;
+  box-shadow: none;
+}
+
+.consolidation-mode .learning-tools-drawer .embedded-calculator {
+  width: 100%;
+}
+
+.consolidation-mode .learning-tools-drawer .learning-notes-textarea {
+  min-height: 220px;
+}
+
+.consolidation-mode .learning-tools-drawer #learningWhiteboardCanvas {
+  width: 100% !important;
+}
+
+/* The old large inline learning-tools block is no longer part of page flow
+   in consolidation mode because it is a fixed drawer. */
+.consolidation-mode .practice-question-flow {
+  margin-top: 18px;
+}
+
+@media (max-width: 700px) {
+  .consolidation-mode .floating-learning-tools-button {
+    top: auto;
+    right: 12px;
+    bottom: 14px;
+
+    border-right: 1px solid #c7d2fe;
+    border-radius: 999px;
+
+    flex-direction: row;
+    min-height: 50px;
+    padding: 10px 15px;
+  }
+
+  .consolidation-mode .floating-learning-tools-button > span:first-child {
+    font-size: 20px;
+  }
+
+  .consolidation-mode .learning-tools-drawer {
+    top: 76px;
+    right: 10px;
+    bottom: 74px;
+    width: calc(100vw - 20px);
+    border-radius: 18px;
+  }
+}

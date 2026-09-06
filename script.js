@@ -4789,7 +4789,29 @@ function createPracticeSection(lesson) {
       </p>
 
 
-      <section class="learning-tools" aria-labelledby="learningToolsHeading">
+      ${
+        selectedWeekId === "consolidation"
+          ? `
+            <button
+              class="floating-learning-tools-button"
+              id="floatingLearningToolsButton"
+              type="button"
+              onclick="toggleLearningToolsDrawer()"
+              aria-controls="learningToolsDrawer"
+              aria-expanded="false"
+            >
+              <span aria-hidden="true">🧰</span>
+              <span>Learning Tools</span>
+            </button>
+          `
+          : ""
+      }
+
+      <section
+        class="learning-tools ${selectedWeekId === "consolidation" ? "learning-tools-drawer hidden" : ""}"
+        id="${selectedWeekId === "consolidation" ? "learningToolsDrawer" : "learningToolsInline"}"
+        aria-labelledby="learningToolsHeading"
+      >
         <div class="learning-tools-heading">
           <div>
             <span class="small-label">Learning Tools</span>
@@ -4799,6 +4821,21 @@ function createPracticeSection(lesson) {
               These tools are saved on this device and are not official submissions.
             </p>
           </div>
+
+          ${
+            selectedWeekId === "consolidation"
+              ? `
+                <button
+                  class="learning-tools-drawer-close"
+                  type="button"
+                  onclick="toggleLearningToolsDrawer(false)"
+                  aria-label="Close learning tools"
+                >
+                  ×
+                </button>
+              `
+              : ""
+          }
         </div>
 
         <div class="learning-tools-bar" role="toolbar" aria-label="Learning tools">
@@ -5027,6 +5064,37 @@ function getPracticeSupportText(questionIndex) {
 }
 
 
+
+function getPracticeHelpButtonLabel(questionIndex) {
+  const level = currentQuestionSupportLevel[questionIndex] || 0;
+
+  if (level === 0) return "💡 Give me a hint";
+  if (level === 1) return "🧭 I still need help";
+  if (level === 2) return "👣 Show me the first step";
+
+  return "✓ Full help shown";
+}
+
+
+function advancePracticeSupport(questionIndex) {
+  const currentLevel = currentQuestionSupportLevel[questionIndex] || 0;
+
+  if (currentLevel >= 3) return;
+
+  const nextLevel = currentLevel + 1;
+  showPracticeSupport(questionIndex, nextLevel);
+
+  const helpButton = document.getElementById("practiceHelpButton" + questionIndex);
+
+  if (helpButton) {
+    helpButton.textContent = getPracticeHelpButtonLabel(questionIndex);
+
+    if (nextLevel >= 3) {
+      helpButton.disabled = true;
+    }
+  }
+}
+
 function showPracticeSupport(questionIndex, level) {
   const lesson = getCurrentLessons()[currentLessonId];
   const question = lesson?.questions?.[questionIndex];
@@ -5045,6 +5113,15 @@ function showPracticeSupport(questionIndex, level) {
     hintBox.textContent = getPracticeSupportText(questionIndex);
     hintBox.classList.remove("hidden");
   }
+}
+
+
+
+if ("speechSynthesis" in window) {
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = () => {
+    window.speechSynthesis.getVoices();
+  };
 }
 
 
@@ -5069,37 +5146,47 @@ function speakPracticeQuestion(questionIndex) {
   const utterance = new SpeechSynthesisUtterance(spokenText);
 
   const voices = window.speechSynthesis.getVoices();
-  const preferredNames = [
+
+  // Browser speech engines do not expose a reliable "gender" property.
+  // We therefore prioritise common UK English female voice names first.
+  const preferredFemaleVoiceNames = [
     "Google UK English Female",
+    "Microsoft Sonia Online",
+    "Microsoft Sonia",
     "Sonia",
     "Libby",
     "Serena",
-    "Kate"
+    "Kate",
+    "Martha",
+    "Stephanie",
+    "Hazel",
+    "Fiona"
   ];
 
-  let voice = voices.find(v =>
-    v.lang?.toLowerCase().startsWith("en-gb") &&
-    preferredNames.some(name =>
-      v.name?.toLowerCase().includes(name.toLowerCase())
-    )
-  );
+  const isEnglish = voice =>
+    voice.lang?.toLowerCase().startsWith("en");
 
-  if (!voice) {
-    voice = voices.find(v =>
-      v.lang?.toLowerCase().startsWith("en-gb")
-    );
-  }
+  const isBritishEnglish = voice =>
+    voice.lang?.toLowerCase().startsWith("en-gb");
 
-  if (!voice) {
-    voice = voices.find(v =>
-      v.lang?.toLowerCase().startsWith("en")
-    );
-  }
+  const looksFemale = voice =>
+    preferredFemaleVoiceNames.some(name =>
+      voice.name?.toLowerCase().includes(name.toLowerCase())
+    ) ||
+    /female/i.test(voice.name || "");
+
+  let voice =
+    voices.find(v => isBritishEnglish(v) && looksFemale(v)) ||
+    voices.find(v => isEnglish(v) && looksFemale(v)) ||
+    voices.find(v => isBritishEnglish(v)) ||
+    voices.find(v => isEnglish(v));
 
   if (voice) utterance.voice = voice;
+
+  // Keep British English pronunciation even when the browser must fall back.
   utterance.lang = voice?.lang || "en-GB";
   utterance.rate = 0.68;
-  utterance.pitch = 1;
+  utterance.pitch = 1.04;
 
   window.speechSynthesis.speak(utterance);
 }
@@ -5260,12 +5347,18 @@ function renderCurrentPracticeQuestion() {
 
 
       <div class="practice-actions">
-        <button
-          class="button button-primary button-small"
-          onclick="checkPracticeAnswer(${questionIndex})"
-        >
-          Check Answer
-        </button>
+        ${
+          selectedWeekId === "consolidation"
+            ? ""
+            : `
+              <button
+                class="button button-primary button-small"
+                onclick="checkPracticeAnswer(${questionIndex})"
+              >
+                Check Answer
+              </button>
+            `
+        }
 
         ${
           question.hint2 || question.firstStep
@@ -5279,27 +5372,13 @@ function renderCurrentPracticeQuestion() {
               </button>
 
               <button
-                class="button button-light button-small"
+                class="button button-light button-small progressive-help-button"
+                id="practiceHelpButton${questionIndex}"
                 type="button"
-                onclick="showPracticeSupport(${questionIndex}, 1)"
+                onclick="advancePracticeSupport(${questionIndex})"
+                ${(currentQuestionSupportLevel[questionIndex] || 0) >= 3 ? "disabled" : ""}
               >
-                💡 Give me a hint
-              </button>
-
-              <button
-                class="button button-light button-small"
-                type="button"
-                onclick="showPracticeSupport(${questionIndex}, 2)"
-              >
-                🧭 I still need help
-              </button>
-
-              <button
-                class="button button-light button-small"
-                type="button"
-                onclick="showPracticeSupport(${questionIndex}, 3)"
-              >
-                👣 Show me the first step
+                ${getPracticeHelpButtonLabel(questionIndex)}
               </button>
             `
             : `
@@ -5349,7 +5428,11 @@ function renderCurrentPracticeQuestion() {
           type="button"
           onclick="${isLastQuestion ? "finishPracticeQuestionSet()" : "nextPracticeQuestion()"}"
         >
-          ${isLastQuestion ? "Finish Practice" : "Next Question →"}
+          ${
+            selectedWeekId === "consolidation"
+              ? (isLastQuestion ? "Check & Finish ✓" : "Check & Continue →")
+              : (isLastQuestion ? "Finish Practice" : "Next Question →")
+          }
         </button>
       </div>
 
@@ -5412,8 +5495,28 @@ function nextPracticeQuestion() {
   const lesson =
     getCurrentLessons()[currentLessonId];
 
+  if (!lesson) return;
+
+  // In the consolidation lesson, "Next Question" also checks the
+  // current answer. Students move on only after getting it correct.
+  if (selectedWeekId === "consolidation") {
+    checkPracticeAnswer(currentPracticeQuestionIndex);
+
+    if (!currentQuestionResults[currentPracticeQuestionIndex]) {
+      const feedback = document.getElementById(
+        "feedback" + currentPracticeQuestionIndex
+      );
+
+      feedback?.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+
+      return;
+    }
+  }
+
   if (
-    lesson &&
     currentPracticeQuestionIndex <
       lesson.questions.length - 1
   ) {
@@ -5431,6 +5534,26 @@ function finishPracticeQuestionSet() {
 
   const lesson =
     getCurrentLessons()[currentLessonId];
+
+  if (!lesson) return;
+
+  // The final button behaves like Next: check first, then finish.
+  if (selectedWeekId === "consolidation") {
+    checkPracticeAnswer(currentPracticeQuestionIndex);
+
+    if (!currentQuestionResults[currentPracticeQuestionIndex]) {
+      const feedback = document.getElementById(
+        "feedback" + currentPracticeQuestionIndex
+      );
+
+      feedback?.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+
+      return;
+    }
+  }
 
   const firstIncompleteIndex =
     lesson.questions.findIndex(
@@ -5553,7 +5676,36 @@ function initialiseLearningTools() {
 }
 
 
+
+function toggleLearningToolsDrawer(forceOpen = null) {
+  const drawer = document.getElementById("learningToolsDrawer");
+  const launcher = document.getElementById("floatingLearningToolsButton");
+
+  if (!drawer) return;
+
+  const isCurrentlyOpen = !drawer.classList.contains("hidden");
+  const shouldOpen =
+    forceOpen === null ? !isCurrentlyOpen : Boolean(forceOpen);
+
+  drawer.classList.toggle("hidden", !shouldOpen);
+
+  if (launcher) {
+    launcher.setAttribute("aria-expanded", String(shouldOpen));
+    launcher.classList.toggle("active", shouldOpen);
+  }
+
+  if (!shouldOpen) {
+    ["learningToolCalculator", "learningToolNotes", "learningToolWhiteboard"]
+      .forEach(id => document.getElementById(id)?.classList.add("hidden"));
+  }
+}
+
+
 function toggleLearningTool(toolName) {
+  if (selectedWeekId === "consolidation") {
+    toggleLearningToolsDrawer(true);
+  }
+
   const panelIds = {
     calculator: "learningToolCalculator",
     notes: "learningToolNotes",
@@ -5580,10 +5732,12 @@ function toggleLearningTool(toolName) {
   target.classList.toggle("hidden");
 
   if (willOpen) {
-    target.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest"
-    });
+    if (selectedWeekId !== "consolidation") {
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+      });
+    }
 
     if (toolName === "whiteboard") {
       window.setTimeout(initialiseWhiteboard, 60);
@@ -6693,7 +6847,7 @@ function checkPracticeAnswer(questionIndex) {
 
     if (!selectedChoice) {
       feedback.textContent =
-        "Choose one answer first. You can use the hint if you need a clue.";
+        "Choose an answer first — you’ve got this. Use the help button if you need a clue.";
 
       feedback.className =
         "feedback-message supportive";
@@ -6714,8 +6868,8 @@ function checkPracticeAnswer(questionIndex) {
 
       feedback.textContent =
         currentQuestionAttempts[questionIndex] === 1
-          ? "Not quite yet. Look at the hint, discuss the process idea, then try again."
-          : "Keep going. Read the key idea above and try again—your progress is saved.";
+          ? "Almost there — try again. Think about the key idea, or use the help button for a clue."
+          : "Keep going — every attempt is helping. Check your thinking, use the next level of help if you need it, then try again.";
 
       feedback.className = "feedback-message supportive";
       questionCard.classList.remove("correct");
@@ -6734,7 +6888,7 @@ function checkPracticeAnswer(questionIndex) {
 
   if (working.length < 5) {
     feedback.textContent =
-      "Start by writing the formula or your first calculation step. Your working does not need to be perfect.";
+      "You’re on the right track. Start with the formula or your first calculation step, then try again.";
 
     feedback.className =
       "feedback-message supportive";
@@ -6747,7 +6901,7 @@ function checkPracticeAnswer(questionIndex) {
 
   if (Number.isNaN(studentNumber)) {
     feedback.textContent =
-      "Add a numerical final answer, then check it again. You may use the hint when you need support.";
+      "Nearly there — add your numerical final answer, then try again. Use the help button if you need support.";
 
     feedback.className =
       "feedback-message supportive";
@@ -6770,7 +6924,9 @@ function checkPracticeAnswer(questionIndex) {
     );
 
   const decimalFormatCorrect =
-    hasTwoDecimalPlaces(answer);
+    selectedWeekId === "consolidation"
+      ? true
+      : hasTwoDecimalPlaces(answer);
 
   if (
     numberCorrect &&
