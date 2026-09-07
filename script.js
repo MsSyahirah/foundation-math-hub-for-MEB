@@ -4342,6 +4342,8 @@ function renderActivityCards() {
     card.className =
       "activity-card";
 
+    card.id = "activityCard-" + activity.id;
+
     card.style.setProperty(
       "--card-colour",
       activity.colour
@@ -7294,9 +7296,7 @@ function completeCurrentLesson() {
 
   if (!wasAlreadyCompleted) {
     if (selectedWeekId === "consolidation") {
-      showToast(
-        "Guided practice completed! Now complete the EdCafe mission checkpoint to move your game journey forward."
-      );
+      showGuidedCompletionModal();
     } else {
       showCelebration(
         currentLessonId
@@ -7307,6 +7307,87 @@ function completeCurrentLesson() {
       "This checkpoint was already completed."
     );
   }
+}
+
+
+
+function getNextConsolidationMissionId() {
+  if (
+    selectedWeekId !== "consolidation" ||
+    !currentLessonId
+  ) {
+    return "";
+  }
+
+  const match =
+    currentLessonId.match(/^skill-([1-6])$/);
+
+  return match
+    ? "checkpoint-" + match[1]
+    : "";
+}
+
+
+function showGuidedCompletionModal() {
+  const modal =
+    document.getElementById("guidedCompletionModal");
+
+  const title =
+    document.getElementById("guidedNextMissionTitle");
+
+  const missionId =
+    getNextConsolidationMissionId();
+
+  const mission =
+    getCurrentActivities().find(
+      activity => activity.id === missionId
+    );
+
+  if (title) {
+    title.textContent =
+      mission
+        ? "Next: " + mission.title
+        : "Next: Mission Checkpoint";
+  }
+
+  modal?.classList.remove("hidden");
+}
+
+
+function closeGuidedCompletionModal() {
+  document
+    .getElementById("guidedCompletionModal")
+    ?.classList.add("hidden");
+}
+
+
+function goToNextConsolidationMission() {
+  const missionId =
+    getNextConsolidationMissionId();
+
+  closeGuidedCompletionModal();
+  returnToActivities();
+
+  window.setTimeout(() => {
+    const card =
+      document.getElementById(
+        "activityCard-" + missionId
+      );
+
+    if (!card) return;
+
+    card.classList.add("attention-pulse");
+
+    card.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
+    window.setTimeout(
+      () => card.classList.remove("attention-pulse"),
+      2600
+    );
+  }, 120);
 }
 
 
@@ -8724,6 +8805,22 @@ document.getElementById(
       .classList.add("hidden");
 
     returnToActivities();
+  }
+);
+
+
+
+document.getElementById(
+  "guidedCompletionModal"
+)?.addEventListener(
+  "click",
+  event => {
+    if (
+      event.target.id ===
+      "guidedCompletionModal"
+    ) {
+      closeGuidedCompletionModal();
+    }
   }
 );
 

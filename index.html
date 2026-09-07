@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Foundation Math Hub for Higher Nitec in Chemical Process Technology">
   <title>Foundation Math Hub</title>
-  <link rel="stylesheet" href="style.css?v=31">
-  <script src="script.js?v=31" defer></script>
+  <link rel="stylesheet" href="style.css?v=32">
+  <script src="script.js?v=32" defer></script>
 </head>
 <body>
 
@@ -957,6 +957,55 @@
   id="toastMessage"
 ></div>
 
+
+
+<!-- ======================================================
+     GUIDED PRACTICE COMPLETE POPUP
+     ====================================================== -->
+
+<div
+  class="modal-overlay hidden"
+  id="guidedCompletionModal"
+>
+  <div class="modal-card guided-completion-card">
+    <div class="guided-completion-icon" aria-hidden="true">✅</div>
+
+    <span class="small-label">Guided Practice Complete</span>
+
+    <h2>Nice work — you’re ready for the mission!</h2>
+
+    <p>
+      Your guided practice is complete. Next, complete the EdCafe mission checkpoint.
+      After you verify or self-confirm the mission, your game journey will move forward.
+    </p>
+
+    <div class="guided-completion-next">
+      <span aria-hidden="true">🎯</span>
+      <div>
+        <strong id="guidedNextMissionTitle">Next: Mission Checkpoint</strong>
+        <small>Complete the mission to unlock the next skill.</small>
+      </div>
+    </div>
+
+    <div class="guided-completion-actions">
+      <button
+        class="button button-primary"
+        type="button"
+        onclick="goToNextConsolidationMission()"
+      >
+        Go to Mission Checkpoint →
+      </button>
+
+      <button
+        class="button button-light"
+        type="button"
+        onclick="closeGuidedCompletionModal()"
+      >
+        Stay Here
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- ======================================================
      COMPLETION POPUP

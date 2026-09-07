@@ -4077,3 +4077,80 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ======================================================
+   V32 — GUIDED PRACTICE COMPLETION POPUP
+   ====================================================== */
+
+.guided-completion-card {
+  width: min(620px, 100%);
+  text-align: center;
+}
+
+.guided-completion-icon {
+  font-size: 58px;
+  margin-bottom: 8px;
+}
+
+.guided-completion-card h2 {
+  margin: 8px 0 10px;
+}
+
+.guided-completion-card > p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.guided-completion-next {
+  margin: 18px 0;
+  padding: 15px 16px;
+  border: 1px solid #bfdbfe;
+  border-radius: 16px;
+  background: #eff6ff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+}
+
+.guided-completion-next > span {
+  font-size: 30px;
+}
+
+.guided-completion-next strong,
+.guided-completion-next small {
+  display: block;
+}
+
+.guided-completion-next small {
+  margin-top: 3px;
+  color: var(--muted);
+}
+
+.guided-completion-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.activity-card.attention-pulse {
+  animation: mission-card-attention 0.7s ease 3;
+}
+
+@keyframes mission-card-attention {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.16);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .activity-card.attention-pulse {
+    animation: none;
+    outline: 3px solid #93c5fd;
+  }
+}
