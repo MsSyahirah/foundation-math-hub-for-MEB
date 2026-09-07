@@ -2991,37 +2991,37 @@ const week6CriterionCards = {
 };
 
 const consolidationCriterionCards = {
-  "checkpoint-1": {
+  "skill-1": {
     title: "Algebra Star Unlocked",
     achievement: "You can identify the unknown, choose a formula, rearrange when needed and substitute values correctly.",
     plantConnection: "In process calculations, engineers rearrange equations for density, flow, moles and energy.",
     whyMatters: "Algebra lets you turn a process formula into the exact unknown quantity you need."
   },
-  "checkpoint-2": {
+  "skill-2": {
     title: "Unit Star Unlocked",
     achievement: "You can convert measurements and make units consistent before calculating.",
     plantConnection: "Plant data may be recorded in g, kg, J, kJ, mL, L and other units.",
     whyMatters: "A correct formula can still give a wrong answer if the units do not match."
   },
-  "checkpoint-3": {
+  "skill-3": {
     title: "Ratio Star Unlocked",
     achievement: "You can use ratio, proportion and percentage to compare and scale process quantities.",
     plantConnection: "Stream composition and reaction relationships often depend on ratios and percentages.",
     whyMatters: "These skills help you scale a known relationship to the actual process quantity."
   },
-  "checkpoint-4": {
+  "skill-4": {
     title: "Fraction Star Unlocked",
     achievement: "You can connect fractions, decimals, percentages and mass fractions.",
     plantConnection: "Composition is often written as a fraction of the whole stream.",
     whyMatters: "Understanding equivalent forms makes it easier to move between mass fraction, decimal and percentage."
   },
-  "checkpoint-5": {
+  "skill-5": {
     title: "Arithmetic Star Unlocked",
     achievement: "You can choose the correct operation and complete multi-step calculations in the correct order.",
     plantConnection: "Material and energy balances repeatedly use addition, subtraction, multiplication and division.",
     whyMatters: "Strong arithmetic prevents simple calculation errors from affecting the final process result."
   },
-  "checkpoint-6": {
+  "skill-6": {
     title: "Decimal Star Unlocked",
     achievement: "You can round the final answer to the required number of decimal places.",
     plantConnection: "Engineering results must be reported clearly and consistently for communication and checking.",
@@ -4825,12 +4825,6 @@ function confirmExternalCompletion(activityId) {
     !wasAlreadyCompleted
   ) {
     showFinalConsolidationAchievement();
-  } else if (
-    selectedWeekId === "consolidation" &&
-    isConsolidationEdCafeCheckpoint(activityId) &&
-    !wasAlreadyCompleted
-  ) {
-    showCelebration(activityId);
   } else if (
     selectedWeekId === "week-3" &&
     activityId === "edcafe-check" &&
@@ -7296,7 +7290,9 @@ function completeCurrentLesson() {
 
   if (!wasAlreadyCompleted) {
     if (selectedWeekId === "consolidation") {
-      showGuidedCompletionModal();
+      showCelebration(
+        currentLessonId
+      );
     } else {
       showCelebration(
         currentLessonId
@@ -7309,86 +7305,6 @@ function completeCurrentLesson() {
   }
 }
 
-
-
-function getNextConsolidationMissionId() {
-  if (
-    selectedWeekId !== "consolidation" ||
-    !currentLessonId
-  ) {
-    return "";
-  }
-
-  const match =
-    currentLessonId.match(/^skill-([1-6])$/);
-
-  return match
-    ? "checkpoint-" + match[1]
-    : "";
-}
-
-
-function showGuidedCompletionModal() {
-  const modal =
-    document.getElementById("guidedCompletionModal");
-
-  const title =
-    document.getElementById("guidedNextMissionTitle");
-
-  const missionId =
-    getNextConsolidationMissionId();
-
-  const mission =
-    getCurrentActivities().find(
-      activity => activity.id === missionId
-    );
-
-  if (title) {
-    title.textContent =
-      mission
-        ? "Next: " + mission.title
-        : "Next: Mission Checkpoint";
-  }
-
-  modal?.classList.remove("hidden");
-}
-
-
-function closeGuidedCompletionModal() {
-  document
-    .getElementById("guidedCompletionModal")
-    ?.classList.add("hidden");
-}
-
-
-function goToNextConsolidationMission() {
-  const missionId =
-    getNextConsolidationMissionId();
-
-  closeGuidedCompletionModal();
-  returnToActivities();
-
-  window.setTimeout(() => {
-    const card =
-      document.getElementById(
-        "activityCard-" + missionId
-      );
-
-    if (!card) return;
-
-    card.classList.add("attention-pulse");
-
-    card.scrollIntoView({
-      behavior: "smooth",
-      block: "center"
-    });
-
-    window.setTimeout(
-      () => card.classList.remove("attention-pulse"),
-      2600
-    );
-  }, 120);
-}
 
 
 /* =========================================================
@@ -7424,8 +7340,16 @@ function showCelebration(activityId) {
   currentBonusActivity = activityId;
   document.getElementById("finalConsolidationAchievement")?.classList.add("hidden");
 
+  const consolidationSkillMatch =
+    selectedWeekId === "consolidation" &&
+    typeof activityId === "string"
+      ? activityId.match(/^skill-([1-6])$/)
+      : null;
+
   const completedCount =
-    getCompletedCheckpointCount();
+    consolidationSkillMatch
+      ? Number(consolidationSkillMatch[1])
+      : getCompletedCheckpointCount();
 
   const level =
     studentLevels[
@@ -7447,7 +7371,7 @@ function showCelebration(activityId) {
     selectedWeekId === "consolidation"
       ? (completedCount === getCurrentCheckpointIds().length
           ? "All Six Mathematics Missions Completed!"
-          : "Mission Completed!")
+          : "Mission Completed — Game Time!")
       : (completedCount === getCurrentCheckpointIds().length
           ? "You Reached the Weekly Goal!"
           : "Checkpoint Completed!");
@@ -7457,8 +7381,8 @@ function showCelebration(activityId) {
   ).textContent =
     selectedWeekId === "consolidation"
       ? (completedCount === getCurrentCheckpointIds().length
-          ? "You have completed all six Foundation Mathematics skill stations. Continue to the Post-Test, then finish with Student Feedback."
-          : "Great work. Your mission checkpoint is complete and your game journey has moved forward.")
+          ? "You completed all six guided mathematics missions. Your final game journey is complete — now finish the last EdCafe checkpoint, Post-Test and Student Feedback."
+          : "Great work. Your guided mission is complete and your game journey has moved forward. Next, complete the EdCafe checkpoint to unlock the next skill.")
       : (completedCount === getCurrentCheckpointIds().length
           ? ["week-3", "week-4", "week-6"].includes(selectedWeekId)
             ? "Your five mission stops are complete. Continue to the independent assessment and final feedback step."
@@ -7469,7 +7393,7 @@ function showCelebration(activityId) {
     "bonusResult"
   ).textContent =
     selectedWeekId === "consolidation"
-      ? "Skill progress updated. Keep going until all six Foundation Mathematics stars are complete."
+      ? "🎮 Game progress saved. Next: complete the EdCafe checkpoint to unlock the next skill."
       : "You now have " + getMasteryStarCount() +
         " of 5 Mastery Stars. Reward Tokens are not awarded by chance.";
 
@@ -8808,21 +8732,6 @@ document.getElementById(
   }
 );
 
-
-
-document.getElementById(
-  "guidedCompletionModal"
-)?.addEventListener(
-  "click",
-  event => {
-    if (
-      event.target.id ===
-      "guidedCompletionModal"
-    ) {
-      closeGuidedCompletionModal();
-    }
-  }
-);
 
 
 /* Close the popup when the dark background is clicked */

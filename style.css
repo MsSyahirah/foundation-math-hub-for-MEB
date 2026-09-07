@@ -4154,3 +4154,19 @@ textarea {
     outline: 3px solid #93c5fd;
   }
 }
+
+
+/* ======================================================
+   V33 — RESTORED CONSOLIDATION SNAKE-AND-LADDER JOURNEY
+   ====================================================== */
+
+/* v32's guided-completion popup is retired; the original game journey
+   now appears immediately after completing guided practice. */
+#guidedCompletionModal {
+  display: none !important;
+}
+
+.consolidation-mode .journey-pause .small-label::after {
+  content: " · Foundation Mathematics Mission";
+}
+
