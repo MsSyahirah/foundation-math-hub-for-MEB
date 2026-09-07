@@ -4944,7 +4944,9 @@ function openLesson(lessonId) {
     "completionHelp"
   ).textContent =
     alreadyCompleted
-      ? "This checkpoint is already completed. You may review it again."
+      ? selectedWeekId === "consolidation"
+        ? "This mission is already completed. You may review the questions and replay the game journey."
+        : "This checkpoint is already completed. You may review it again."
       : "Complete all questions correctly to unlock this button.";
 
   hideWeekDashboard();
@@ -7288,16 +7290,20 @@ function completeCurrentLesson() {
 
   updateWholeWeek();
 
+  if (selectedWeekId === "consolidation") {
+    // Always show/replay the mission journey when the student presses
+    // Complete This Checkpoint. This also allows previously completed
+    // missions to be tested/reviewed without being blocked by saved progress.
+    showCelebration(
+      currentLessonId
+    );
+    return;
+  }
+
   if (!wasAlreadyCompleted) {
-    if (selectedWeekId === "consolidation") {
-      showCelebration(
-        currentLessonId
-      );
-    } else {
-      showCelebration(
-        currentLessonId
-      );
-    }
+    showCelebration(
+      currentLessonId
+    );
   } else {
     showToast(
       "This checkpoint was already completed."
